@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Smpp.Net.Client</RootNamespace>
-    <AssemblyName>JamaaTech.Smpp.Net.Client.v1.4</AssemblyName>
+    <AssemblyName>JamaaTech.Smpp.Net.Client</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
