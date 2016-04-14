@@ -3,3 +3,6 @@ Jamaa SMPP Client is a .NET implementation of the SMPP protocol that focuses on 
 
 # Based On
 This is created based on  https://jamaasmpp.codeplex.com/
+
+# What's new?
+Support sending concatenated messages
