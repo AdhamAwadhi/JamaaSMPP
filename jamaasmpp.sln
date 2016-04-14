@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smpp.Net.Client", "JamaaTech.Smpp.Net.Client\Smpp.Net.Client.csproj", "{1578A5AA-1DC1-42C6-AFF5-0EB278960881}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smpp.Net.Lib", "JamaaTech.SMPP.Net.Lib\Smpp.Net.Lib.csproj", "{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1578A5AA-1DC1-42C6-AFF5-0EB278960881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1578A5AA-1DC1-42C6-AFF5-0EB278960881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1578A5AA-1DC1-42C6-AFF5-0EB278960881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1578A5AA-1DC1-42C6-AFF5-0EB278960881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

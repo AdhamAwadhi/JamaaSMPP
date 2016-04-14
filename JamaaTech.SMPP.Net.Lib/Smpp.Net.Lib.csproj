@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JamaaTech.Smpp.Net.Lib</RootNamespace>
+    <AssemblyName>JamaaTech.Smpp.Net.Lib.v1.4</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Jamaa Smpp Client.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataCoding.cs" />
+    <Compile Include="InterfaceVersion.cs" />
+    <Compile Include="Networking\SessionCloseReason.cs" />
+    <Compile Include="Networking\SessionExceptionEventArgs.cs" />
+    <Compile Include="Networking\SessionType.cs" />
+    <Compile Include="Networking\TcpIpConnectionException.cs" />
+    <Compile Include="Networking\TcpIpException.cs" />
+    <Compile Include="Networking\TcpIpExceptionThrownEventArgs.cs" />
+    <Compile Include="Networking\TcpIpSession.cs" />
+    <Compile Include="Networking\TcpIpSessionClosedEventArgs.cs" />
+    <Compile Include="Networking\TcpIpSessionClosedException.cs" />
+    <Compile Include="Networking\TcpIpSessionProperties.cs" />
+    <Compile Include="ParserExceptionEventArgs.cs" />
+    <Compile Include="PDUErrorEventArgs.cs" />
+    <Compile Include="PduProcessorCallback.cs" />
+    <Compile Include="PduReceivedEventArgs.cs" />
+    <Compile Include="PDUTransmitter.cs" />
+    <Compile Include="PDUWaitContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\AlertNotification.cs" />
+    <Compile Include="Protocol\BindReceiver.cs" />
+    <Compile Include="Protocol\BindReceiverResp.cs" />
+    <Compile Include="Protocol\BindRequest.cs" />
+    <Compile Include="Protocol\BindResponse.cs" />
+    <Compile Include="Protocol\BindTranceiver.cs" />
+    <Compile Include="Protocol\BindTransceiverResp.cs" />
+    <Compile Include="Protocol\BindTransmitter.cs" />
+    <Compile Include="Protocol\BindTransmitterResp.cs" />
+    <Compile Include="Protocol\CancelSm.cs" />
+    <Compile Include="Protocol\CancelSmResp.cs" />
+    <Compile Include="Protocol\CommandType.cs" />
+    <Compile Include="Protocol\DataSm.cs" />
+    <Compile Include="Protocol\DataSmResp.cs" />
+    <Compile Include="Protocol\DeliverSm.cs" />
+    <Compile Include="Protocol\DeliverSmResp.cs" />
+    <Compile Include="Protocol\DestinationFlag.cs" />
+    <Compile Include="Protocol\EnquireLink.cs" />
+    <Compile Include="Protocol\EnquireLinkResp.cs" />
+    <Compile Include="Protocol\EsmClass.cs" />
+    <Compile Include="Protocol\GenericNack.cs" />
+    <Compile Include="Protocol\GenericRequestPDU.cs" />
+    <Compile Include="Protocol\GenericResponsePDU.cs" />
+    <Compile Include="Protocol\InvalidPDUCommandException.cs" />
+    <Compile Include="Protocol\MessageState.cs" />
+    <Compile Include="Protocol\NotEnoughBytesException.cs" />
+    <Compile Include="NumberingPlanIndicator.cs" />
+    <Compile Include="Protocol\Outbind.cs" />
+    <Compile Include="Protocol\PDU.cs" />
+    <Compile Include="Protocol\PDUException.cs" />
+    <Compile Include="Protocol\PDUFormatException.cs" />
+    <Compile Include="Protocol\PDUHeader.cs" />
+    <Compile Include="Protocol\PDUParseException.cs" />
+    <Compile Include="Protocol\PriorityFlag.cs" />
+    <Compile Include="Protocol\QuerySm.cs" />
+    <Compile Include="Protocol\QuerySmResp.cs" />
+    <Compile Include="Protocol\RegisteredDelivery.cs" />
+    <Compile Include="Protocol\ReplaceSm.cs" />
+    <Compile Include="Protocol\ReplaceSmResp.cs" />
+    <Compile Include="Protocol\RequestPDU.cs" />
+    <Compile Include="Protocol\ResponsePDU.cs" />
+    <Compile Include="Protocol\SendSmPDU.cs" />
+    <Compile Include="Protocol\ServiceType.cs" />
+    <Compile Include="Protocol\SingleDestinationPDU.cs" />
+    <Compile Include="Protocol\SmOperationPDU.cs" />
+    <Compile Include="Protocol\SmPDU.cs" />
+    <Compile Include="Protocol\SmppAddress.cs" />
+    <Compile Include="Protocol\SmppEntityType.cs" />
+    <Compile Include="Protocol\SubmitSm.cs" />
+    <Compile Include="Protocol\SubmitSmResp.cs" />
+    <Compile Include="Protocol\Tlv\Tag.cs" />
+    <Compile Include="Protocol\Tlv\Tlv.cs" />
+    <Compile Include="Protocol\Tlv\TlvCollection.cs" />
+    <Compile Include="Protocol\Tlv\TlvException.cs" />
+    <Compile Include="Protocol\TooManyBytesException.cs" />
+    <Compile Include="TypeOfNumber.cs" />
+    <Compile Include="Protocol\Unbind.cs" />
+    <Compile Include="Protocol\UnbindResp.cs" />
+    <Compile Include="ResponseHandler.cs" />
+    <Compile Include="SendPduCallback.cs" />
+    <Compile Include="SessionBindInfo.cs" />
+    <Compile Include="SmppBindException.cs" />
+    <Compile Include="SmppClientSession.cs" />
+    <Compile Include="SmppErrorCode.cs" />
+    <Compile Include="SmppException.cs" />
+    <Compile Include="SmppResponseTimedOutException.cs" />
+    <Compile Include="SmppSessionClosedEventArgs.cs" />
+    <Compile Include="SmppSessionCloseReason.cs" />
+    <Compile Include="SmppSessionState.cs" />
+    <Compile Include="StreamParser.cs" />
+    <Compile Include="Udh.cs" />
+    <Compile Include="Util\ByteBuffer.cs" />
+    <Compile Include="Util\Latin1Encoding.cs" />
+    <Compile Include="Util\PduProcessor.cs" />
+    <Compile Include="Util\RunningComponent.cs" />
+    <Compile Include="Util\SMPPEncodingUtil.cs" />
+    <Compile Include="Util\SmscDefaultEncoding.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Jamaa Smpp Client.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
