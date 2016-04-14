@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Jamaa SMPP Library")]
-[assembly: AssemblyDescription("Jamaa Technologies SMPP Implementation Library")]
+[assembly: AssemblyTitle("DemoClient")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Jamaa Technologies")]
-[assembly: AssemblyProduct("Jamaa SMPP Library")]
-[assembly: AssemblyCopyright("Copyright ? 2011 Jamaa Technologies")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("DemoClient")]
+[assembly: AssemblyCopyright("Copyright ?  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a6ed1854-e4d7-43c4-8695-e6200045620b")]
+[assembly: Guid("4e58329b-d8b3-4169-97b6-f501e7b04d07")]
 
 // Version information for an assembly consists of the following four values:
 //

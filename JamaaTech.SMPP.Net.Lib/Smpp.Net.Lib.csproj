@@ -9,9 +9,11 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JamaaTech.Smpp.Net.Lib</RootNamespace>
-    <AssemblyName>JamaaTech.Smpp.Net.Lib</AssemblyName>
+    <AssemblyName>JamaaTech.Smpp.Net.Lib.v1.4</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
