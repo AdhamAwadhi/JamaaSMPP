@@ -27,6 +27,7 @@ namespace JamaaTech.Smpp.Net.Client
     {
         #region Variables
         private string vText;
+        private int vMaxMessageLength;
         #endregion
 
         #region Constuctors
@@ -40,7 +41,7 @@ namespace JamaaTech.Smpp.Net.Client
         }
 
         internal TextMessage(int segmentId, int messageCount, int sequenceNumber)
-            :base(segmentId,messageCount,sequenceNumber)
+            : base(segmentId, messageCount, sequenceNumber)
         {
             vText = "";
         }
@@ -55,29 +56,60 @@ namespace JamaaTech.Smpp.Net.Client
             get { return vText; }
             set { vText = value; }
         }
+        public int MaxMessageLength { get { return vMaxMessageLength; } }
         #endregion
 
         #region Methods
         protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding)
         {
-            //This smpp implementation does not support sending concatenated messages,
-            //however, concatenated messages are supported on the receiving side.
-            int maxLength = GetMaxMessageLength(defaultEncoding, false);
-            byte[] bytes = SMPPEncodingUtil.GetBytesFromString(vText, defaultEncoding);
-            //Check message size
-            if(bytes.Length > maxLength)
-            {
-                throw new InvalidOperationException(string.Format(
-                    "Encoding '{0}' does not support messages of length greater than '{1}' charactors",
-                    defaultEncoding, maxLength));
-            }
             SubmitSm sm = new SubmitSm();
-            sm.SetMessageBytes(bytes);
             sm.SourceAddress.Address = vSourceAddress;
-            sm.DestinationAddress.Address = vDestinatinoAddress;
+            sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
             sm.DataCoding = defaultEncoding;
-            if (vRegisterDeliveryNotification) { sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt; }
-            yield return sm;
+            if (vRegisterDeliveryNotification)
+                sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
+
+            vMaxMessageLength = GetMaxMessageLength(defaultEncoding, false);
+            byte[] bytes = SMPPEncodingUtil.GetBytesFromString(vText, defaultEncoding);
+
+            // Unicode encoding return 2 items for 1 char 
+            // We check vText Length first
+            if (vText.Length > vMaxMessageLength && bytes.Length > vMaxMessageLength) // Split into multiple!
+            {
+                var SegID = new Random().Next(1000, 9999); // create random SegmentID
+                vMaxMessageLength = GetMaxMessageLength(defaultEncoding, true);
+                var messages = Split(vText, vMaxMessageLength);
+                var totalSegments = messages.Count; // get the number of (how many) parts
+                var udh = new Udh(SegID, totalSegments, 0); // ID, Total, part
+
+                for (int i = 0; i < totalSegments; i++)
+                {
+                    udh.MessageSequence = i + 1;  // seq+1 , - parts of the message      
+                    sm.SetMessageText(messages[i], defaultEncoding, udh); // send parts of the message + all other UDH settings
+                    yield return sm;
+                }
+            }
+            else
+            {
+                sm.SetMessageBytes(bytes);
+                yield return sm;
+            }
+        }
+
+        private static List<String> Split(string message, int maxPartLength)
+        {
+            var result = new List<String>();
+
+            for (int i = 0; i < message.Length; i += maxPartLength)
+            {
+                var chunkSize = i + maxPartLength < message.Length ? maxPartLength : message.Length - i;
+                var chunk = new char[chunkSize];
+                message.CopyTo(i, chunk, 0, chunkSize);
+                result.Add(new string(chunk));
+            }
+
+            return result;
+
         }
 
         private static int GetMaxMessageLength(DataCoding encoding, bool includeUdh)
