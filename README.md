@@ -3,10 +3,13 @@ Jamaa SMPP Client is a .NET implementation of the SMPP protocol that focuses on 
 
 ## Based On
 This is created based on  https://jamaasmpp.codeplex.com/
+## [NuGet](https://www.nuget.org/packages/JamaaTech.Smpp15)
+	Install-Package JamaaTech.Smpp15
+
 
 ## SMPP Server Simulator
 - Downlad from [http://www.seleniumsoftware.com/downloads.html](http://www.seleniumsoftware.com/downloads.html)
-- Read User Guide[http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
+- Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
 Support sending concatenated messages
