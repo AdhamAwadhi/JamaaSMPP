@@ -108,7 +108,7 @@ Task("CreateNugetPackage")
     .Does(() =>
 {
     var nugetVersion = gitVersionOutput["NuGetVersion"].ToString();
-    var packageName = "jamaatech.smpp";
+    var packageName = "JamaaTech.Smpp15";
 
     Information("Building {0}.{1}.nupkg", packageName, nugetVersion);
 
