@@ -34,7 +34,7 @@ var libDir = outputDir + Directory("lib");
 var slnPath = "./jamaasmpp.sln";
 
 // NuGet
-var nuspecFilename = "./jamaatech.smpp.nuspec";
+var nuspecFilename = "./JamaaSMPP.nuspec";
 var nupkgDestDir = outputDir;// + Directory("nuget-package");
 var nuspecDestFile = outputDir + File(nuspecFilename);
 
@@ -108,7 +108,7 @@ Task("CreateNugetPackage")
     .Does(() =>
 {
     var nugetVersion = gitVersionOutput["NuGetVersion"].ToString();
-    var packageName = "JamaaTech.Smpp15";
+    var packageName = "JamaaSMPP";
 
     Information("Building {0}.{1}.nupkg", packageName, nugetVersion);
 
