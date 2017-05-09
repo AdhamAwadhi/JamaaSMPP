@@ -3,7 +3,7 @@ Jamaa SMPP Client is a .NET implementation of the SMPP protocol that focuses on 
 
 ## Based On
 This is created based on  https://jamaasmpp.codeplex.com/
-## [NuGet](https://www.nuget.org/packages/JamaaSMPP)
+## [NuGet](https://www.nuget.org/packages/JamaaSMPP) ![#](https://img.shields.io/nuget/v/JamaaSMPP.svg)
 	Install-Package JamaaSMPP
 
 

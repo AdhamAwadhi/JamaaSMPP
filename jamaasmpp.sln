@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{BAF24B2C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{10B5221A-E6A5-4788-8DAF-5E8315D0B015}"
 	ProjectSection(SolutionItems) = preProject
-		jamaatech.smpp.nuspec = jamaatech.smpp.nuspec
+		JamaaSMPP.nuspec = JamaaSMPP.nuspec
 	EndProjectSection
 EndProject
 Global
