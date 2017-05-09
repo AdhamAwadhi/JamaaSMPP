@@ -42,7 +42,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         /// <summary>
         /// Short message contains SMSC delivery receipt
         /// </summary>
-        DeliveryReceipt = 0x08,
+        DeliveryReceipt = 0x04,
         /// <summary>
         /// SME contains ESME delivery acknoledgement
         /// </summary>
