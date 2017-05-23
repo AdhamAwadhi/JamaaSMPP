@@ -15,4 +15,7 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
-Support sending concatenated messages
+- Support sending concatenated messages
+- Fix Unicode Languages [issue #2](https://github.com/AdhamAwadhi/JamaaSMPP/issues/2). Allow user to set UCS2 encoding in SMPPEncodingUtil
+ 
+        SMPPEncodingUtil.UCS2Encoding = Encoding.BigEndianUnicode; 
