@@ -23,6 +23,8 @@ namespace JamaaTech.Smpp.Net.Lib.Util
 {
     public static class SMPPEncodingUtil
     {
+        public static System.Text.Encoding UCS2Encoding { get; set; } = System.Text.Encoding.Unicode;
+
         #region Methods
         public static byte[] GetBytesFromInt(uint value)
         {
@@ -87,7 +89,7 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                     bytes = Latin1Encoding.GetBytes(cStr);
                     break;
                 case DataCoding.UCS2:
-                    bytes = System.Text.Encoding.Unicode.GetBytes(cStr);
+                    bytes = UCS2Encoding.GetBytes(cStr);
                     break;
                 case DataCoding.SMSCDefault:
                     bytes = SMSCDefaultEncoding.GetBytes(cStr);
@@ -124,7 +126,7 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                     result = SMSCDefaultEncoding.GetString(data);
                     break;
                 case DataCoding.UCS2:
-                    result = System.Text.Encoding.Unicode.GetString(data);
+                    result = UCS2Encoding.GetString(data);
                     break;
                 default:
                     throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Unsupported encoding");
@@ -151,7 +153,7 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                     bytes = Latin1Encoding.GetBytes(cStr);
                     break;
                 case DataCoding.UCS2:
-                    bytes = System.Text.Encoding.Unicode.GetBytes(cStr);
+                    bytes = UCS2Encoding.GetBytes(cStr);
                     break;
                 case DataCoding.SMSCDefault:
                     bytes = SMSCDefaultEncoding.GetBytes(cStr);
@@ -183,7 +185,7 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                     result = SMSCDefaultEncoding.GetString(data);
                     break;
                 case DataCoding.UCS2:
-                    result = System.Text.Encoding.Unicode.GetString(data);
+                    result = UCS2Encoding.GetString(data);
                     break;
                 default:
                     throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Unsupported encoding");

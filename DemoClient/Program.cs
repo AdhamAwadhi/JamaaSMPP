@@ -1,4 +1,5 @@
 ﻿using JamaaTech.Smpp.Net.Client;
+using JamaaTech.Smpp.Net.Lib.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +15,8 @@ namespace DemoClient
         {
             smppConfig = GetSmppConfiguration();
 
+            SMPPEncodingUtil.UCS2Encoding = Encoding.BigEndianUnicode;
+
             var client = CreateSmppClient(smppConfig);
             client.Start();
             // must wait until connected before start sending
@@ -24,7 +27,8 @@ namespace DemoClient
 
             msg.DestinationAddress = "255455388333"; //Receipient number
             msg.SourceAddress = "255344338333"; //Originating number
-            msg.Text = "Hello, this is my test message!";
+            //msg.Text = "Hello, this is my test message!";
+            msg.Text = "السلام عليكم";
             msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
 
             client.SendMessage(msg);
