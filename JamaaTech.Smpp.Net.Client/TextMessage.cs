@@ -55,17 +55,24 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vText; }
             set { vText = value; }
-        }
+        }       
+
         public int MaxMessageLength { get { return vMaxMessageLength; } }
         #endregion
 
         #region Methods
         protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding)
         {
-            SubmitSm sm = new SubmitSm();
-            sm.SourceAddress.Address = vSourceAddress;
+            SubmitSm sm = CreateSubmitSm();
+            sm.SourceAddress.Address = vSourceAddress;            
             sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
             sm.DataCoding = defaultEncoding;
+            if (!string.IsNullOrEmpty(UserMessageReference))
+            {
+                var msgIdBytes = SMPPEncodingUtil.GetBytesFromCString(UserMessageReference);                
+                sm.Tlv.Add(new Lib.Protocol.Tlv.Tlv(Lib.Protocol.Tlv.Tag.user_message_reference, (ushort)msgIdBytes.Length, msgIdBytes));
+            }
+
             if (vRegisterDeliveryNotification)
                 sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
 
@@ -94,6 +101,16 @@ namespace JamaaTech.Smpp.Net.Client
                 sm.SetMessageBytes(bytes);
                 yield return sm;
             }
+        }
+
+        protected virtual SubmitSm CreateSubmitSm()
+        {
+            var sm = new SubmitSm();
+
+            //sm.SourceAddress.Ton = TypeOfNumber.Unknown;
+            //sm.DestinationAddress.Ton = TypeOfNumber.Unknown;
+
+            return sm;
         }
 
         private static List<String> Split(string message, int maxPartLength)

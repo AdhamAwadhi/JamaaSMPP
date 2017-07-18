@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using JamaaTech.Smpp.Net.Lib;
+using JamaaTech.Smpp.Net.Lib.Protocol;
 
 namespace DemoClient
 {
@@ -15,7 +17,7 @@ namespace DemoClient
         {
             smppConfig = GetSmppConfiguration();
 
-            SMPPEncodingUtil.UCS2Encoding = Encoding.BigEndianUnicode;
+            SMPPEncodingUtil.UCS2Encoding = Encoding.UTF8;
 
             var client = CreateSmppClient(smppConfig);
             client.Start();
@@ -28,8 +30,14 @@ namespace DemoClient
             msg.DestinationAddress = "255455388333"; //Receipient number
             msg.SourceAddress = "255344338333"; //Originating number
             //msg.Text = "Hello, this is my test message!";
-            msg.Text = "السلام عليكم";
+            msg.Text = @"السلام عليكم ورحمة الله وبركاته733733838
+احمد باجندوح
+البيضاني
+L;KSDJFG
+مكنستيبلكمسيبل
+";
             msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
+            msg.UserMessageReference = Guid.NewGuid().ToString();
 
             client.SendMessage(msg);
 
@@ -46,14 +54,14 @@ namespace DemoClient
                 SystemID = "smppclient1",
                 Password = "password",
                 Host = "localhost",
-                Port = 2775,
+                Port = 5016,
                 SystemType = "5750",
                 DefaultServiceType = "5750",
                 SourceAddress = "5750",
                 AutoReconnectDelay = 5000,
                 KeepAliveInterval = 5000,
                 ReconnectInteval = 10000,
-                Encoding = JamaaTech.Smpp.Net.Lib.DataCoding.ASCII
+                Encoding = JamaaTech.Smpp.Net.Lib.DataCoding.UCS2
             };
         }
 
@@ -122,14 +130,15 @@ namespace DemoClient
         {
             var client = (SmppClient)sender;
             Console.WriteLine("SMPP client {0} - Message Sent to: {1}", client.Name, e.ShortMessage.DestinationAddress);
-
             // CANDO: save sent sms
         }
 
         private static void client_MessageDelivered(object sender, MessageEventArgs e)
         {
             var client = (SmppClient)sender;
-            Console.WriteLine("SMPP client {0} Message Delivered to: {1}", client.Name, e.ShortMessage.DestinationAddress);
+            //Console.WriteLine("SMPP client {0} Message Delivered to: {1}", client.Name, e.ShortMessage.DestinationAddress);
+            Console.WriteLine("SMPP client {0} MessageId: {1}", client.Name, e.ShortMessage.UserMessageReference);
+
 
             // CANDO: save delivered sms
         }
@@ -141,6 +150,19 @@ namespace DemoClient
             Console.WriteLine("SMPP client {0} - Message Received from: {1}, msg: {2}", client.Name, msg.SourceAddress, msg.Text);
 
             // CANDO: save received sms
+        }
+    }
+
+    public class MyTextMessage : TextMessage
+    {
+        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding)
+        {
+            foreach (var pdu in base.GetPDUs(defaultEncoding))
+            {
+                var sm = (SubmitSm)pdu;
+                sm.SourceAddress.Ton = TypeOfNumber.Aphanumeric;
+                yield return sm;
+            }
         }
     }
 }

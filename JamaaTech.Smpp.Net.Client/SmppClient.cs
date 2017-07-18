@@ -20,6 +20,7 @@ using System.Diagnostics;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Util;
+using JamaaTech.Smpp.Net.Lib.Protocol.Tlv;
 
 namespace JamaaTech.Smpp.Net.Client
 {
@@ -78,7 +79,7 @@ namespace JamaaTech.Smpp.Net.Client
             vAutoReconnectDelay = 10000;
             vTimeOut = 5000;
             //--
-            vTimer = new System.Threading.Timer(AutoReconnectTimerEventHandler,null,Timeout.Infinite, vAutoReconnectDelay);
+            vTimer = new System.Threading.Timer(AutoReconnectTimerEventHandler, null, Timeout.Infinite, vAutoReconnectDelay);
             //--
             vName = "";
             vState = SmppConnectionState.Closed;
@@ -166,11 +167,18 @@ namespace JamaaTech.Smpp.Net.Client
             if (vState != SmppConnectionState.Connected)
             { throw new SmppClientException("Sending message operation failed because the SmppClient is not connected"); }
 
+            string messageId = null;
             foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding))
             {
                 ResponsePDU resp = vTrans.SendPdu(pdu, timeOut);
                 if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
                 { throw new SmppException(resp.Header.ErrorCode); }
+                var submitSmResp = resp as SubmitSmResp;
+                if (submitSmResp != null)
+                {
+                    messageId = ((SubmitSmResp)resp).MessageID;
+                }
+                message.ReceiptedMessageId = messageId;
                 RaiseMessageSentEvent(message);
             }
         }
@@ -445,13 +453,13 @@ namespace JamaaTech.Smpp.Net.Client
 
         private void RaiseMessageSentEvent(ShortMessage message)
         {
-            if (MessageSent != null) { MessageSent(this,new MessageEventArgs(message)); }
+            if (MessageSent != null) { MessageSent(this, new MessageEventArgs(message)); }
         }
 
         private void RaiseConnectionStateChangeEvent(SmppConnectionState newState, SmppConnectionState oldState)
         {
             if (ConnectionStateChanged == null) { return; }
-            ConnectionStateChangedEventArgs e = new ConnectionStateChangedEventArgs(newState,oldState, vAutoReconnectDelay);
+            ConnectionStateChangedEventArgs e = new ConnectionStateChangedEventArgs(newState, oldState, vAutoReconnectDelay);
             ConnectionStateChanged(this, e);
             if (e.ReconnectInteval < 5000) { e.ReconnectInteval = 5000; }
             Interlocked.Exchange(ref vAutoReconnectDelay, e.ReconnectInteval);
@@ -484,7 +492,7 @@ namespace JamaaTech.Smpp.Net.Client
                 e.Response.Header.ErrorCode = smppEx.ErrorCode;
                 return;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (vTraceSwitch.TraceError)
                 {
@@ -502,7 +510,26 @@ namespace JamaaTech.Smpp.Net.Client
             { RaiseMessageReceivedEvent(message); }
             //Or if we have received a delivery receipt
             else if ((pdu.EsmClass & EsmClass.DeliveryReceipt) == EsmClass.DeliveryReceipt)
-            { RaiseMessageDeliveredEvent(message); }
+            {
+                // Extract receipted message id
+                var receiptedMessageIdTlv = pdu.Tlv.GetTlvByTag(Tag.receipted_message_id);
+                string receiptedMessageId = null;
+                if (receiptedMessageIdTlv != null)
+                {
+                    receiptedMessageId = SMPPEncodingUtil.GetCStringFromBytes(receiptedMessageIdTlv.RawValue);
+                }
+                message.ReceiptedMessageId = receiptedMessageId;
+
+                // Extract user message reference
+                var userMessageReferenceTlv = pdu.Tlv.GetTlvByTag(Tag.user_message_reference);
+                string userMessageReference = null;
+                if (userMessageReferenceTlv != null)
+                {
+                    userMessageReference = SMPPEncodingUtil.GetCStringFromBytes(userMessageReferenceTlv.RawValue);
+                }
+                message.UserMessageReference = userMessageReference;
+                RaiseMessageDeliveredEvent(message);
+            }
         }
 
         private void SessionClosedEventHandler(object sender, SmppSessionClosedEventArgs e)
