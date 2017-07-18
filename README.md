@@ -19,3 +19,15 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Fix Unicode Languages [issue #2](https://github.com/AdhamAwadhi/JamaaSMPP/issues/2). Allow user to set UCS2 encoding in SMPPEncodingUtil
  
         SMPPEncodingUtil.UCS2Encoding = Encoding.BigEndianUnicode; 
+
+- Add `TextMessage` virtual method `CreateSubmitSm()` to allow user to change some properties (like Source address ton)
+
+        class MyTextMessage : TextMessage
+        {
+            protected override SubmitSm CreateSubmitSm()
+            {
+                var sm = base.CreateSubmitSm();
+                sm.SourceAddress.Ton = JamaaTech.Smpp.Net.Lib.TypeOfNumber.Aphanumeric;
+                return sm;
+            }
+        }

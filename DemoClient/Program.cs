@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using JamaaTech.Smpp.Net.Lib.Protocol;
 
 namespace DemoClient
 {
@@ -141,6 +142,16 @@ namespace DemoClient
             Console.WriteLine("SMPP client {0} - Message Received from: {1}, msg: {2}", client.Name, msg.SourceAddress, msg.Text);
 
             // CANDO: save received sms
+        }
+    }
+
+    class MyTextMessage : TextMessage
+    {
+        protected override SubmitSm CreateSubmitSm()
+        {
+            var sm = base.CreateSubmitSm();
+            sm.SourceAddress.Ton = JamaaTech.Smpp.Net.Lib.TypeOfNumber.Aphanumeric;
+            return sm;
         }
     }
 }
