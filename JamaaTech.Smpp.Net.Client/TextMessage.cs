@@ -62,7 +62,7 @@ namespace JamaaTech.Smpp.Net.Client
         #region Methods
         protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding)
         {
-            SubmitSm sm = new SubmitSm();
+            SubmitSm sm = CreateSubmitSm();
             sm.SourceAddress.Address = vSourceAddress;
             sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
             sm.DataCoding = defaultEncoding;
@@ -94,6 +94,16 @@ namespace JamaaTech.Smpp.Net.Client
                 sm.SetMessageBytes(bytes);
                 yield return sm;
             }
+        }
+
+        protected virtual SubmitSm CreateSubmitSm()
+        {
+            var sm = new SubmitSm();
+
+            //sm.SourceAddress.Ton = TypeOfNumber.Unknown;
+            //sm.DestinationAddress.Ton = TypeOfNumber.Unknown;
+
+            return sm;
         }
 
         private static List<String> Split(string message, int maxPartLength)
