@@ -30,14 +30,12 @@ namespace DemoClient
             msg.DestinationAddress = "255455388333"; //Receipient number
             msg.SourceAddress = "255344338333"; //Originating number
             //msg.Text = "Hello, this is my test message!";
-            msg.Text = @"السلام عليكم ورحمة الله وبركاته733733838
-احمد باجندوح
-البيضاني
-L;KSDJFG
-مكنستيبلكمسيبل
-";
+            msg.Text = @"السلام عليكم ورحمة الله وبركاته
+هذه رسالة عربية
+متعددة الاسطر";
             msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
             msg.UserMessageReference = Guid.NewGuid().ToString();
+            Console.WriteLine($"msg.UserMessageReference: {msg.UserMessageReference}");
 
             client.SendMessage(msg);
 
