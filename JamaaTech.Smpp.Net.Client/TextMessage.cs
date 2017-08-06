@@ -113,16 +113,6 @@ namespace JamaaTech.Smpp.Net.Client
             return sm;
         }
 
-        protected virtual SubmitSm CreateSubmitSm()
-        {
-            var sm = new SubmitSm();
-
-            //sm.SourceAddress.Ton = TypeOfNumber.Unknown;
-            //sm.DestinationAddress.Ton = TypeOfNumber.Unknown;
-
-            return sm;
-        }
-
         private static List<String> Split(string message, int maxPartLength)
         {
             var result = new List<String>();
