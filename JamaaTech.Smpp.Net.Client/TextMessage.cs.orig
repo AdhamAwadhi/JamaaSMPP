@@ -64,7 +64,11 @@ namespace JamaaTech.Smpp.Net.Client
         protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding)
         {
             SubmitSm sm = CreateSubmitSm();
+<<<<<<< HEAD
+            sm.SourceAddress.Address = vSourceAddress;
+=======
             sm.SourceAddress.Address = vSourceAddress;            
+>>>>>>> feature/ShortMessage_messageId
             sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
             sm.DataCoding = defaultEncoding;
             if (!string.IsNullOrEmpty(UserMessageReference))
@@ -101,16 +105,6 @@ namespace JamaaTech.Smpp.Net.Client
                 sm.SetMessageBytes(bytes);
                 yield return sm;
             }
-        }
-
-        protected virtual SubmitSm CreateSubmitSm()
-        {
-            var sm = new SubmitSm();
-
-            //sm.SourceAddress.Ton = TypeOfNumber.Unknown;
-            //sm.DestinationAddress.Ton = TypeOfNumber.Unknown;
-
-            return sm;
         }
 
         protected virtual SubmitSm CreateSubmitSm()

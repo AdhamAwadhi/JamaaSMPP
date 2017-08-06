@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+<<<<<<< HEAD
+=======
 using JamaaTech.Smpp.Net.Lib;
+>>>>>>> feature/ShortMessage_messageId
 using JamaaTech.Smpp.Net.Lib.Protocol;
 
 namespace DemoClient
@@ -52,7 +55,7 @@ namespace DemoClient
                 SystemID = "smppclient1",
                 Password = "password",
                 Host = "localhost",
-                Port = 2775,
+                Port = 5016,
                 SystemType = "5750",
                 DefaultServiceType = "5750",
                 SourceAddress = "5750",
@@ -148,6 +151,20 @@ namespace DemoClient
             Console.WriteLine("SMPP client {0} - Message Received from: {1}, msg: {2}", client.Name, msg.SourceAddress, msg.Text);
 
             // CANDO: save received sms
+        }
+    }
+
+<<<<<<< HEAD
+    class MyTextMessage : TextMessage
+=======
+    public class MyTextMessage : TextMessage
+>>>>>>> feature/ShortMessage_messageId
+    {
+        protected override SubmitSm CreateSubmitSm()
+        {
+            var sm = base.CreateSubmitSm();
+            sm.SourceAddress.Ton = JamaaTech.Smpp.Net.Lib.TypeOfNumber.Aphanumeric;
+            return sm;
         }
     }
 }

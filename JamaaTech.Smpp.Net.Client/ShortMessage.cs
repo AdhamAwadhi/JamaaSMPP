@@ -34,6 +34,8 @@ namespace JamaaTech.Smpp.Net.Client
         protected int vSegmentID;
         protected int vSequenceNumber;
         protected bool vRegisterDeliveryNotification;
+        protected string vReceiptedMessageId;
+        protected string vUserMessageReference;
         #endregion
 
         #region Constructors
@@ -62,7 +64,6 @@ namespace JamaaTech.Smpp.Net.Client
             get { return vSourceAddress; }
             set { vSourceAddress = value; }
         }
-
         /// <summary>
         /// Gets or sets a <see cref="ShortMessage"/> destination address
         /// </summary>
@@ -70,6 +71,29 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vDestinatinoAddress; }
             set { vDestinatinoAddress = value; }
+        }
+        /// <summary>
+        /// Gets or sets a <see cref="ShortMessage"/> receipted message identifier.
+        /// </summary>
+        /// <value>
+        /// The receipted message identifier.
+        /// </value>
+        public string ReceiptedMessageId
+        {
+            get { return vReceiptedMessageId; }
+            set { vReceiptedMessageId = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="ShortMessage"/> user message reference.
+        /// </summary>
+        /// <value>
+        /// The user message reference.
+        /// </value>
+        public string UserMessageReference
+        {
+            get { return vUserMessageReference; }
+            set { vUserMessageReference = value; }
         }
 
         /// <summary>
