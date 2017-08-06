@@ -42,7 +42,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         }
 
         public PDUHeader(CommandType cmdType)
-            : this(cmdType, GetNextSequenceNumber()) 
+            : this(cmdType, GetNextSequenceNumber())
         {
             vCommandLength = 16;
         }
@@ -51,18 +51,18 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         {
             vCommandType = cmdType;
             vSequenceNumber = seqNumber;
-            vCommandLength = 16;
+            vCommandLength = 16;            
         }
 
         public PDUHeader(CommandType cmdType, uint seqNumber, SmppErrorCode errorCode)
-            :this(cmdType,seqNumber)
+            : this(cmdType, seqNumber)
         {
             vErrorCode = errorCode;
             vCommandLength = 16;
         }
 
         public PDUHeader(CommandType cmdType, uint seqNumber, SmppErrorCode errorCode, uint cmdLength)
-            :this(cmdType,seqNumber,errorCode)
+            : this(cmdType, seqNumber, errorCode)
         {
             vCommandLength = cmdLength;
         }
@@ -89,29 +89,29 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public uint SequenceNumber
         {
             get { return vSequenceNumber; }
-        }
+        }        
         #endregion
 
         #region Methods
-        public static PDUHeader Parse(ByteBuffer buffer)
+        public static PDUHeader Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
             if (buffer.Length < 16) { throw new ArgumentException("Buffer length must not be less than 16 bytes"); }
-            uint cmdLength = SMPPEncodingUtil.GetIntFromBytes(buffer.Remove(4));
-            CommandType cmdType = (CommandType)SMPPEncodingUtil.GetIntFromBytes(buffer.Remove(4));
-            SmppErrorCode errorCode = (SmppErrorCode)SMPPEncodingUtil.GetIntFromBytes(buffer.Remove(4));
-            uint seqNumber = SMPPEncodingUtil.GetIntFromBytes(buffer.Remove(4));
+            uint cmdLength = smppEncodingService.GetIntFromBytes(buffer.Remove(4));
+            CommandType cmdType = (CommandType)smppEncodingService.GetIntFromBytes(buffer.Remove(4));
+            SmppErrorCode errorCode = (SmppErrorCode)smppEncodingService.GetIntFromBytes(buffer.Remove(4));
+            uint seqNumber = smppEncodingService.GetIntFromBytes(buffer.Remove(4));
             PDUHeader header = new PDUHeader(cmdType, seqNumber, errorCode, cmdLength);
             return header;
         }
 
-        public byte[] GetBytes()
+        public byte[] GetBytes(SmppEncodingService smppEncodingService)
         {
             ByteBuffer buffer = new ByteBuffer(32);
-            buffer.Append(SMPPEncodingUtil.GetBytesFromInt(vCommandLength));
-            buffer.Append(SMPPEncodingUtil.GetBytesFromInt((uint)vCommandType));
-            buffer.Append(SMPPEncodingUtil.GetBytesFromInt((uint)vErrorCode));
-            buffer.Append(SMPPEncodingUtil.GetBytesFromInt(vSequenceNumber));
+            buffer.Append(smppEncodingService.GetBytesFromInt(vCommandLength));
+            buffer.Append(smppEncodingService.GetBytesFromInt((uint)vCommandType));
+            buffer.Append(smppEncodingService.GetBytesFromInt((uint)vErrorCode));
+            buffer.Append(smppEncodingService.GetBytesFromInt(vSequenceNumber));
             return buffer.ToBytes();
         }
 

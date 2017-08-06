@@ -32,8 +32,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal QuerySmResp(PDUHeader header)
-            : base(header)
+        internal QuerySmResp(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService)
         {
             vMessageID = "";
             vFinalDate = "";
@@ -82,8 +82,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(16);
-            buffer.Append(EncodeCString(vMessageID));
-            buffer.Append(EncodeCString(vFinalDate));
+            buffer.Append(EncodeCString(vMessageID, SmppEncodingService));
+            buffer.Append(EncodeCString(vFinalDate, SmppEncodingService));
             buffer.Append((byte)vMessageState);
             buffer.Append(vErrorCode);
             return buffer.ToBytes();
@@ -92,8 +92,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer);
-            vFinalDate = DecodeCString(buffer);
+            vMessageID = DecodeCString(buffer, SmppEncodingService);
+            vFinalDate = DecodeCString(buffer, SmppEncodingService);
             vMessageState = (MessageState)GetByte(buffer);
             vErrorCode = GetByte(buffer);
             //This pdu has no option parameters,

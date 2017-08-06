@@ -25,8 +25,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public sealed class DeliverSmResp : ResponsePDU
     {
         #region Constructors
-        internal DeliverSmResp(PDUHeader header)
-            : base(header) { }
+        internal DeliverSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService) { }
         #endregion
 
         #region Properties
@@ -46,7 +46,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         {
             //deliver_sm_resp has unused param 'message_id'
             //It must always be set to null
-            return EncodeCString(null);
+            return EncodeCString(null, SmppEncodingService);
         }
 
         protected override void Parse(ByteBuffer buffer)
@@ -55,7 +55,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             //thus, at least 1 byte is required for this pdu
             if (buffer.Length < 1) { throw new NotEnoughBytesException("deliver_sm_resp requires at least 1 byte for body data"); }
             //unfortunately we don't have storage variable for this parameter
-            /*vMessageID = */ DecodeCString(buffer);
+            /*vMessageID = */ DecodeCString(buffer, SmppEncodingService);
             //Since this pdu has no optional parameters,
             //If there is still something in the buffer,
             //we then have more than enough

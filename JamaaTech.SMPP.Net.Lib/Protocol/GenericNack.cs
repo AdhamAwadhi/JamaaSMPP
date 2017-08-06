@@ -24,8 +24,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public class GenericNack : GenericResponsePDU
     {
         #region Constructors
-        internal GenericNack(PDUHeader header)
-            : base(header) { }
+        internal GenericNack(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService) { }
         #endregion
 
         #region Properties

@@ -45,10 +45,11 @@ namespace JamaaTech.Smpp.Net.Lib
         private string vPassword;
         private TypeOfNumber vAddressTon;
         private NumberingPlanIndicator vAddressNpi;
+        private SmppEncodingService vSmppEncodingService;
 
         private SendPduCallback vCallback;
         //--
-        private static TraceSwitch vTraceSwitch = 
+        private static TraceSwitch vTraceSwitch =
             new TraceSwitch("SmppClientSessionSwitch", "SmppClientSession class switch");
         #endregion
 
@@ -65,8 +66,9 @@ namespace JamaaTech.Smpp.Net.Lib
         #endregion
 
         #region Constructors
-        private SmppClientSession()
+        private SmppClientSession(SmppEncodingService smppEncodingService)
         {
+            vSmppEncodingService = smppEncodingService;
             InitializeTimer();
             vSyncRoot = new object();
             vDefaultResponseTimeout = 5000;
@@ -143,6 +145,12 @@ namespace JamaaTech.Smpp.Net.Lib
             get { return vSyncRoot; }
             set { vSyncRoot = value; }
         }
+
+        public SmppEncodingService SmppEncodingService
+        {
+            get { return vSmppEncodingService; }
+            set { vSmppEncodingService = value; }
+        }
         #endregion
 
         #region Methods
@@ -157,7 +165,7 @@ namespace JamaaTech.Smpp.Net.Lib
         public ResponsePDU SendPdu(RequestPDU pdu, int timeout)
         {
             SendPduBase(pdu);
-            if (pdu.HasResponse) 
+            if (pdu.HasResponse)
             {
                 try { return vRespHandler.WaitResponse(pdu, timeout); }
                 catch (SmppResponseTimedOutException)
@@ -188,7 +196,7 @@ namespace JamaaTech.Smpp.Net.Lib
             }
         }
 
-        public IAsyncResult BeginSendPdu(RequestPDU pdu, int timeout,AsyncCallback callback, object @object)
+        public IAsyncResult BeginSendPdu(RequestPDU pdu, int timeout, AsyncCallback callback, object @object)
         {
             return vCallback.BeginInvoke(pdu, timeout, callback, @object);
         }
@@ -210,7 +218,7 @@ namespace JamaaTech.Smpp.Net.Lib
             EndSession(SmppSessionCloseReason.EndSessionCalled, null);
         }
 
-        public static SmppClientSession Bind(SessionBindInfo bindInfo, int timeOut)
+        public static SmppClientSession Bind(SessionBindInfo bindInfo, int timeOut, SmppEncodingService smppEncodingService)
         {
             try
             {
@@ -219,7 +227,7 @@ namespace JamaaTech.Smpp.Net.Lib
                 //--
                 tcpIpSession = CreateTcpIpSession(bindInfo);
                 //--
-                SmppClientSession smppSession = new SmppClientSession();
+                SmppClientSession smppSession = new SmppClientSession(smppEncodingService);
                 smppSession.vTcpIpSession = tcpIpSession;
                 smppSession.ChangeState(SmppSessionState.Open);
                 smppSession.AssembleComponents();
@@ -234,10 +242,10 @@ namespace JamaaTech.Smpp.Net.Lib
             }
             catch (Exception ex)
             {
-                if(vTraceSwitch.TraceInfo)
+                if (vTraceSwitch.TraceInfo)
                 {
                     string traceMessage = "200017:SMPP bind operation failed:";
-                    if(ex is SmppException) { traceMessage += (ex as SmppException).ErrorCode.ToString() + " - "; }
+                    if (ex is SmppException) { traceMessage += (ex as SmppException).ErrorCode.ToString() + " - "; }
                     traceMessage += ex.Message;
                     Trace.WriteLine(traceMessage);
                 }
@@ -258,8 +266,8 @@ namespace JamaaTech.Smpp.Net.Lib
             if (reason != SmppSessionCloseReason.UnbindRequested)
             {
                 //If unbind request was received, do not try to unbind again
-                Unbind unbind = new Unbind();
-                try 
+                Unbind unbind = new Unbind(SmppEncodingService);
+                try
                 {
                     vTrans.Send(unbind);
                     vRespHandler.WaitResponse(unbind, 1000);
@@ -275,7 +283,7 @@ namespace JamaaTech.Smpp.Net.Lib
         private static TcpIpSession CreateTcpIpSession(SessionBindInfo bindInfo)
         {
             //Check that Host is not an empty string or null
-            if (string.IsNullOrEmpty(bindInfo.ServerName)) 
+            if (string.IsNullOrEmpty(bindInfo.ServerName))
             { throw new InvalidOperationException("Host cannot be an empty string or null"); }
             //Check the port number is not set to an invalid value
             if (bindInfo.Port < IPEndPoint.MinPort || bindInfo.Port > IPEndPoint.MaxPort)
@@ -305,7 +313,7 @@ namespace JamaaTech.Smpp.Net.Lib
             vTrans = new PDUTransmitter(vTcpIpSession);
             vRespHandler = new ResponseHandler();
             vStreamParser = new StreamParser(
-                vTcpIpSession, vRespHandler, new PduProcessorCallback(PduRequestProcessorCallback));
+                vTcpIpSession, vRespHandler, new PduProcessorCallback(PduRequestProcessorCallback), SmppEncodingService);
             vStreamParser.ParserException += ParserExceptionEventHandler;
             vStreamParser.PDUError += PduErrorEventHandler;
             //Start stream parser
@@ -328,7 +336,7 @@ namespace JamaaTech.Smpp.Net.Lib
         {
             vTcpIpSession.SessionClosed += TcpIpSessionClosedEventHandler;
 
-            BindRequest bindReq = bindInfo.CreatePdu();
+            BindRequest bindReq = bindInfo.CreatePdu(SmppEncodingService);
             vTrans.Send(bindReq);
             BindResponse bindResp = null;
             try { bindResp = (BindResponse)vRespHandler.WaitResponse(bindReq, timeOut); }
@@ -386,7 +394,7 @@ namespace JamaaTech.Smpp.Net.Lib
 
         private void TimerCallback(object sender, ElapsedEventArgs e)
         {
-            EnquireLink enqLink = new EnquireLink();
+            EnquireLink enqLink = new EnquireLink(SmppEncodingService);
             //Send EnquireLink with 5 seconds response timeout
             try
             {
@@ -454,7 +462,7 @@ namespace JamaaTech.Smpp.Net.Lib
             }
             else
             {
-                resp = new GenericNack(e.Header);
+                resp = new GenericNack(e.Header, SmppEncodingService);
                 resp.Header.ErrorCode = e.Exception.ErrorCode;
             }
             try { SendPduBase(resp); }
@@ -483,8 +491,8 @@ namespace JamaaTech.Smpp.Net.Lib
 
         private void AsyncCallBackRaiseSessionClosedEvent(IAsyncResult result)
         {
-            EventHandler<SmppSessionClosedEventArgs> del = 
-                (EventHandler<SmppSessionClosedEventArgs>) result.AsyncState;
+            EventHandler<SmppSessionClosedEventArgs> del =
+                (EventHandler<SmppSessionClosedEventArgs>)result.AsyncState;
             del.EndInvoke(result);
         }
         #endregion

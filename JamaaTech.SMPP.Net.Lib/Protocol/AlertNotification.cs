@@ -30,14 +30,14 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        public AlertNotification()
-            : base(new PDUHeader(CommandType.AlertNotification))
+        public AlertNotification(SmppEncodingService smppEncodingService)
+            : base(new PDUHeader(CommandType.AlertNotification), smppEncodingService)
         {
             vEsmeAddress = new SmppAddress();
         }
 
-        internal AlertNotification(PDUHeader header)
-            : base(header)
+        internal AlertNotification(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService)
         {
             vEsmeAddress = new SmppAddress();
         }
@@ -73,8 +73,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
 
         protected override byte[] GetBodyData()
         {
-            byte[] sourceAddrBytes = vSourceAddress.GetBytes();
-            byte[] esmeAddresBytes = vEsmeAddress.GetBytes();
+            byte[] sourceAddrBytes = vSourceAddress.GetBytes(SmppEncodingService);
+            byte[] esmeAddresBytes = vEsmeAddress.GetBytes(SmppEncodingService);
             ByteBuffer buffer = new ByteBuffer(sourceAddrBytes.Length + esmeAddresBytes.Length);
             buffer.Append(sourceAddrBytes);
             buffer.Append(esmeAddresBytes);
@@ -84,11 +84,11 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vSourceAddress = SmppAddress.Parse(buffer);
-            vEsmeAddress = SmppAddress.Parse(buffer);
+            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
+            vEsmeAddress = SmppAddress.Parse(buffer, SmppEncodingService);
             //If there are some bytes left,
             //construct a tlv collection
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer); }
+            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, SmppEncodingService); }
         }
         #endregion
     }

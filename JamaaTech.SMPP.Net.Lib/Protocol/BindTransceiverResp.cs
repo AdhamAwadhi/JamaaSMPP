@@ -23,8 +23,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public sealed class BindTransceiverResp : BindResponse
     {
         #region Constructors
-        internal BindTransceiverResp(PDUHeader header)
-            : base(header) { }
+        internal BindTransceiverResp(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService) { }
         #endregion
     }
 }

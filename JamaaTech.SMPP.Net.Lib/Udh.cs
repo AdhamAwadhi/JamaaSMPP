@@ -71,7 +71,7 @@ namespace JamaaTech.Smpp.Net.Lib
         #endregion
 
         #region Methods
-        public static Udh Parse(ByteBuffer buffer)
+        public static Udh Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
             //There must be at least 3 bytes for UDHL, IEI, IEDL
@@ -99,7 +99,7 @@ namespace JamaaTech.Smpp.Net.Lib
             }
             else if (length == 6 && iei == 8 && ieidl == 4) //16 bits message reference
             {
-                segId = SMPPEncodingUtil.GetShortFromBytes(buffer.Remove(2));
+                segId = smppEncodingService.GetShortFromBytes(buffer.Remove(2));
                 count = buffer.Remove();
                 seq = buffer.Remove();
             }

@@ -24,20 +24,20 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol.Tlv
     public class TlvCollection : List<Tlv>
     {
         #region Methods
-        public byte[] GetBytes()
+        public byte[] GetBytes(SmppEncodingService smppEncodingService)
         {
             ByteBuffer buffer = new ByteBuffer(64); //Creates buffer with enough capacity
-            foreach (Tlv tlv in this) { buffer.Append(tlv.GetBytes()); }
+            foreach (Tlv tlv in this) { buffer.Append(tlv.GetBytes(smppEncodingService)); }
             return buffer.ToBytes();
         }
 
-        public static TlvCollection Parse(ByteBuffer buffer)
+        public static TlvCollection Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
             TlvCollection tlvs = new TlvCollection();
             while (buffer.Length > 0)
             {
-                Tlv tlv = Tlv.Parse(buffer);
+                Tlv tlv = Tlv.Parse(buffer, smppEncodingService);
                 tlvs.Add(tlv);
             }
             return tlvs;

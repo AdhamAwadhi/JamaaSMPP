@@ -30,8 +30,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal Outbind(PDUHeader header)
-            : base(header)
+        internal Outbind(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService)
         {
             vSystemID = "";
             vPassword = "";
@@ -67,14 +67,14 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.BindTransceiver, vHeader.SequenceNumber);
-            return new BindTransceiverResp(header);
+            return new BindTransceiverResp(header, SmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(vSystemID.Length + vPassword.Length + 2);
-            buffer.Append(EncodeCString(vSystemID));
-            buffer.Equals(EncodeCString(vPassword));
+            buffer.Append(EncodeCString(vSystemID, SmppEncodingService));
+            buffer.Equals(EncodeCString(vPassword, SmppEncodingService));
             return buffer.ToBytes();
         }
 
@@ -83,8 +83,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
             //Outbind PDU requires at least 2 bytes
             if (buffer.Length < 2) { throw new NotEnoughBytesException("Outbind PDU requires at least 2 bytes for body data"); }
-            vSystemID = DecodeCString(buffer);
-            vPassword = DecodeCString(buffer);
+            vSystemID = DecodeCString(buffer, SmppEncodingService);
+            vPassword = DecodeCString(buffer, SmppEncodingService);
             //This PDU has no optional parameters
             //If we still have something in the buffer, we are having more bytes than we expected
             if (buffer.Length > 0) { throw new TooManyBytesException(); }

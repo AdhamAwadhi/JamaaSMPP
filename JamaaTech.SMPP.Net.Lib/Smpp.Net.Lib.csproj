@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataCoding.cs" />
+    <Compile Include="SmppEncodingService.cs" />
     <Compile Include="InterfaceVersion.cs" />
     <Compile Include="Networking\SessionCloseReason.cs" />
     <Compile Include="Networking\SessionExceptionEventArgs.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="Util\Latin1Encoding.cs" />
     <Compile Include="Util\PduProcessor.cs" />
     <Compile Include="Util\RunningComponent.cs" />
-    <Compile Include="Util\SMPPEncodingUtil.cs" />
     <Compile Include="Util\SmscDefaultEncoding.cs" />
   </ItemGroup>
   <ItemGroup>

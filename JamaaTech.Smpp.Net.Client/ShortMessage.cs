@@ -130,13 +130,14 @@ namespace JamaaTech.Smpp.Net.Client
         }
         #endregion
 
-        #region Methods
-        internal IEnumerable<SendSmPDU> GetMessagePDUs(DataCoding defaultEncoding)
+        #region Methods       
+        internal IEnumerable<SendSmPDU> GetMessagePDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService)
         {
-            return GetPDUs(defaultEncoding);
+            return GetPDUs(defaultEncoding, smppEncodingService);
         }
 
-        protected abstract IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding);
+        protected abstract IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService);
+
         #endregion
     }
 }
