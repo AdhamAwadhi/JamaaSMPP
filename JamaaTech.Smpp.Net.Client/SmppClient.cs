@@ -76,6 +76,7 @@ namespace JamaaTech.Smpp.Net.Client
         public SmppClient()
         {
             vProperties = new SmppConnectionProperties();
+            vSmppEncodingService = new SmppEncodingService();
             vConnSyncRoot = new object();
             vAutoReconnectDelay = 10000;
             vTimeOut = 5000;

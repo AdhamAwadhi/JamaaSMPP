@@ -67,7 +67,7 @@ namespace DemoClient
         {
             var client = new SmppClient();
             client.Name = config.Name;
-            client.SmppEncodingService = new SmppEncodingService();
+            //client.SmppEncodingService = new SmppEncodingService(System.Text.Encoding.UTF8);
 
             client.ConnectionStateChanged += new EventHandler<ConnectionStateChangedEventArgs>(client_ConnectionStateChanged);
             client.StateChanged += new EventHandler<StateChangedEventArgs>(client_StateChanged);
