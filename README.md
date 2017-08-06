@@ -31,3 +31,12 @@ This is created based on  https://jamaasmpp.codeplex.com/
                 return sm;
             }
         }
+
+- Add Message `UserMessageReference`, you can now use it on `MessageSent` event 
+
+        // set user message reference
+        msg.UserMessageReference = Guid.NewGuid().ToString();
+
+    on MessageSent event
+
+        Console.WriteLine("Message Id {0} Sent to: {1}", e.ShortMessage.UserMessageReference, e.ShortMessage.DestinationAddress);
