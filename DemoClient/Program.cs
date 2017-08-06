@@ -127,7 +127,7 @@ namespace DemoClient
         private static void client_MessageSent(object sender, MessageEventArgs e)
         {
             var client = (SmppClient)sender;
-            Console.WriteLine("SMPP client {0} - Message Sent to: {1}", client.Name, e.ShortMessage.DestinationAddress);
+            Console.WriteLine("SMPP client {0} - Message Sent to: {1} {2}", client.Name, e.ShortMessage.DestinationAddress, e.ShortMessage.UserMessageReference);
             // CANDO: save sent sms
         }
 
@@ -153,14 +153,11 @@ namespace DemoClient
 
     public class MyTextMessage : TextMessage
     {
-        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding)
+        protected override SubmitSm CreateSubmitSm()
         {
-            foreach (var pdu in base.GetPDUs(defaultEncoding))
-            {
-                var sm = (SubmitSm)pdu;
-                sm.SourceAddress.Ton = TypeOfNumber.Aphanumeric;
-                yield return sm;
-            }
+            var sm = base.CreateSubmitSm();
+            sm.SourceAddress.Ton = JamaaTech.Smpp.Net.Lib.TypeOfNumber.Aphanumeric;
+            return sm;
         }
     }
 }
