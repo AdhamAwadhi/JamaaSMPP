@@ -66,24 +66,24 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Methods
-        internal static SmppAddress Parse(ByteBuffer buffer)
+        internal static SmppAddress Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
         {
             //We require at least 3 bytes for SMPPAddress instance to be craeted
             if (buffer.Length < 3) { throw new NotEnoughBytesException("SMPPAddress requires at least 3 bytes"); }
             TypeOfNumber ton = (TypeOfNumber)PDU.GetByte(buffer);
             NumberingPlanIndicator npi = (NumberingPlanIndicator)PDU.GetByte(buffer);
-            string address = PDU.DecodeCString(buffer);
+            string address = PDU.DecodeCString(buffer, smppEncodingService);
             return new SmppAddress(ton, npi, address);
         }
 
-        public byte[] GetBytes()
+        public byte[] GetBytes(SmppEncodingService smppEncodingService)
         {
             //Approximate buffer required;
             int capacity = 4 + vAddress == null ? 1 : vAddress.Length;
             ByteBuffer buffer = new ByteBuffer(capacity);
             buffer.Append((byte)vTon);
             buffer.Append((byte)vNpi);
-            buffer.Append(PDU.EncodeCString(vAddress));
+            buffer.Append(PDU.EncodeCString(vAddress, smppEncodingService));
             return buffer.ToBytes();
         }
         #endregion

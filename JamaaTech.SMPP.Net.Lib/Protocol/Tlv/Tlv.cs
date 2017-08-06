@@ -62,23 +62,23 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol.Tlv
         #endregion
 
         #region Methods
-        public virtual byte[] GetBytes()
+        public virtual byte[] GetBytes(SmppEncodingService smppEncodingService)
         {
             if (vRawValue == null || vRawValue.Length != vLength) 
             { throw new TlvException("Tlv value length inconsistent with length field or has no data set"); }
             ByteBuffer buffer = new ByteBuffer(vLength + 4); //Reserve enough capacity for tag, length and value fields
-            buffer.Append(SMPPEncodingUtil.GetBytesFromShort((ushort)vTag));
-            buffer.Append(SMPPEncodingUtil.GetBytesFromShort(vLength));
+            buffer.Append(smppEncodingService.GetBytesFromShort((ushort)vTag));
+            buffer.Append(smppEncodingService.GetBytesFromShort(vLength));
             buffer.Append(vRawValue);
             return buffer.ToBytes();
         }
 
-        public static Tlv Parse(ByteBuffer buffer)
+        public static Tlv Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
         {
             //Buffer must have at least 4 bytes for tag and length plus at least one byte for the value field
             if (buffer.Length < 5) { throw new TlvException("Tlv required at least 5 bytes"); }
-            Tag tag = (Tag)SMPPEncodingUtil.GetShortFromBytes(buffer.Remove(2));
-            ushort len = SMPPEncodingUtil.GetShortFromBytes(buffer.Remove(2));
+            Tag tag = (Tag)smppEncodingService.GetShortFromBytes(buffer.Remove(2));
+            ushort len = smppEncodingService.GetShortFromBytes(buffer.Remove(2));
             Tlv tlv = new Tlv(tag, len);
             tlv.ParseValue(buffer, len);
             return tlv;

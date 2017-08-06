@@ -25,11 +25,11 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public sealed class QuerySm : SmOperationPDU
     {
         #region Constructors
-        public QuerySm()
-            : base(new PDUHeader(CommandType.QuerySm)) { }
+        public QuerySm(SmppEncodingService smppEncodingService)
+            : base(new PDUHeader(CommandType.QuerySm), smppEncodingService) { }
 
-        internal QuerySm(PDUHeader header)
-            : base(header) { }
+        internal QuerySm(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService) { }
         #endregion
 
         #region Properties
@@ -48,22 +48,22 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.QuerySmResp, vHeader.SequenceNumber);
-            return new QuerySmResp(header);
+            return new QuerySmResp(header, SmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(16);
-            buffer.Append(EncodeCString(vMessageID));
-            buffer.Append(vSourceAddress.GetBytes());
+            buffer.Append(EncodeCString(vMessageID, SmppEncodingService));
+            buffer.Append(vSourceAddress.GetBytes(SmppEncodingService));
             return buffer.ToBytes();
         }
 
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer);
-            vSourceAddress = SmppAddress.Parse(buffer);
+            vMessageID = DecodeCString(buffer, SmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
             //This pdu has no option parameters
             //If there is still something in the buffer,
             //we then have more than required bytes

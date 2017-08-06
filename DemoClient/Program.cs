@@ -17,7 +17,7 @@ namespace DemoClient
         {
             smppConfig = GetSmppConfiguration();
 
-            SMPPEncodingUtil.UCS2Encoding = Encoding.UTF8;
+            //SMPPEncodingUtil.UCS2Encoding = Encoding.UTF8;
 
             var client = CreateSmppClient(smppConfig);
             client.Start();
@@ -52,7 +52,7 @@ namespace DemoClient
                 SystemID = "smppclient1",
                 Password = "password",
                 Host = "localhost",
-                Port = 2775,
+                Port = 5016,
                 SystemType = "5750",
                 DefaultServiceType = "5750",
                 SourceAddress = "5750",
@@ -67,6 +67,8 @@ namespace DemoClient
         {
             var client = new SmppClient();
             client.Name = config.Name;
+            //client.SmppEncodingService = new SmppEncodingService(System.Text.Encoding.UTF8);
+
             client.ConnectionStateChanged += new EventHandler<ConnectionStateChangedEventArgs>(client_ConnectionStateChanged);
             client.StateChanged += new EventHandler<StateChangedEventArgs>(client_StateChanged);
             client.MessageSent += new EventHandler<MessageEventArgs>(client_MessageSent);
@@ -135,7 +137,7 @@ namespace DemoClient
         {
             var client = (SmppClient)sender;
             //Console.WriteLine("SMPP client {0} Message Delivered to: {1}", client.Name, e.ShortMessage.DestinationAddress);
-            Console.WriteLine("SMPP client {0} MessageId: {1}", client.Name, e.ShortMessage.UserMessageReference);
+            Console.WriteLine("SMPP client {0} - Message Delivered: MessageId: {1}", client.Name, e.ShortMessage.UserMessageReference);
 
 
             // CANDO: save delivered sms

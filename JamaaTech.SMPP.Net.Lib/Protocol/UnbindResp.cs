@@ -24,8 +24,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public class UnbindResp : GenericResponsePDU
     {
         #region Constructors
-        internal UnbindResp(PDUHeader header)
-            : base(header) { }
+        internal UnbindResp(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService) { }
         #endregion
 
         #region Properties

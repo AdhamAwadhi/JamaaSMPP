@@ -24,8 +24,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public sealed class ReplaceSmResp : GenericResponsePDU
     {
         #region Constructors
-        internal ReplaceSmResp(PDUHeader header)
-            : base(header) { }
+        internal ReplaceSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService) { }
         #endregion
 
         #region Properties

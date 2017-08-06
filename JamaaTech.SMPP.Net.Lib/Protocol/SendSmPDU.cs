@@ -35,8 +35,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal SendSmPDU(PDUHeader header)
-            : base(header)
+        internal SendSmPDU(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService)
         {
             vServiceType = "";
             vEsmClass = EsmClass.Default;
@@ -96,7 +96,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             if ((EsmClass & EsmClass.UdhiIndicator) == EsmClass.UdhiIndicator) 
             {
                 if (vTraceSwitch.TraceInfo) { Trace.WriteLine("200020:UDH field presense detected;"); }
-                try { udh = Udh.Parse(buffer); }
+                try { udh = Udh.Parse(buffer, SmppEncodingService); }
                 catch (Exception ex)
                 {
                     if (vTraceSwitch.TraceError)
@@ -110,7 +110,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             }
             //Check if we have something remaining in the buffer
             if (buffer.Length == 0) { return; }
-            try { message = SMPPEncodingUtil.GetStringFromBytes(buffer.ToBytes(), DataCoding); }
+            try { message = SmppEncodingService.GetStringFromBytes(buffer.ToBytes(), DataCoding); }
             catch (Exception ex1)
             {
                 if (vTraceSwitch.TraceError)
@@ -132,7 +132,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         {
             ByteBuffer buffer = new ByteBuffer(160);
             if (udh != null) { buffer.Append(udh.GetBytes()); }
-            buffer.Append(SMPPEncodingUtil.GetBytesFromString(message, dataCoding));
+            buffer.Append(SmppEncodingService.GetBytesFromString(message, dataCoding));
             SetMessageBytes(buffer.ToBytes());
             if (udh != null) { EsmClass = EsmClass | EsmClass.UdhiIndicator; }
             DataCoding = dataCoding;

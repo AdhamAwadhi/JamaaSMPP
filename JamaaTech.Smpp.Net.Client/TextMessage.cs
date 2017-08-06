@@ -55,21 +55,21 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vText; }
             set { vText = value; }
-        }       
+        }
 
         public int MaxMessageLength { get { return vMaxMessageLength; } }
         #endregion
 
         #region Methods
-        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding)
+        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService)
         {
-            SubmitSm sm = CreateSubmitSm();
-            sm.SourceAddress.Address = vSourceAddress;            
+            SubmitSm sm = CreateSubmitSm(smppEncodingService);
+            sm.SourceAddress.Address = vSourceAddress;
             sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
             sm.DataCoding = defaultEncoding;
             if (!string.IsNullOrEmpty(UserMessageReference))
             {
-                var msgIdBytes = SMPPEncodingUtil.GetBytesFromCString(UserMessageReference);                
+                var msgIdBytes = smppEncodingService.GetBytesFromCString(UserMessageReference);
                 sm.Tlv.Add(new Lib.Protocol.Tlv.Tlv(Lib.Protocol.Tlv.Tag.user_message_reference, (ushort)msgIdBytes.Length, msgIdBytes));
             }
 
@@ -77,7 +77,7 @@ namespace JamaaTech.Smpp.Net.Client
                 sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
 
             vMaxMessageLength = GetMaxMessageLength(defaultEncoding, false);
-            byte[] bytes = SMPPEncodingUtil.GetBytesFromString(vText, defaultEncoding);
+            byte[] bytes = smppEncodingService.GetBytesFromString(vText, defaultEncoding);
 
             // Unicode encoding return 2 items for 1 char 
             // We check vText Length first
@@ -103,9 +103,9 @@ namespace JamaaTech.Smpp.Net.Client
             }
         }
 
-        protected virtual SubmitSm CreateSubmitSm()
+        protected virtual SubmitSm CreateSubmitSm(SmppEncodingService smppEncodingService)
         {
-            var sm = new SubmitSm();
+            var sm = new SubmitSm(smppEncodingService);
 
             //sm.SourceAddress.Ton = TypeOfNumber.Unknown;
             //sm.DestinationAddress.Ton = TypeOfNumber.Unknown;

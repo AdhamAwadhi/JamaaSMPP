@@ -27,8 +27,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal SingleDestinationPDU(PDUHeader header)
-            : base(header)
+        internal SingleDestinationPDU(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService)
         {
             vDestinationAddress = new SmppAddress();
         }
