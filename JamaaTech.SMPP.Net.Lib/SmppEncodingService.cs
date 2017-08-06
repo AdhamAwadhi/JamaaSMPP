@@ -9,7 +9,7 @@ namespace JamaaTech.Smpp.Net.Lib
     {
         public System.Text.Encoding UCS2Encoding { get; protected set; }
 
-        public SmppEncodingService() : this(System.Text.Encoding.Unicode)
+        public SmppEncodingService() : this(System.Text.Encoding.BigEndianUnicode)
         {
         }        
         public SmppEncodingService(System.Text.Encoding ucs2Encoding)
