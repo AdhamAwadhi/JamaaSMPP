@@ -136,6 +136,7 @@
     <Compile Include="StreamParser.cs" />
     <Compile Include="Udh.cs" />
     <Compile Include="Util\ByteBuffer.cs" />
+    <Compile Include="Util\GSMEncoding.cs" />
     <Compile Include="Util\Latin1Encoding.cs" />
     <Compile Include="Util\PduProcessor.cs" />
     <Compile Include="Util\RunningComponent.cs" />
