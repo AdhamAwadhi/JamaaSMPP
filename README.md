@@ -46,3 +46,10 @@ This is created based on  https://jamaasmpp.codeplex.com/
 > Default encdoing `System.Text.Encoding.BigEndianUnicode`
 
         client.SmppEncodingService = new SmppEncodingService(System.Text.Encoding.UTF8);
+- Fix `SMSCDefaultEncoding` exception [issue #4](https://github.com/AdhamAwadhi/JamaaSMPP/issues/4). There are 2 options here:
+    - GSM Encoding (***Default***) : Use GSM 03.38 alphabet [Wikipedia](https://en.wikipedia.org/wiki/GSM_03.38). (Code from [https://github.com/mediaburst/.NET-GSM-Encoding/blob/master/GSMEncoding.cs](https://github.com/mediaburst/.NET-GSM-Encoding/blob/master/GSMEncoding.cs))
+    - JamaaSMPP version : Simple version of GSM 03.38 without **Greeks  alphapet**
+
+  >    You can choose between them by setting `UseGsmEncoding` property to `true` (*defualt*) to use  **GSM Encoding** or ti `false` to use the other.
+    
+        JamaaTech.Smpp.Net.Lib.Util.SMSCDefaultEncoding.UseGsmEncoding = true; // or false
