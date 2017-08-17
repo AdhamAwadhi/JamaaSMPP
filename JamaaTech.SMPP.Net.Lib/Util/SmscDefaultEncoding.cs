@@ -1,4 +1,4 @@
-/************************************************************************
+ï»¿/************************************************************************
  * Copyright (C) 2007 Jamaa Technologies
  *
  * This file is part of Jamaa SMPP Library.
@@ -22,6 +22,10 @@ namespace JamaaTech.Smpp.Net.Lib.Util
 {
     public static class SMSCDefaultEncoding
     {
+        private static GSMEncoding gsm = new GSMEncoding();
+
+        public static bool UseGsmEncoding { get; set; } = true;
+
         #region Variables
         private static char[] vDefaultForwardTable;
         private static byte[] vDefaultReverseTable;
@@ -39,6 +43,9 @@ namespace JamaaTech.Smpp.Net.Lib.Util
         public static byte[] GetBytes(string str)
         {
             if (string.IsNullOrEmpty(str)) { return null; } //Because there would be nothing to encode
+            // Use Gsm Encoding
+            if (UseGsmEncoding) return gsm.GetBytes(str);
+
             ByteBuffer buffer = new ByteBuffer(str.Length);
             foreach (char @char in str) //For each charactor in the string
             {
@@ -60,8 +67,11 @@ namespace JamaaTech.Smpp.Net.Lib.Util
         public static string GetString(byte[] bytes)
         {
             if (bytes == null) { throw new ArgumentNullException("bytes"); }
+            // Use Gsm Encoding
+            if (UseGsmEncoding) return gsm.GetString(bytes);
+
             StringBuilder builder = new StringBuilder(bytes.Length);
-            for(int index = 0; index < bytes.Length;++index)
+            for (int index = 0; index < bytes.Length; ++index)
             {
                 byte @byte = bytes[index];
                 if (@byte > 127) { continue; } //This is outside range
@@ -92,15 +102,16 @@ namespace JamaaTech.Smpp.Net.Lib.Util
             //Instead, they are converted to a space charactor (0x20)
             vDefaultForwardTable = new char[]
             {
-                /*    0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 ,  8 , 8 , 10 , 11, 12, 13, 14, 15 */
-                /*0*/'@','£','$','¥','è','é','ù','ì', 'ò','Ç','\n','Ø','ø','\r','Å','å',
-                /*1*/' ','_',' ',' ',' ',' ',' ',' ', ' ',' ',' ', ' ','Æ','æ', 'ß','É',
-                /*2*/' ','!','"','#','¤','%','&','\'','(',')','*', '+',',','-', '.','/',
+                /*    0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 ,  8 , 9 , 10 , 11, 12, 13, 14, 15 */
+                /*0*/'@','Â£','$','Â¥','Ã¨','Ã©','Ã¹','Ã¬', 'Ã²','Ã‡','\n','Ã˜','Ã¸','\r','Ã…','Ã¥',
+                ///*1*/'Î”','_','Î¦','Î“','Î›','Î©','Î ','Î¨', 'Î£','Î˜','Îž', '\x1B','Ã†','Ã¦', 'ÃŸ','Ã‰',
+                /*1*/' ','_',' ',' ',' ',' ',' ',' ', ' ',' ',' ', '\x1B','Ã†','Ã¦', 'ÃŸ','Ã‰',
+                /*2*/' ','!','"','#','Â¤','%','&','\'','(',')','*', '+',',','-', '.','/',
                 /*3*/'0','1','2','3','4','5','6','7', '8','9',':', ';','<','=', '>','?',
-                /*4*/'¡','A','B','C','D','E','F','G', 'H','I','J', 'K','L','M', 'N','O',
-                /*5*/'P','Q','R','S','T','U','V','W', 'X','Y','Z', 'Ä','Ö','Ñ', 'Ü','§',
-                /*6*/'¿','a','b','c','d','e','f','g', 'h','i','j', 'k','l','m', 'n','o',
-                /*7*/'p','q','r','s','t','u','v','w', 'x','y','z', 'ä','ö','ñ', 'ü','à'
+                /*4*/'Â¡','A','B','C','D','E','F','G', 'H','I','J', 'K','L','M', 'N','O',
+                /*5*/'P','Q','R','S','T','U','V','W', 'X','Y','Z', 'Ã„','Ã–','Ã‘', 'Ãœ','Â§',
+                /*6*/'Â¿','a','b','c','d','e','f','g', 'h','i','j', 'k','l','m', 'n','o',
+                /*7*/'p','q','r','s','t','u','v','w', 'x','y','z', 'Ã¤','Ã¶','Ã±', 'Ã¼','Ã '
             };
 
             //This table is used for reverse lookup
@@ -111,9 +122,10 @@ namespace JamaaTech.Smpp.Net.Lib.Util
             {
                 vDefaultReverseTable[index] = 128;
             }
-            
+
             for (index = 0; index < vDefaultForwardTable.Length; ++index)
             {
+                System.Diagnostics.Debug.WriteLine($"BuildTable: {index}");
                 vDefaultReverseTable[vDefaultForwardTable[index]] = (byte)index;
             }
         }
@@ -139,7 +151,7 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                 case 0x40:
                     return '|';
                 case 0x65:
-                    return '€';
+                    return 'â‚¬';
                 default:
                     return '\0'; //returns a null char
             }
@@ -165,7 +177,7 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                     return 0x3e;
                 case '|':
                     return 0x40;
-                case '€':
+                case 'â‚¬':
                     return 0x65;
                 default:
                     return 0; //returns zero
