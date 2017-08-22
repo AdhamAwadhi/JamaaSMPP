@@ -187,6 +187,13 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                 case DataCoding.UCS2:
                     result = UCS2Encoding.GetString(data);
                     break;
+                case DataCoding.Octet1:
+                case DataCoding.Octet2:
+                    StringBuilder hex = new StringBuilder(data.Length * 2);
+                    foreach (byte b in data)
+                        hex.AppendFormat("{0:x2}", b);
+                    result = hex.ToString();
+                    break;
                 default:
                     throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Unsupported encoding");
             }
