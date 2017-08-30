@@ -150,6 +150,16 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vStarted; }
         }
+        /// <summary>
+        /// Gets a <see cref="System.Exception"/> indicating if an instance of <see cref="SmppClient"/> has an occurred exception while connecting.
+        /// </summary>
+        /// <value>
+        /// The last exception.
+        /// </value>
+        public Exception LastException
+        {
+            get { return vLastException; }
+        }
         #endregion
 
         #region Methods

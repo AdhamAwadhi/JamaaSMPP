@@ -96,6 +96,13 @@ namespace DemoClient
             var client = (SmppClient)sender;
             Console.WriteLine("SMPP client {1} - State {1}", client.Name, e.CurrentState);
 
+            if (client.LastException != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(client.LastException.ToString());
+                Console.ResetColor();
+            }
+
             switch (e.CurrentState)
             {
                 case SmppConnectionState.Closed:
