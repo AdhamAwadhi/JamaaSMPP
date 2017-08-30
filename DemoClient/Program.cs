@@ -52,7 +52,7 @@ namespace DemoClient
                 SystemID = "smppclient1",
                 Password = "password",
                 Host = "localhost",
-                Port = 5016,
+                Port = 2775,
                 SystemType = "5750",
                 DefaultServiceType = "5750",
                 SourceAddress = "5750",
@@ -97,6 +97,13 @@ namespace DemoClient
         {
             var client = (SmppClient)sender;
             Console.WriteLine("SMPP client {1} - State {1}", client.Name, e.CurrentState);
+
+            if (client.LastException != null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(client.LastException.ToString());
+                Console.ResetColor();
+            }
 
             switch (e.CurrentState)
             {
