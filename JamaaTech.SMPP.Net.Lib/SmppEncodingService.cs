@@ -18,7 +18,7 @@ namespace JamaaTech.Smpp.Net.Lib
         }
 
         #region Methods
-        public byte[] GetBytesFromInt(uint value)
+        public virtual byte[] GetBytesFromInt(uint value)
         {
             byte[] result = new byte[4];
             result[0] = (byte)(value >> 24);
@@ -28,7 +28,7 @@ namespace JamaaTech.Smpp.Net.Lib
             return result;
         }
 
-        public uint GetIntFromBytes(byte[] data)
+        public virtual uint GetIntFromBytes(byte[] data)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
             if (data.Length != 4) { throw new ArgumentException("Array length must be equal to four(4)", "data"); }
@@ -43,7 +43,7 @@ namespace JamaaTech.Smpp.Net.Lib
             return result;
         }
 
-        public byte[] GetBytesFromShort(ushort value)
+        public virtual byte[] GetBytesFromShort(ushort value)
         {
             byte[] result = new byte[2];
             result[0] = (byte)(value >> 8);
@@ -51,7 +51,7 @@ namespace JamaaTech.Smpp.Net.Lib
             return result;
         }
 
-        public ushort GetShortFromBytes(byte[] data)
+        public virtual ushort GetShortFromBytes(byte[] data)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
             if (data.Length != 2) { throw new ArgumentException("Array length must be equal to two (2)", "data"); }
@@ -62,12 +62,12 @@ namespace JamaaTech.Smpp.Net.Lib
             return result;
         }
 
-        public byte[] GetBytesFromCString(string cStr)
+        public virtual byte[] GetBytesFromCString(string cStr)
         {
             return GetBytesFromCString(cStr, DataCoding.ASCII);
         }
 
-        public byte[] GetBytesFromCString(string cStr, DataCoding dataCoding)
+        public virtual byte[] GetBytesFromCString(string cStr, DataCoding dataCoding)
         {
             if (cStr == null) { throw new ArgumentNullException("cStr"); }
             if (cStr.Length == 0) { return new byte[] { 0x00 }; }
@@ -94,12 +94,12 @@ namespace JamaaTech.Smpp.Net.Lib
             return buffer.ToBytes();
         }
 
-        public string GetCStringFromBytes(byte[] data)
+        public virtual string GetCStringFromBytes(byte[] data)
         {
             return GetCStringFromBytes(data, DataCoding.ASCII);
         }
 
-        public string GetCStringFromBytes(byte[] data, DataCoding dataCoding)
+        public virtual string GetCStringFromBytes(byte[] data, DataCoding dataCoding)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
             if (data.Length < 1) { throw new ArgumentException("Array cannot be empty", "data"); }
@@ -126,12 +126,12 @@ namespace JamaaTech.Smpp.Net.Lib
             return result.Replace("\x00", "");//Replace the terminating null charactor
         }
 
-        public byte[] GetBytesFromString(string cStr)
+        public virtual byte[] GetBytesFromString(string cStr)
         {
             return GetBytesFromCString(cStr, DataCoding.ASCII);
         }
 
-        public byte[] GetBytesFromString(string cStr, DataCoding dataCoding)
+        public virtual byte[] GetBytesFromString(string cStr, DataCoding dataCoding)
         {
             if (cStr == null) { throw new ArgumentNullException("cStr"); }
             if (cStr.Length == 0) { return new byte[] { 0x00 }; }
@@ -156,12 +156,12 @@ namespace JamaaTech.Smpp.Net.Lib
             return bytes;
         }
 
-        public string GetStringFromBytes(byte[] data)
+        public virtual string GetStringFromBytes(byte[] data)
         {
             return GetStringFromBytes(data, DataCoding.ASCII);
         }
 
-        public string GetStringFromBytes(byte[] data, DataCoding dataCoding)
+        public virtual string GetStringFromBytes(byte[] data, DataCoding dataCoding)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
             string result = null;
