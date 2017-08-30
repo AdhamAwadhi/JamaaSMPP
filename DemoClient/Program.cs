@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
+using System.Diagnostics;
 
 namespace DemoClient
 {
@@ -15,6 +16,9 @@ namespace DemoClient
 
         static void Main(string[] args)
         {
+            Trace.WriteLine("Start");
+            //Trace.Listeners.Add(new ConsoleTraceListener());
+
             smppConfig = GetSmppConfiguration();
 
             //SMPPEncodingUtil.UCS2Encoding = Encoding.UTF8;
@@ -52,7 +56,7 @@ namespace DemoClient
                 SystemID = "smppclient1",
                 Password = "password",
                 Host = "localhost",
-                Port = 2775,
+                Port = 5016,
                 SystemType = "5750",
                 DefaultServiceType = "5750",
                 SourceAddress = "5750",

@@ -331,7 +331,9 @@ namespace JamaaTech.Smpp.Net.Client
                         useSepConn = vProperties.InterfaceVersion == InterfaceVersion.v33;
                     }
                     try { OpenSession(bindInfo, useSepConn, timeOut); }
-                    catch (Exception ex) { vLastException = ex; throw; }
+                    catch (Exception ex) {
+                        if (vTraceSwitch.TraceError) { Trace.TraceError(ex.ToString()); }
+                        vLastException = ex; throw; }
                     vLastException = null;
                 }
                 else
