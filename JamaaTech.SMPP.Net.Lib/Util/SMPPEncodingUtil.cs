@@ -158,6 +158,10 @@ namespace JamaaTech.Smpp.Net.Lib.Util
                 case DataCoding.SMSCDefault:
                     bytes = SMSCDefaultEncoding.GetBytes(cStr);
                     break;
+                case DataCoding.Octet1:
+                case DataCoding.Octet2:
+                    bytes = Encoding.ASCII.GetBytes(cStr);
+                    break;
                 default:
                     throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Unsupported encoding");
             }
