@@ -175,6 +175,8 @@ namespace JamaaTech.Smpp.Net.Lib.Util
 
         public static string GetStringFromBytes(byte[] data, DataCoding dataCoding)
         {
+            //dataCoding = DataCoding.Octet1;
+            //Console.WriteLine(dataCoding);
             if (data == null) { throw new ArgumentNullException("data"); }
             string result = null;
             switch (dataCoding)
