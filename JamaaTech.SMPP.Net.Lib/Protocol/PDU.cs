@@ -28,12 +28,14 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #region Varibles
         protected PDUHeader vHeader;
         protected TlvCollection vTlv;
+        protected SmppEncodingService vSmppEncodingService;
         #endregion
 
         #region Constructors
-        internal PDU(PDUHeader header)
+        internal PDU(PDUHeader header, SmppEncodingService smppEncodingService)
         {
             vHeader = header;
+            vSmppEncodingService = smppEncodingService;
             vTlv = new TlvCollection();
         }
         #endregion
@@ -49,40 +51,45 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             get { return vTlv; }
         }
 
-        public abstract SmppEntityType AllowedSource { get;}
+        public SmppEncodingService SmppEncodingService
+        {
+            get { return vSmppEncodingService; }
+        }
 
-        public abstract SmppSessionState AllowedSession { get;}
+        public abstract SmppEntityType AllowedSource { get; }
+
+        public abstract SmppSessionState AllowedSession { get; }
 
         #endregion
 
         #region Methods
         #region Interface Methods
-        public static GenericNack GenericNack(PDUHeader header, SmppErrorCode errorCode)
+        public static GenericNack GenericNack(PDUHeader header, SmppErrorCode errorCode, SmppEncodingService smppEncodingService)
         {
             if (header == null) { throw new ArgumentNullException("header"); }
-            GenericNack gNack = (GenericNack)CreatePDU(header);
+            GenericNack gNack = (GenericNack)CreatePDU(header, smppEncodingService);
             gNack.Header.ErrorCode = errorCode;
             return gNack;
         }
 
         public virtual GenericNack GenericNack(SmppErrorCode errorCode)
         {
-            PDUHeader header = new PDUHeader(CommandType.GenericNack,vHeader.SequenceNumber);
+            PDUHeader header = new PDUHeader(CommandType.GenericNack, vHeader.SequenceNumber);
             header.ErrorCode = errorCode;
-            GenericNack gNack = (GenericNack)CreatePDU(header);
+            GenericNack gNack = (GenericNack)CreatePDU(header, SmppEncodingService);
             return gNack;
         }
 
         public virtual byte[] GetBytes()
         {
             byte[] bodyData = GetBodyData();
-            byte[] tlvData = vTlv.GetBytes();
+            byte[] tlvData = vTlv.GetBytes(SmppEncodingService);
             int length = 16;
             length += bodyData == null ? 0 : bodyData.Length;
             length += tlvData == null ? 0 : tlvData.Length;
             vHeader.CommandLength = (uint)length;
             ByteBuffer buffer = new ByteBuffer(length); //Allocate buffer with enough capacity
-            buffer.Append(vHeader.GetBytes());
+            buffer.Append(vHeader.GetBytes(vSmppEncodingService));
             if (bodyData != null) { buffer.Append(bodyData); }
             if (tlvData != null) { buffer.Append(tlvData); }
             return buffer.ToBytes();
@@ -100,83 +107,83 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             catch (Exception ex) { PDUParseException.WrapAndThrow(ex); }
         }
 
-        public static PDU CreatePDU(PDUHeader header)
+        public static PDU CreatePDU(PDUHeader header, SmppEncodingService smppEncodingService)
         {
             if (header == null) { throw new ArgumentNullException("header"); }
             switch (header.CommandType)
             {
                 case CommandType.BindReceiver:
-                    return new BindReceiver(header);
-                    //--
+                    return new BindReceiver(header, smppEncodingService);
+                //--
                 case CommandType.BindTransceiver:
-                    return new BindTransceiver(header);
-                    //--
+                    return new BindTransceiver(header, smppEncodingService);
+                //--
                 case CommandType.BindTransmitter:
-                    return new BindTransmitter(header);
-                    //--
+                    return new BindTransmitter(header, smppEncodingService);
+                //--
                 case CommandType.BindTransmitterResp:
-                    return new BindTransmitterResp(header);
-                    //--
+                    return new BindTransmitterResp(header, smppEncodingService);
+                //--
                 case CommandType.BindTransceiverResp:
-                    return new BindTransceiverResp(header);
-                    //--
+                    return new BindTransceiverResp(header, smppEncodingService);
+                //--
                 case CommandType.BindReceiverResp:
-                    return new BindReceiverResp(header);
-                    //--
+                    return new BindReceiverResp(header, smppEncodingService);
+                //--
                 case CommandType.OutBind:
-                    return new Outbind(header);
-                    //--
+                    return new Outbind(header, smppEncodingService);
+                //--
                 case CommandType.EnquireLink:
-                    return new EnquireLink(header);
-                    //--
+                    return new EnquireLink(header, smppEncodingService);
+                //--
                 case CommandType.EnquireLinkResp:
-                    return new EnquireLinkResp(header);
-                    //--
+                    return new EnquireLinkResp(header, smppEncodingService);
+                //--
                 case CommandType.UnBind:
-                    return new Unbind(header);
-                    //--
+                    return new Unbind(header, smppEncodingService);
+                //--
                 case CommandType.UnBindResp:
-                    return new UnbindResp(header);
-                    //--
+                    return new UnbindResp(header, smppEncodingService);
+                //--
                 case CommandType.GenericNack:
-                    return new GenericNack(header);
-                    //--
+                    return new GenericNack(header, smppEncodingService);
+                //--
                 case CommandType.SubmitSm:
-                    return new SubmitSm(header);
-                    //--
+                    return new SubmitSm(header, smppEncodingService);
+                //--
                 case CommandType.SubmitSmResp:
-                    return new SubmitSmResp(header);
-                    //--
+                    return new SubmitSmResp(header, smppEncodingService);
+                //--
                 case CommandType.DataSm:
-                    return new DataSm(header);
-                    //--
+                    return new DataSm(header, smppEncodingService);
+                //--
                 case CommandType.DataSmResp:
-                    return new DataSmResp(header);
-                    //--
+                    return new DataSmResp(header, smppEncodingService);
+                //--
                 case CommandType.DeliverSm:
-                    return new DeliverSm(header);
-                    //--
+                    return new DeliverSm(header, smppEncodingService);
+                //--
                 case CommandType.DeliverSmResp:
-                    return new DeliverSmResp(header);
-                    //--
+                    return new DeliverSmResp(header, smppEncodingService);
+                //--
                 case CommandType.CancelSm:
-                    return new CancelSm(header);
-                    //--
+                    return new CancelSm(header, smppEncodingService);
+                //--
                 case CommandType.CancelSmResp:
-                    return new CancelSmResp(header);
-                    //--
+                    return new CancelSmResp(header, smppEncodingService);
+                //--
                 case CommandType.ReplaceSm:
-                    return new ReplaceSm(header);
-                    //--
+                    return new ReplaceSm(header, smppEncodingService);
+                //--
                 case CommandType.ReplaceSmResp:
-                    return new ReplaceSmResp(header);
-                    //--
+                    return new ReplaceSmResp(header, smppEncodingService);
+                //--
                 case CommandType.QuerySm:
-                    return new QuerySm(header);
-                    //--
+                    return new QuerySm(header, smppEncodingService);
+                //--
                 case CommandType.QuerySmResp:
-                    return new QuerySmResp(header);
-                    //--
+                    return new QuerySmResp(header, smppEncodingService);
+                //--
                 default:
                     throw new InvalidPDUCommandException();
             }
@@ -184,12 +191,12 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Helper Methods
-        internal static string DecodeCString(ByteBuffer buffer)
+        internal static string DecodeCString(ByteBuffer buffer, SmppEncodingService smppEncodingService)
         {
             //Get next terminating null value
             int pos = buffer.Find(0x00);
             if (pos < 0) { throw new PDUFormatException("CString type field could not be read. The terminating charactor is missing"); }
-            try { string value = SMPPEncodingUtil.GetCStringFromBytes(buffer.Remove(pos + 1)); return value; }
+            try { string value = smppEncodingService.GetCStringFromBytes(buffer.Remove(pos + 1)); return value; }
             catch (ArgumentException ex)
             {
                 //ByteBuffer.Remove(int count) throw ArgumentException if the buffer length is less than count
@@ -199,16 +206,16 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             }
         }
 
-        internal static byte[] EncodeCString(string str)
+        internal static byte[] EncodeCString(string str, SmppEncodingService smppEncodingService)
         {
             if (str == null) { str = ""; }
-            return SMPPEncodingUtil.GetBytesFromCString(str);
+            return smppEncodingService.GetBytesFromCString(str);
         }
 
-        internal static string DecodeString(ByteBuffer buffer, int length)
+        internal static string DecodeString(ByteBuffer buffer, int length, SmppEncodingService smppEncodingService)
         {
-            try { string value = SMPPEncodingUtil.GetStringFromBytes(buffer.Remove(length)); return value; }
-            catch(ArgumentException ex)
+            try { string value = smppEncodingService.GetStringFromBytes(buffer.Remove(length)); return value; }
+            catch (ArgumentException ex)
             {
                 //ByteBuffer.Remove(int count) throw ArgumentException if the buffer length is less than count
                 //This is the indication that the amount of bytes required could not be met
@@ -230,10 +237,10 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             }
         }
 
-        internal static byte[] EncodeString(string str)
+        internal static byte[] EncodeString(string str, SmppEncodingService smppEncodingService)
         {
             if (str == null) { str = ""; }
-            return SMPPEncodingUtil.GetBytesFromString(str);
+            return smppEncodingService.GetBytesFromString(str);
         }
         #endregion
 

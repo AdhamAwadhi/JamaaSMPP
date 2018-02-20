@@ -23,8 +23,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public abstract class GenericRequestPDU : RequestPDU
     {
         #region Constructors
-        internal GenericRequestPDU(PDUHeader header)
-            : base(header) { }
+        internal GenericRequestPDU(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService) { }
         #endregion
 
         #region Methods

@@ -40,6 +40,7 @@ namespace JamaaTech.Smpp.Net.Client
         private int vKeepAliveInterval;
         private SendMessageCallBack vSendMessageCallBack;
         private bool vStarted;
+        private SmppEncodingService vSmppEncodingService;
         //--
         private static TraceSwitch vTraceSwitch = new TraceSwitch("SmppClientSwitch", "SmppClient trace switch");
         #endregion
@@ -75,6 +76,7 @@ namespace JamaaTech.Smpp.Net.Client
         public SmppClient()
         {
             vProperties = new SmppConnectionProperties();
+            vSmppEncodingService = new SmppEncodingService();
             vConnSyncRoot = new object();
             vAutoReconnectDelay = 10000;
             vTimeOut = 5000;
@@ -150,6 +152,13 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vStarted; }
         }
+
+        public SmppEncodingService SmppEncodingService
+        {
+            get { return vSmppEncodingService; }
+            set { vSmppEncodingService = value; }
+        }
+
         /// <summary>
         /// Gets a <see cref="System.Exception"/> indicating if an instance of <see cref="SmppClient"/> has an occurred exception while connecting.
         /// </summary>
@@ -178,7 +187,7 @@ namespace JamaaTech.Smpp.Net.Client
             { throw new SmppClientException("Sending message operation failed because the SmppClient is not connected"); }
 
             string messageId = null;
-            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding))
+            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService))
             {
                 ResponsePDU resp = vTrans.SendPdu(pdu, timeOut);
                 if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
@@ -351,7 +360,7 @@ namespace JamaaTech.Smpp.Net.Client
                 {
                     bindInfo.AllowReceive = true;
                     bindInfo.AllowTransmit = false;
-                    vRecv = SmppClientSession.Bind(bindInfo, timeOut);
+                    vRecv = SmppClientSession.Bind(bindInfo, timeOut, vSmppEncodingService);
                     InitializeSession(vRecv);
                 }
                 catch
@@ -366,7 +375,7 @@ namespace JamaaTech.Smpp.Net.Client
                 {
                     bindInfo.AllowReceive = false;
                     bindInfo.AllowTransmit = true;
-                    vTrans = SmppClientSession.Bind(bindInfo, timeOut);
+                    vTrans = SmppClientSession.Bind(bindInfo, timeOut, vSmppEncodingService);
                     InitializeSession(vTrans);
                 }
                 catch
@@ -388,7 +397,7 @@ namespace JamaaTech.Smpp.Net.Client
                 bindInfo.AllowReceive = true;
                 try
                 {
-                    SmppClientSession session = SmppClientSession.Bind(bindInfo, timeOut);
+                    SmppClientSession session = SmppClientSession.Bind(bindInfo, timeOut, vSmppEncodingService);
                     vTrans = session;
                     vRecv = session;
                     InitializeSession(session);
@@ -526,7 +535,7 @@ namespace JamaaTech.Smpp.Net.Client
                 string receiptedMessageId = null;
                 if (receiptedMessageIdTlv != null)
                 {
-                    receiptedMessageId = SMPPEncodingUtil.GetCStringFromBytes(receiptedMessageIdTlv.RawValue);
+                    receiptedMessageId = vSmppEncodingService.GetCStringFromBytes(receiptedMessageIdTlv.RawValue);
                 }
                 message.ReceiptedMessageId = receiptedMessageId;
 
@@ -535,7 +544,7 @@ namespace JamaaTech.Smpp.Net.Client
                 string userMessageReference = null;
                 if (userMessageReferenceTlv != null)
                 {
-                    userMessageReference = SMPPEncodingUtil.GetCStringFromBytes(userMessageReferenceTlv.RawValue);
+                    userMessageReference = vSmppEncodingService.GetCStringFromBytes(userMessageReferenceTlv.RawValue);
                 }
                 message.UserMessageReference = userMessageReference;
                 RaiseMessageDeliveredEvent(message);

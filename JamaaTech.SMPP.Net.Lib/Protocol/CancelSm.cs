@@ -29,14 +29,14 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constuctors
-        public CancelSm()
-            : base(new PDUHeader(CommandType.CancelSm))
+        public CancelSm(SmppEncodingService smppEncodingService)
+            : base(new PDUHeader(CommandType.CancelSm), smppEncodingService)
         {
             vDestinationAddress = new SmppAddress();
         }
 
-        internal CancelSm(PDUHeader header)
-            : base(header)
+        internal CancelSm(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService)
         {
             vDestinationAddress = new SmppAddress();
         }
@@ -63,24 +63,24 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.CancelSmResp, vHeader.SequenceNumber);
-            return new CancelSmResp(header);
+            return new CancelSmResp(header, SmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(64);
-            buffer.Append(EncodeCString(vMessageID));
-            buffer.Append(vSourceAddress.GetBytes());
-            buffer.Append(vDestinationAddress.GetBytes());
+            buffer.Append(EncodeCString(vMessageID, SmppEncodingService));
+            buffer.Append(vSourceAddress.GetBytes(SmppEncodingService));
+            buffer.Append(vDestinationAddress.GetBytes(SmppEncodingService));
             return buffer.ToBytes();
         }
 
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer);
-            vSourceAddress = SmppAddress.Parse(buffer);
-            vDestinationAddress = SmppAddress.Parse(buffer);
+            vMessageID = DecodeCString(buffer, SmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
+            vDestinationAddress = SmppAddress.Parse(buffer, SmppEncodingService);
             //If this pdu has no option parameters
             //If there is still something in the buffer, we then have more than required bytes
             if (buffer.Length > 0) { throw new TooManyBytesException(); }

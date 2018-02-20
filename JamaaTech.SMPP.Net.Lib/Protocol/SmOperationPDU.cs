@@ -27,8 +27,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal SmOperationPDU(PDUHeader header)
-            : base(header) 
+        internal SmOperationPDU(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService)
         {
             vMessageID = "";
         }

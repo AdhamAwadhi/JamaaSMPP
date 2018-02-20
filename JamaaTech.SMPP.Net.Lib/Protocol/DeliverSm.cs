@@ -84,8 +84,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        public DeliverSm(PDUHeader header)
-            : base(header)
+        public DeliverSm(PDUHeader header, SmppEncodingService smppEncodingService)
+            : base(header, smppEncodingService)
         {
             vServiceType = Protocol.ServiceType.DEFAULT;
             vProtocolId = 0;
@@ -98,8 +98,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             vSmDefalutMessageId = 0;
         }
 
-        public DeliverSm()
-            : this(new PDUHeader(CommandType.SubmitSm))
+        public DeliverSm(SmppEncodingService smppEncodingService)
+            : this(new PDUHeader(CommandType.SubmitSm), smppEncodingService)
         { }
         #endregion
 
@@ -107,20 +107,20 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.DeliverSmResp, vHeader.SequenceNumber);
-            return new DeliverSmResp(header);
+            return new DeliverSmResp(header, SmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(256);
-            buffer.Append(EncodeCString(vServiceType));
-            buffer.Append(vSourceAddress.GetBytes());
-            buffer.Append(vDestinationAddress.GetBytes());
+            buffer.Append(EncodeCString(vServiceType, SmppEncodingService));
+            buffer.Append(vSourceAddress.GetBytes(SmppEncodingService));
+            buffer.Append(vDestinationAddress.GetBytes(SmppEncodingService));
             buffer.Append((byte)vEsmClass);
             buffer.Append(vProtocolId);
             buffer.Append((byte)vPriorityFlag);
-            buffer.Append(EncodeCString(vScheduleDeliveryTime));
-            buffer.Append(EncodeCString(vValidityPeriod));
+            buffer.Append(EncodeCString(vScheduleDeliveryTime, SmppEncodingService));
+            buffer.Append(EncodeCString(vValidityPeriod, SmppEncodingService));
             buffer.Append((byte)vRegisteredDelivery);
             buffer.Append(vReplaceIfPresent ? (byte)1 : (byte)0);
             buffer.Append((byte)vDataCoding);
@@ -147,14 +147,14 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vServiceType = DecodeCString(buffer);
-            vSourceAddress = SmppAddress.Parse(buffer);
-            vDestinationAddress = SmppAddress.Parse(buffer);
+            vServiceType = DecodeCString(buffer, SmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
+            vDestinationAddress = SmppAddress.Parse(buffer, SmppEncodingService);
             vEsmClass = (EsmClass)GetByte(buffer);
             vProtocolId = GetByte(buffer);
             vPriorityFlag = (PriorityFlag)GetByte(buffer);
-            vScheduleDeliveryTime = DecodeCString(buffer);
-            vValidityPeriod = DecodeCString(buffer);
+            vScheduleDeliveryTime = DecodeCString(buffer, SmppEncodingService);
+            vValidityPeriod = DecodeCString(buffer, SmppEncodingService);
             vRegisteredDelivery = (RegisteredDelivery)GetByte(buffer);
             vReplaceIfPresent = GetByte(buffer) == 0 ? false : true;
             vDataCoding = (DataCoding)GetByte(buffer);
@@ -169,7 +169,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
                 }
                 vMessageBytes = buffer.Remove(length);
             }
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer); }
+            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, SmppEncodingService); }
         }
 
         public override byte[] GetMessageBytes()
