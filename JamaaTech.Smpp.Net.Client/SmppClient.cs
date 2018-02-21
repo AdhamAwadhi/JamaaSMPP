@@ -331,9 +331,11 @@ namespace JamaaTech.Smpp.Net.Client
                         useSepConn = vProperties.InterfaceVersion == InterfaceVersion.v33;
                     }
                     try { OpenSession(bindInfo, useSepConn, timeOut); }
-                    catch (Exception ex) {
+                    catch (Exception ex)
+                    {
                         if (vTraceSwitch.TraceError) { Trace.TraceError(ex.ToString()); }
-                        vLastException = ex; throw; }
+                        vLastException = ex; throw;
+                    }
                     vLastException = null;
                 }
                 else
@@ -498,6 +500,10 @@ namespace JamaaTech.Smpp.Net.Client
             //This handler is interested in SingleDestinationPDU only
             SingleDestinationPDU pdu = e.Request as SingleDestinationPDU;
             if (pdu == null) { return; }
+            if (vTraceSwitch.TraceVerbose)
+            {
+                Trace.WriteLine(string.Format("PduReceived: RequestType: {0}", e.Request?.GetType()?.Name));
+            }
             ShortMessage message = null;
             try { message = MessageFactory.CreateMessage(pdu); }
             catch (SmppException smppEx)
@@ -526,29 +532,27 @@ namespace JamaaTech.Smpp.Net.Client
                 e.Response.Header.ErrorCode = SmppErrorCode.ESME_RX_P_APPN; //ESME Receiver Reject Message
                 return;
             }
+            if (vTraceSwitch.TraceVerbose)
+            {
+#if DEBUG
+                Console.WriteLine(string.Format("PduReceived: pdu: Header:{0}, EsmClass:{1}, ServiceType:{2}, DataCoding:{3}", pdu.Header, pdu.EsmClass, pdu.ServiceType, pdu.DataCoding));
+#endif
+                Trace.WriteLine(string.Format("PduReceived: pdu: Header:{0}, EsmClass:{1}, ServiceType:{2}, DataCoding:{3}", pdu.Header, pdu.EsmClass, pdu.ServiceType, pdu.DataCoding));
+                if (message != null)
+                    Trace.WriteLine(string.Format("PduReceived: message: DestinationAddress:{0}, MessageCount:{1}, ReceiptedMessageId:{2}, RegisterDeliveryNotification:{3}, SegmentID:{4}, SequenceNumber:{5}, SourceAddress:{6}, UserMessageReference:{7}",
+                                                    message.DestinationAddress, message.MessageCount, message.ReceiptedMessageId, message.RegisterDeliveryNotification, message.SegmentID, message.SequenceNumber, message.SourceAddress, message.UserMessageReference));
+            }
             //If we have just a normal message
             if ((((byte)pdu.EsmClass) | 0xc3) == 0xc3)
             { RaiseMessageReceivedEvent(message); }
             //Or if we have received a delivery receipt
             else if ((pdu.EsmClass & EsmClass.DeliveryReceipt) == EsmClass.DeliveryReceipt)
             {
-                // Extract receipted message id
-                var receiptedMessageIdTlv = pdu.Tlv.GetTlvByTag(Tag.receipted_message_id);
-                string receiptedMessageId = null;
-                if (receiptedMessageIdTlv != null)
-                {
-                    receiptedMessageId = vSmppEncodingService.GetCStringFromBytes(receiptedMessageIdTlv.RawValue);
-                }
-                message.ReceiptedMessageId = receiptedMessageId;
+                // Extract receipted message id                
+                message.ReceiptedMessageId = pdu.GetOptionalParamString(Tag.receipted_message_id);
 
-                // Extract user message reference
-                var userMessageReferenceTlv = pdu.Tlv.GetTlvByTag(Tag.user_message_reference);
-                string userMessageReference = null;
-                if (userMessageReferenceTlv != null)
-                {
-                    userMessageReference = vSmppEncodingService.GetCStringFromBytes(userMessageReferenceTlv.RawValue);
-                }
-                message.UserMessageReference = userMessageReference;
+                // Extract user message reference               
+                message.UserMessageReference = pdu.GetOptionalParamString(Tag.user_message_reference);
                 RaiseMessageDeliveredEvent(message);
             }
         }

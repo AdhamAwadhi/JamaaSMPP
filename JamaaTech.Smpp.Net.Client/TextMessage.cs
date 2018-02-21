@@ -67,11 +67,7 @@ namespace JamaaTech.Smpp.Net.Client
             sm.SourceAddress.Address = vSourceAddress;
             sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
             sm.DataCoding = defaultEncoding;
-            if (!string.IsNullOrEmpty(UserMessageReference))
-            {
-                var msgIdBytes = smppEncodingService.GetBytesFromCString(UserMessageReference);
-                sm.Tlv.Add(new Lib.Protocol.Tlv.Tlv(Lib.Protocol.Tlv.Tag.user_message_reference, (ushort)msgIdBytes.Length, msgIdBytes));
-            }
+            sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);           
 
             if (vRegisterDeliveryNotification)
                 sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;

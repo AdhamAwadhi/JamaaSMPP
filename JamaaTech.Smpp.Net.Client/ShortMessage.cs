@@ -127,7 +127,7 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vRegisterDeliveryNotification; }
             set { vRegisterDeliveryNotification = value; }
-        }
+        }       
         #endregion
 
         #region Methods       

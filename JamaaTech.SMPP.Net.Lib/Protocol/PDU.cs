@@ -250,6 +250,138 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             return vHeader.ToString();
         }
         #endregion
+
+        #region TLV collection methods
+
+        /// <summary>
+        /// Gets the optional parameter string associated with
+        /// the given tag.
+        /// </summary>
+        /// <param name="tag">The tag in TLV.</param>
+        /// <returns>The optional parameter string, or null if not found.</returns>
+        public string GetOptionalParamString(Tag tag)
+        {
+            var tlv = vTlv.GetTlvByTag(tag);
+            if (tlv == null) return null;
+
+            return vSmppEncodingService.GetCStringFromBytes(tlv.RawValue);
+        }
+        /// <summary>
+        /// Gets the optional parameter bytes associated with
+        /// the given tag.
+        /// </summary>
+        /// <param name="tag">The tag in TLV.</param>
+        /// <returns>The optional parameter bytes, or null if not found</returns>
+        public byte[] GetOptionalParamBytes(Tag tag)
+        {
+            var tlv = vTlv.GetTlvByTag(tag);
+            if (tlv == null) return null;
+
+            return tlv.RawValue;
+        }
+        /// <summary>
+        /// Gets the optional parameter of type T associated with
+        /// the given tag.
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <returns>The optional parameter value, or null if not found</returns>
+        public byte? GetOptionalParamByte(Tag tag)
+        {
+            return this.GetOptionalParamByte<byte>(tag);
+        }
+        /// <summary>
+        /// Gets the optional parameter of type T associated with
+        /// the given tag.
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        /// <returns>The optional parameter value, or null if not found</returns>
+        public T? GetOptionalParamByte<T>(Tag tag)
+            where T : struct
+        {
+            var tlv = vTlv.GetTlvByTag(tag);
+            if (tlv == null) return null;
+
+            var data = tlv.RawValue[0];
+
+            return typeof(T).IsEnum ? (T)Enum.ToObject(typeof(T), data) : (T)Convert.ChangeType(data, typeof(T));
+        }
+
+        /// <summary>
+        /// Sets the given TLV(as a string)into the table.
+        /// This will reverse the byte order in the tag for you (necessary for encoding).
+        /// If the value is null, the parameter TLV will be removed instead.
+        /// </summary>
+        /// <param name="tag">The tag for this TLV.</param>
+        /// <param name="val">The value of this TLV.</param>
+        public void SetOptionalParamString(Tag tag, string val, bool nullTerminated = false)
+        {
+            if (val == null)
+            {
+                this.RemoveOptionalParameter(tag);
+            }
+            else
+            {
+                var bytes = vSmppEncodingService.GetBytesFromCString(val);
+
+                // Add a null byte to the end if needed.
+                if (nullTerminated) Array.Resize(ref bytes, bytes.Length + 1);
+
+                SetOptionalParamBytes(tag, bytes);
+            }
+        }
+
+        /// <summary>
+        /// Sets the given TLV(as a byte) into the table.  This will not take
+        /// care of big-endian/little-endian issues, although it will reverse the byte order 
+        /// in the tag for you (necessary for encoding). 
+        /// If the value is null, the parameter TLV will be removed instead.
+        /// </summary>
+        /// <param name="tag">The tag for this TLV.</param>
+        /// <param name="val">The value of this TLV.</param>
+        public void SetOptionalParamByte<T>(Tag tag, T? val)
+            where T : struct
+        {
+            if (!val.HasValue)
+            {
+                SetOptionalParamBytes(tag, null);
+            }
+            else
+            {
+                SetOptionalParamBytes(tag, new[] { Convert.ToByte(val.Value) });
+            }
+        }
+        /// <summary>
+        /// Sets the given TLV(as a byte array)into the table.  This will not take
+        /// care of big-endian/little-endian issues, although it will reverse the byte order 
+        /// in the tag for you(necessary for encoding).
+        /// If the value is null, the parameter TLV will be removed instead.
+        /// </summary>
+        /// <param name="tag">The tag for this TLV.</param>
+        /// <param name="val">The value of this TLV.</param>
+        public void SetOptionalParamBytes(Tag tag, byte[] val)
+        {
+            if (val == null)
+            {
+                this.RemoveOptionalParameter(tag);
+            }
+            else
+            {
+                vTlv.Add(new Tlv.Tlv(Tag.user_message_reference, (ushort)val.Length, val));
+            }
+        }
+
+        /// <summary>
+        /// Removes the optional parameter.
+        /// </summary>
+        /// <param name="tag">The tag.</param>
+        public void RemoveOptionalParameter(Tag tag)
+        {
+            var tlv = vTlv.GetTlvByTag(tag);
+            if (tlv == null) return;
+
+            vTlv.Remove(tlv);
+        }
+        #endregion TLV collection methods
         #endregion
     }
 }
