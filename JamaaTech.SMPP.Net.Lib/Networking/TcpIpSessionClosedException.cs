@@ -21,6 +21,7 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
     /// <summary>
     /// Represents an exception that is thrown when attempting to send or received data with a closed <see cref="TcpIpSession"/> instance
     /// </summary>
+    [Serializable]
     public class TcpIpSessionClosedException : TcpIpException
     {
         #region Constructors

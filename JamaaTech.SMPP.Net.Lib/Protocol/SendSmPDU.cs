@@ -25,6 +25,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
 {
     public abstract class SendSmPDU : SmPDU
     {
+        private static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Variables
         protected string vServiceType;
         protected EsmClass vEsmClass;
@@ -95,10 +97,12 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             //Check if the UDH is set in the esm_class field
             if ((EsmClass & EsmClass.UdhiIndicator) == EsmClass.UdhiIndicator) 
             {
+                _Log.Info("200020:UDH field presense detected;");
                 if (vTraceSwitch.TraceInfo) { Trace.WriteLine("200020:UDH field presense detected;"); }
                 try { udh = Udh.Parse(buffer, SmppEncodingService); }
                 catch (Exception ex)
                 {
+                    _Log.ErrorFormat("20023:UDH field parsing error - {0}", ex, new ByteBuffer(msgBytes).DumpString());
                     if (vTraceSwitch.TraceError)
                     {
                         Trace.WriteLine(string.Format(
@@ -113,6 +117,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             try { message = SmppEncodingService.GetStringFromBytes(buffer.ToBytes(), DataCoding); }
             catch (Exception ex1)
             {
+                _Log.ErrorFormat("200019:SMS message decoding failure - {0}", ex1, new ByteBuffer(msgBytes).DumpString());
                 if (vTraceSwitch.TraceError)
                 {
                     Trace.WriteLine(string.Format(

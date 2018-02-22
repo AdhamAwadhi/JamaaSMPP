@@ -29,6 +29,8 @@ namespace JamaaTech.Smpp.Net.Lib
 {
     public class SmppClientSession
     {
+        private static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Variables
         private Timer vTimer;
         private PDUTransmitter vTrans;
@@ -170,6 +172,7 @@ namespace JamaaTech.Smpp.Net.Lib
                 try { return vRespHandler.WaitResponse(pdu, timeout); }
                 catch (SmppResponseTimedOutException)
                 {
+                    _Log.Error("200016:PDU send operation timed out;");
                     if (vTraceSwitch.TraceWarning)
                     { Trace.WriteLine("200016:PDU send operation timed out;"); }
                     throw;
@@ -186,9 +189,10 @@ namespace JamaaTech.Smpp.Net.Lib
             try { vTrans.Send(pdu); }
             catch (Exception ex)
             {
+                ByteBuffer buffer = new ByteBuffer(pdu.GetBytes());
+                _Log.ErrorFormat("200022:PDU send operation failed - {0}", ex, buffer.DumpString());
                 if (vTraceSwitch.TraceInfo)
-                {
-                    ByteBuffer buffer = new ByteBuffer(pdu.GetBytes());
+                {                    
                     Trace.WriteLine(string.Format(
                         "200022:PDU send operation failed - {0} {1};",
                         buffer.DumpString(), ex.Message));
@@ -242,6 +246,7 @@ namespace JamaaTech.Smpp.Net.Lib
             }
             catch (Exception ex)
             {
+                _Log.Error("200017:SMPP bind operation failed:", ex);
                 if (vTraceSwitch.TraceInfo)
                 {
                     string traceMessage = "200017:SMPP bind operation failed:";

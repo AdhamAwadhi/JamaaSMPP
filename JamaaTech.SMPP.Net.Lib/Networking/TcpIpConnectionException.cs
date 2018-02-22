@@ -20,6 +20,7 @@ using System.Text;
 
 namespace JamaaTech.Smpp.Net.Lib.Networking
 {
+    [Serializable]
     public class TcpIpConnectionException : TcpIpException
     {
         #region Constructors

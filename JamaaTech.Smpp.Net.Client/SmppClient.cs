@@ -21,11 +21,14 @@ using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Util;
 using JamaaTech.Smpp.Net.Lib.Protocol.Tlv;
+using JamaaTech.Smpp.Net.Lib.Logging;
 
 namespace JamaaTech.Smpp.Net.Client
 {
     public class SmppClient : IDisposable
     {
+        private static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Variables
         private SmppConnectionProperties vProperties;
         private SmppClientSession vTrans;
@@ -333,6 +336,7 @@ namespace JamaaTech.Smpp.Net.Client
                     try { OpenSession(bindInfo, useSepConn, timeOut); }
                     catch (Exception ex)
                     {
+                        _Log.Error("OpenSession", ex);
                         if (vTraceSwitch.TraceError) { Trace.TraceError(ex.ToString()); }
                         vLastException = ex; throw;
                     }
@@ -500,6 +504,8 @@ namespace JamaaTech.Smpp.Net.Client
             //This handler is interested in SingleDestinationPDU only
             SingleDestinationPDU pdu = e.Request as SingleDestinationPDU;
             if (pdu == null) { return; }
+
+            _Log.DebugFormat("Received PDU: {0}", LoggingExtensions.DumpStrig(pdu));
             if (vTraceSwitch.TraceVerbose)
             {
                 Trace.WriteLine(string.Format("PduReceived: RequestType: {0}", e.Request?.GetType()?.Name));
@@ -508,6 +514,7 @@ namespace JamaaTech.Smpp.Net.Client
             try { message = MessageFactory.CreateMessage(pdu); }
             catch (SmppException smppEx)
             {
+                _Log.Error(string.Format("200019:SMPP message decoding failure - {0} - {1}", smppEx.ErrorCode, new ByteBuffer(pdu.GetBytes()).DumpString()), smppEx);
                 if (vTraceSwitch.TraceError)
                 {
                     Trace.WriteLine(string.Format(
@@ -521,6 +528,7 @@ namespace JamaaTech.Smpp.Net.Client
             }
             catch (Exception ex)
             {
+                _Log.ErrorFormat("200019:SMPP message decoding failure - {0}", ex, new ByteBuffer(pdu.GetBytes()).DumpString());
                 if (vTraceSwitch.TraceError)
                 {
                     Trace.WriteLine(string.Format(
@@ -532,6 +540,10 @@ namespace JamaaTech.Smpp.Net.Client
                 e.Response.Header.ErrorCode = SmppErrorCode.ESME_RX_P_APPN; //ESME Receiver Reject Message
                 return;
             }
+
+            if (message != null)
+                _Log.TraceFormat("PduReceived: message: {0}", LoggingExtensions.DumpStrig(message));
+
             if (vTraceSwitch.TraceVerbose)
             {
 #if DEBUG

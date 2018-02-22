@@ -21,6 +21,7 @@ using JamaaTech.Smpp.Net.Lib;
 
 namespace JamaaTech.Smpp.Net.Lib.Protocol
 {
+    [Serializable]
     public class PDUException : Exception
     {
         #region Variables

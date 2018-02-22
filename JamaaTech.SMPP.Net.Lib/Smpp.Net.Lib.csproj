@@ -40,12 +40,17 @@
     <AssemblyOriginatorKeyFile>Jamaa Smpp Client.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataCoding.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Logging\LoggingExtensions.cs" />
     <Compile Include="SmppEncodingService.cs" />
     <Compile Include="InterfaceVersion.cs" />
     <Compile Include="Networking\SessionCloseReason.cs" />
@@ -148,7 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Jamaa Smpp Client.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

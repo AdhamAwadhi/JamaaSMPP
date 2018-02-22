@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>JamaaSMPP</id>
-    <version>1.6.1</version>
+    <version>1.6.2</version>
     <title>Jamaa SMPP Client</title>
     <authors>JamaaTech</authors>
     <owners>JamaaTech</owners>
@@ -11,6 +11,9 @@
     <description>Jamaa SMPP Client is a .NET implementation of the SMPP protocol that focuses on providing an easy-to-use and robust SMPP client library for .NET developers. This project is intended to be used by developers who want to integrate SMS functionalities in their applications as well as students who are learning the SMPP protocol.</description>
     <tags>.net smpp</tags>
     <copyright>Jamaa Technologies</copyright>
+    <dependencies>
+      <dependency id="Common.Logging" version="[2.0.0,)" />
+    </dependencies>
   </metadata>
   <files>
     <file src="lib\JamaaTech.Smpp.Net*.*" target="lib" exclude="**\*.exe" />    
