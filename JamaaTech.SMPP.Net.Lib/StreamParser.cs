@@ -100,7 +100,7 @@ namespace JamaaTech.Smpp.Net.Lib
                 catch (TcpIpException) { /*Silent catch*/ }
                 catch (Exception ex)
                 {
-                    _Log.Error("200015:Unanticipated stream parser exception;", ex);
+                    _Log.ErrorFormat("200015:Unanticipated stream parser exception: {0}", ex, ex.Message);
                     if (vTraceSwitch.TraceError)
                     {
                         Trace.WriteLine(string.Format(
@@ -124,7 +124,7 @@ namespace JamaaTech.Smpp.Net.Lib
             try { headerBytes = ReadHeaderBytes(); }
             catch (TcpIpException tcpIp_ex_1)
             {
-                _Log.Error("200010:TCP/IP Exception encountered while reading pdu header bytes", tcpIp_ex_1);
+                _Log.ErrorFormat("200010:TCP/IP Exception encountered while reading pdu header bytes: {0}", tcpIp_ex_1, tcpIp_ex_1.Message);
                 if (vTraceSwitch.TraceInfo)
                 {
                     Trace.WriteLine(string.Format(
@@ -158,7 +158,7 @@ namespace JamaaTech.Smpp.Net.Lib
             try { bodyBytes = ReadBodyBytes((int)header.CommandLength - 16); }
             catch (TcpIpException tpcIp_ex_2)
             {
-                _Log.Error("200012:TCP/IP Exception encountered while reading pdu body bytes", tpcIp_ex_2);
+                _Log.ErrorFormat("200012:TCP/IP Exception encountered while reading pdu body bytes: {0}", tpcIp_ex_2, tpcIp_ex_2.Message);
                 if (vTraceSwitch.TraceInfo)
                 {
                     Trace.WriteLine(string.Format(

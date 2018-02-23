@@ -86,6 +86,13 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             buffer.Append(PDU.EncodeCString(vAddress, smppEncodingService));
             return buffer.ToBytes();
         }
+
+        #region override
+        public override string ToString()
+        {
+            return string.Format("{{Address:{0}, Ton:{1}, Npi:{2}}}", Address, Ton, Npi);
+        }
+        #endregion
         #endregion
     }
 }

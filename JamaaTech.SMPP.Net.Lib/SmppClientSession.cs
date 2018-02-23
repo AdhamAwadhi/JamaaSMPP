@@ -246,7 +246,7 @@ namespace JamaaTech.Smpp.Net.Lib
             }
             catch (Exception ex)
             {
-                _Log.Error("200017:SMPP bind operation failed:", ex);
+                _Log.ErrorFormat("200017:SMPP bind operation failed: {0}", ex, ex.Message);
                 if (vTraceSwitch.TraceInfo)
                 {
                     string traceMessage = "200017:SMPP bind operation failed:";
