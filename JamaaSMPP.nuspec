@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>JamaaSMPP</id>
-    <version>1.6.2</version>
+    <version>1.7.0</version>
     <title>Jamaa SMPP Client</title>
     <authors>JamaaTech</authors>
     <owners>JamaaTech</owners>
@@ -12,7 +12,7 @@
     <tags>.net smpp</tags>
     <copyright>Jamaa Technologies</copyright>
     <dependencies>
-      <dependency id="Common.Logging" version="[2.0.0,)" />
+      <dependency id="Common.Logging" version="[3.0.0,)" />
     </dependencies>
   </metadata>
   <files>

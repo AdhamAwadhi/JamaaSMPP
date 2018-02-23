@@ -542,7 +542,7 @@ namespace JamaaTech.Smpp.Net.Client
             }
 
             if (message != null)
-                _Log.TraceFormat("PduReceived: message: {0}", LoggingExtensions.DumpStrig(message));
+                _Log.DebugFormat("PduReceived: message: {0}", LoggingExtensions.DumpStrig(message));
 
             if (vTraceSwitch.TraceVerbose)
             {
