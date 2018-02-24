@@ -17,9 +17,7 @@ This is created based on  https://jamaasmpp.codeplex.com/
 # What's new?
 - Support sending concatenated messages
 - ~~Fix Unicode Languages [issue #2](https://github.com/AdhamAwadhi/JamaaSMPP/issues/2). Allow user to set UCS2 encoding in SMPPEncodingUtil~~ 
-> Look ***custom encoding for each `SmppClient` instance***
-
-        SMPPEncodingUtil.UCS2Encoding = Encoding.BigEndianUnicode; 
+SEE [here](https://github.com/AdhamAwadhi/JamaaSMPP/wiki/Smpp-Encoding)
 
 - Add `TextMessage` virtual method `CreateSubmitSm()` to allow user to change some properties (like Source address ton)
 
@@ -53,3 +51,15 @@ This is created based on  https://jamaasmpp.codeplex.com/
   >    You can choose between them by setting `UseGsmEncoding` property to `true` (*defualt*) to use  **GSM Encoding** or ti `false` to use the other.
     
         JamaaTech.Smpp.Net.Lib.Util.SMSCDefaultEncoding.UseGsmEncoding = true; // or false
+        
+- Use Common.Logging for logging purpose
+- PDU TLV collection methods
+	+ `string GetOptionalParamString(Tag tag)`
+	+ `byte[] GetOptionalParamBytes(Tag tag)`
+	+ `byte? GetOptionalParamByte(Tag tag)`
+	+ `T? GetOptionalParamByte<T>(Tag tag) where T : struct`
+	+ `void SetOptionalParamString(Tag tag, string val, bool nullTerminated = false)`
+	+ `void SetOptionalParamByte<T>(Tag tag, T? val) where T : struct`
+	+ `void SetOptionalParamBytes(Tag tag, byte[] val)`
+	+ `void RemoveOptionalParameter(Tag tag)`
+
