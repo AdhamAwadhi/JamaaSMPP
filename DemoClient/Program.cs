@@ -7,6 +7,8 @@ using System.Threading;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using System.Diagnostics;
+using SettingsReader.Readers;
+using System.Linq;
 
 namespace DemoClient
 {
@@ -14,8 +16,30 @@ namespace DemoClient
     {
         static ISmppConfiguration smppConfig;
 
+        public static byte[] StringToByteArray(string hex)
+        {
+            return Enumerable.Range(0, hex.Length)
+                             .Where(x => x % 2 == 0)
+                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                             .ToArray();
+        }
+
         static void Main(string[] args)
         {
+            //Common.Logging.LogManager.Adapter = new Common.Logging.Simple.ConsoleOutLoggerFactoryAdapter();
+            var encSrv = new SmppEncodingService();
+
+            var hexBytes = "000000dd0000000500000000019182410001013334363439323836383039000501657669636572746961000400000000000000008569643a323533303932393134353232363637333732207375623a30303120646c7672643a303031207375626d697420646174653a3133303932393136353220646f6e6520646174653a3133303932393136353220737461743a44454c49565244206572723a3030303020746578743a1b3c657669534d531b3e0a534d532064652050727565042300030300000427000102001e001332353330393239313435323236363733373200";
+            var packet = StringToByteArray(hexBytes);
+            var bodyBytes = packet.Skip(16).ToArray();
+
+            var pdu = PDU.CreatePDU(PDUHeader.Parse(new ByteBuffer(packet), encSrv), encSrv);
+            pdu.SetBodyData(new ByteBuffer(bodyBytes));
+
+            var receiptedMessageId = pdu.GetOptionalParamString(JamaaTech.Smpp.Net.Lib.Protocol.Tlv.Tag.receipted_message_id);
+
+            //Assert.AreEqual("253092914522667372", pdu.ReceiptedMessageId);
+
             Trace.WriteLine("Start");
             //Trace.Listeners.Add(new ConsoleTraceListener());
 
@@ -25,27 +49,44 @@ namespace DemoClient
 
             var client = CreateSmppClient(smppConfig);
             client.Start();
+
             // must wait until connected before start sending
             while (client.ConnectionState != SmppConnectionState.Connected)
                 Thread.Sleep(100);
 
-            TextMessage msg = new TextMessage();
+            var input = "";
+            do
+            {
+                Console.Write("Enter Dest: ");
+                input = Console.ReadLine();
+                if ("q".Equals(input, StringComparison.InvariantCultureIgnoreCase)) break;
 
-            msg.DestinationAddress = "255455388333"; //Receipient number
-            msg.SourceAddress = "255344338333"; //Originating number
-            //msg.Text = "Hello, this is my test message!";
-            msg.Text = @"السلام عليكم ورحمة الله وبركاته
+                var dest = input;
+                Console.Write("Enter Msg: ");
+                var msgTxt = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(msgTxt))
+                    msgTxt = @"السلام عليكم ورحمة الله وبركاته
 هذه رسالة عربية
 متعددة الاسطر";
-            msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
-            msg.UserMessageReference = Guid.NewGuid().ToString();
-            Console.WriteLine($"msg.UserMessageReference: {msg.UserMessageReference}");
 
-            //client.SendMessage(msg);
+                TextMessage msg = new TextMessage();
 
-            client.BeginSendMessage(msg, SendMessageCompleteCallback, client);
+                msg.DestinationAddress = dest; //Receipient number
+                msg.SourceAddress = smppConfig.SourceAddress; //Originating number
+                                                              //msg.Text = "Hello, this is my test message!";
+                msg.Text = msgTxt;
+                msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
+                msg.UserMessageReference = Guid.NewGuid().ToString();
+                Console.WriteLine($"msg.UserMessageReference: {msg.UserMessageReference}");
+                Trace.WriteLine($"msg.UserMessageReference: {msg.UserMessageReference}");
 
-            Console.ReadLine();
+                //client.SendMessage(msg);
+
+                client.BeginSendMessage(msg, SendMessageCompleteCallback, client);
+
+                Console.ReadLine();
+            } while (true);
         }
 
         private static void SendMessageCompleteCallback(IAsyncResult result)
@@ -57,30 +98,14 @@ namespace DemoClient
             }
             catch (Exception e)
             {
-
-
+                Trace.TraceError("SendMessageCompleteCallback:" + e.ToString());
             }
         }
 
         private static ISmppConfiguration GetSmppConfiguration()
         {
-            return new SmppConfiguration
-            {
-                TimeOut = 60000,
-                StartAutomatically = true,
-                Name = "MyLocalClient",
-                SystemID = "smppclient1",
-                Password = "password",
-                Host = "localhost",
-                Port = 5016,
-                SystemType = "5750",
-                DefaultServiceType = "5750",
-                SourceAddress = "5750",
-                AutoReconnectDelay = 5000,
-                KeepAliveInterval = 5000,
-                ReconnectInteval = 10000,
-                Encoding = JamaaTech.Smpp.Net.Lib.DataCoding.UCS2
-            };
+            var reader = new AppSettingsReader();
+            return reader.Read<SmppConfiguration>();
         }
 
         static SmppClient CreateSmppClient(ISmppConfiguration config)

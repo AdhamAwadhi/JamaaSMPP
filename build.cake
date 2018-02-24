@@ -89,8 +89,17 @@ Task("Build")
     .Does(() =>
 {
       // Use MSBuild
-      MSBuild(slnPath, settings =>
-        settings.SetConfiguration(configuration));    
+      //MSBuild(slnPath, settings =>
+       // settings.SetConfiguration(configuration));    
+
+	Information("Building solution...");
+    MSBuild(slnPath, settings =>
+        settings            
+            //.UseToolVersion(MSBuildToolVersion.VS2017)
+            .WithProperty("TreatWarningsAsErrors","true")
+            .SetVerbosity(Verbosity.Quiet)
+            .WithTarget("Build")
+            .SetConfiguration(configuration));
 });
 
 Task("Export-Files")

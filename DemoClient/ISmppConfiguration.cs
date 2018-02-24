@@ -1,4 +1,5 @@
 ﻿using JamaaTech.Smpp.Net.Lib;
+using JamaaTech.Smpp.Net.Lib.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,5 +25,6 @@ namespace DemoClient
         int TimeOut { get; }
         bool StartAutomatically { get; }
         string DestinationAddressRegex { get; }
+        RegisteredDelivery RegisteredDeliveryValue { get; }
     }
 }

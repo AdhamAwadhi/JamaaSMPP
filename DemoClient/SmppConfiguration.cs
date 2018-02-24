@@ -1,4 +1,5 @@
 ﻿using JamaaTech.Smpp.Net.Lib;
+using JamaaTech.Smpp.Net.Lib.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,5 +25,26 @@ namespace DemoClient
         public int TimeOut { get; set; }
         public bool StartAutomatically { get; set; }
         public string DestinationAddressRegex { get; set; }
+        public RegisteredDelivery RegisteredDeliveryValue { get; set; }
+
+        public SmppConfiguration()
+        {
+            TimeOut = 60000;
+            StartAutomatically = true;
+            Name = "MyLocalClient";
+            SystemID = "smppclient1";
+            Password = "password";
+            Host = "localhost";
+            Port = 5016;
+            SystemType = "5750";
+            DefaultServiceType = "5750";
+            SourceAddress = "5750";
+            AutoReconnectDelay = 5000;
+            KeepAliveInterval = 5000;
+            ReconnectInteval = 10000;
+            Encoding = JamaaTech.Smpp.Net.Lib.DataCoding.UCS2;
+            RegisteredDeliveryValue = RegisteredDelivery.DeliveryReceipt;
+
+        }
     }
 }
