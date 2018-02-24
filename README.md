@@ -52,7 +52,7 @@ SEE [here](https://github.com/AdhamAwadhi/JamaaSMPP/wiki/Smpp-Encoding)
     
         JamaaTech.Smpp.Net.Lib.Util.SMSCDefaultEncoding.UseGsmEncoding = true; // or false
         
-- Use Common.Logging for logging purpose
+- Use [Common.Logging](https://github.com/net-commons/common-logging) for logging purpose
 - PDU TLV collection methods
 	+ `string GetOptionalParamString(Tag tag)`
 	+ `byte[] GetOptionalParamBytes(Tag tag)`
