@@ -57,7 +57,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #region Methods
         protected override byte[] GetBodyData()
         {
-            return EncodeCString(vMessageID, SmppEncodingService);
+            return EncodeCString(vMessageID, vSmppEncodingService);
         }
 
         protected override void Parse(ByteBuffer buffer)
@@ -66,7 +66,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             //Note that the body part may have not been returned by
             //the SMSC if the command status is not 0
             if (buffer.Length == 0) { return; }
-            vMessageID = DecodeCString(buffer, SmppEncodingService);
+            vMessageID = DecodeCString(buffer, vSmppEncodingService);
             //This pdu has no optional parameters,
             //after preceding statements, the buffer must remain with no data
             if (buffer.Length > 0) { throw new TooManyBytesException(); }

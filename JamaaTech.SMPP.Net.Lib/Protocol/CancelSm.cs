@@ -63,24 +63,24 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.CancelSmResp, vHeader.SequenceNumber);
-            return new CancelSmResp(header, SmppEncodingService);
+            return new CancelSmResp(header, vSmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(64);
-            buffer.Append(EncodeCString(vMessageID, SmppEncodingService));
-            buffer.Append(vSourceAddress.GetBytes(SmppEncodingService));
-            buffer.Append(vDestinationAddress.GetBytes(SmppEncodingService));
+            buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
+            buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
+            buffer.Append(vDestinationAddress.GetBytes(vSmppEncodingService));
             return buffer.ToBytes();
         }
 
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer, SmppEncodingService);
-            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
-            vDestinationAddress = SmppAddress.Parse(buffer, SmppEncodingService);
+            vMessageID = DecodeCString(buffer, vSmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+            vDestinationAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
             //If this pdu has no option parameters
             //If there is still something in the buffer, we then have more than required bytes
             if (buffer.Length > 0) { throw new TooManyBytesException(); }

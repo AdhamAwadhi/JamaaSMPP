@@ -52,7 +52,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             //use default Status and Length
             //header.CommandStatus = 0;
             //header.CommandLength = 16;
-            EnquireLinkResp resp = (EnquireLinkResp)CreatePDU(header, SmppEncodingService);
+            EnquireLinkResp resp = (EnquireLinkResp)CreatePDU(header, vSmppEncodingService);
             return resp;
         }
         #endregion

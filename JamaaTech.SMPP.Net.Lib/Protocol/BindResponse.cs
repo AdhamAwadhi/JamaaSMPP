@@ -60,7 +60,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #region Methods
         protected override byte[] GetBodyData()
         {
-            return EncodeCString(vSystemID, SmppEncodingService);
+            return EncodeCString(vSystemID, vSmppEncodingService);
         }
 
         protected override void Parse(ByteBuffer buffer)
@@ -71,8 +71,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             //if the origianl bind request contained an error.
             if (Header.ErrorCode != SmppErrorCode.ESME_ROK && buffer.Length == 0) { vSystemID = ""; return; }
             //Otherwise, there must be something in the buffer
-            vSystemID = DecodeCString(buffer, SmppEncodingService);
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, SmppEncodingService); }
+            vSystemID = DecodeCString(buffer, vSmppEncodingService);
+            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, vSmppEncodingService); }
         }
         #endregion
     }

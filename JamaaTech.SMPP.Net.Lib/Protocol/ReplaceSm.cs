@@ -108,19 +108,19 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.ReplaceSm,vHeader.SequenceNumber);
-            return new ReplaceSmResp(header, SmppEncodingService);
+            return new ReplaceSmResp(header, vSmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(64);
-            buffer.Append(EncodeCString(vMessageID, SmppEncodingService));
-            buffer.Append(vSourceAddress.GetBytes(SmppEncodingService));
-            buffer.Append(EncodeCString(vScheduleDeliveryTime, SmppEncodingService));
-            buffer.Append(EncodeCString(vValidityPeriod, SmppEncodingService));
+            buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
+            buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
+            buffer.Append(EncodeCString(vScheduleDeliveryTime, vSmppEncodingService));
+            buffer.Append(EncodeCString(vValidityPeriod, vSmppEncodingService));
             buffer.Append((byte)vRegisteredDelivery);
             buffer.Append((byte)vSmDefaultMessageID);
-            byte[] shortMessage = EncodeCString(vShortMessage, SmppEncodingService);
+            byte[] shortMessage = EncodeCString(vShortMessage, vSmppEncodingService);
             vSmLength = (byte)shortMessage.Length;
             buffer.Append((byte)vSmLength);
             buffer.Append(shortMessage);
@@ -130,14 +130,14 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer, SmppEncodingService);
-            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
-            vScheduleDeliveryTime = DecodeCString(buffer, SmppEncodingService);
-            vValidityPeriod = DecodeCString(buffer, SmppEncodingService);
+            vMessageID = DecodeCString(buffer, vSmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+            vScheduleDeliveryTime = DecodeCString(buffer, vSmppEncodingService);
+            vValidityPeriod = DecodeCString(buffer, vSmppEncodingService);
             vRegisteredDelivery = (RegisteredDelivery)GetByte(buffer);
             vSmDefaultMessageID = GetByte(buffer);
             vSmLength = GetByte(buffer);
-            vShortMessage = DecodeString(buffer, (int)vSmLength, SmppEncodingService);
+            vShortMessage = DecodeString(buffer, (int)vSmLength, vSmppEncodingService);
             //This pdu has no option parameters,
             //If there is something left in the buffer,
             //then we have more than required bytes

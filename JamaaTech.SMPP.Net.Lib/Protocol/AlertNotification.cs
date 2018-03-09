@@ -73,8 +73,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
 
         protected override byte[] GetBodyData()
         {
-            byte[] sourceAddrBytes = vSourceAddress.GetBytes(SmppEncodingService);
-            byte[] esmeAddresBytes = vEsmeAddress.GetBytes(SmppEncodingService);
+            byte[] sourceAddrBytes = vSourceAddress.GetBytes(vSmppEncodingService);
+            byte[] esmeAddresBytes = vEsmeAddress.GetBytes(vSmppEncodingService);
             ByteBuffer buffer = new ByteBuffer(sourceAddrBytes.Length + esmeAddresBytes.Length);
             buffer.Append(sourceAddrBytes);
             buffer.Append(esmeAddresBytes);
@@ -84,11 +84,11 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
-            vEsmeAddress = SmppAddress.Parse(buffer, SmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+            vEsmeAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
             //If there are some bytes left,
             //construct a tlv collection
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, SmppEncodingService); }
+            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, vSmppEncodingService); }
         }
         #endregion
     }

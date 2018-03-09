@@ -48,22 +48,22 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.QuerySmResp, vHeader.SequenceNumber);
-            return new QuerySmResp(header, SmppEncodingService);
+            return new QuerySmResp(header, vSmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(16);
-            buffer.Append(EncodeCString(vMessageID, SmppEncodingService));
-            buffer.Append(vSourceAddress.GetBytes(SmppEncodingService));
+            buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
+            buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
             return buffer.ToBytes();
         }
 
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer, SmppEncodingService);
-            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
+            vMessageID = DecodeCString(buffer, vSmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
             //This pdu has no option parameters
             //If there is still something in the buffer,
             //we then have more than required bytes

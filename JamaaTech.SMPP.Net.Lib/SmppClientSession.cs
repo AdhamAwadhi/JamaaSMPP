@@ -318,7 +318,7 @@ namespace JamaaTech.Smpp.Net.Lib
             vTrans = new PDUTransmitter(vTcpIpSession);
             vRespHandler = new ResponseHandler();
             vStreamParser = new StreamParser(
-                vTcpIpSession, vRespHandler, new PduProcessorCallback(PduRequestProcessorCallback), SmppEncodingService);
+                vTcpIpSession, vRespHandler, new PduProcessorCallback(PduRequestProcessorCallback), vSmppEncodingService);
             vStreamParser.ParserException += ParserExceptionEventHandler;
             vStreamParser.PDUError += PduErrorEventHandler;
             //Start stream parser
@@ -467,7 +467,7 @@ namespace JamaaTech.Smpp.Net.Lib
             }
             else
             {
-                resp = new GenericNack(e.Header, SmppEncodingService);
+                resp = new GenericNack(e.Header, vSmppEncodingService);
                 resp.Header.ErrorCode = e.Exception.ErrorCode;
             }
             try { SendPduBase(resp); }

@@ -46,7 +46,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         {
             //deliver_sm_resp has unused param 'message_id'
             //It must always be set to null
-            return EncodeCString(null, SmppEncodingService);
+            return EncodeCString(null, vSmppEncodingService);
         }
 
         protected override void Parse(ByteBuffer buffer)
@@ -55,7 +55,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             //thus, at least 1 byte is required for this pdu
             if (buffer.Length < 1) { throw new NotEnoughBytesException("deliver_sm_resp requires at least 1 byte for body data"); }
             //unfortunately we don't have storage variable for this parameter
-            /*vMessageID = */ DecodeCString(buffer, SmppEncodingService);
+            /*vMessageID = */ DecodeCString(buffer, vSmppEncodingService);
             //Since this pdu has no optional parameters,
             //If there is still something in the buffer,
             //we then have more than enough

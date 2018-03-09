@@ -49,7 +49,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.UnBindResp,vHeader.SequenceNumber);
-            UnbindResp resp = (UnbindResp)CreatePDU(header, SmppEncodingService);
+            UnbindResp resp = (UnbindResp)CreatePDU(header, vSmppEncodingService);
             return resp;
         }
         #endregion

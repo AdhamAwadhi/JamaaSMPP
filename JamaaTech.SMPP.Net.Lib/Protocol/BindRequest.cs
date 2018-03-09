@@ -118,19 +118,19 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
                     break;
             }
             PDUHeader header = new PDUHeader(cmdType, vHeader.SequenceNumber);
-            return (BindResponse)CreatePDU(header, SmppEncodingService);
+            return (BindResponse)CreatePDU(header, vSmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(32);
-            buffer.Append(EncodeCString(vSystemID, SmppEncodingService));
-            buffer.Append(EncodeCString(vPassword, SmppEncodingService));
-            buffer.Append(EncodeCString(vSystemType, SmppEncodingService));
+            buffer.Append(EncodeCString(vSystemID, vSmppEncodingService));
+            buffer.Append(EncodeCString(vPassword, vSmppEncodingService));
+            buffer.Append(EncodeCString(vSystemType, vSmppEncodingService));
             buffer.Append(vInterfaceVersion);
             buffer.Append((byte)vAddressTon);
             buffer.Append((byte)vAddressNpi);
-            buffer.Append(EncodeCString(vAddressRange, SmppEncodingService));
+            buffer.Append(EncodeCString(vAddressRange, vSmppEncodingService));
             return buffer.ToBytes();
         }
 
@@ -141,13 +141,13 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             if (buffer.Length < minBytes) { throw new NotEnoughBytesException("BindRequest requires at least 7 bytes for body parameters"); }
             try
             {
-                vSystemID = DecodeCString(buffer, SmppEncodingService);
-                vPassword = DecodeCString(buffer, SmppEncodingService);
-                vSystemType = DecodeCString(buffer, SmppEncodingService);
+                vSystemID = DecodeCString(buffer, vSmppEncodingService);
+                vPassword = DecodeCString(buffer, vSmppEncodingService);
+                vSystemType = DecodeCString(buffer, vSmppEncodingService);
                 vInterfaceVersion = GetByte(buffer);
                 vAddressTon = (TypeOfNumber)GetByte(buffer);
                 vAddressNpi = (NumberingPlanIndicator)GetByte(buffer);
-                vAddressRange = DecodeCString(buffer, SmppEncodingService);
+                vAddressRange = DecodeCString(buffer, vSmppEncodingService);
             }
             catch (InvalidOperationException ex)
             {

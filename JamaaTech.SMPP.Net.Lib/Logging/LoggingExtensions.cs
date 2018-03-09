@@ -6,11 +6,12 @@ using System.Text;
 namespace JamaaTech.Smpp.Net.Lib.Logging
 {
     public static class LoggingExtensions
-    {
+    {        
+        public static Func<object, SmppEncodingService, string> DumpStrig { get; set; } = DumpStrigDefault;
 #if NET4
         public static string DumpStrig(this object obj, SmppEncodingService encodingService = null)
 #else
-        public static string DumpStrig(object obj, SmppEncodingService encodingService = null)
+        public static string DumpStrigDefault(object obj, SmppEncodingService encodingService = null)
 #endif
         {
             var sb = new StringBuilder();

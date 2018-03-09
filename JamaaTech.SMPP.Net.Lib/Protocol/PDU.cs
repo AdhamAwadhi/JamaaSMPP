@@ -49,12 +49,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public TlvCollection Tlv
         {
             get { return vTlv; }
-        }
-
-        public SmppEncodingService SmppEncodingService
-        {
-            get { return vSmppEncodingService; }
-        }
+        }       
 
         public abstract SmppEntityType AllowedSource { get; }
 
@@ -76,14 +71,14 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         {
             PDUHeader header = new PDUHeader(CommandType.GenericNack, vHeader.SequenceNumber);
             header.ErrorCode = errorCode;
-            GenericNack gNack = (GenericNack)CreatePDU(header, SmppEncodingService);
+            GenericNack gNack = (GenericNack)CreatePDU(header, vSmppEncodingService);
             return gNack;
         }
 
         public virtual byte[] GetBytes()
         {
             byte[] bodyData = GetBodyData();
-            byte[] tlvData = vTlv.GetBytes(SmppEncodingService);
+            byte[] tlvData = vTlv.GetBytes(vSmppEncodingService);
             int length = 16;
             length += bodyData == null ? 0 : bodyData.Length;
             length += tlvData == null ? 0 : tlvData.Length;

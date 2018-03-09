@@ -49,15 +49,15 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.DataSmResp, vHeader.SequenceNumber);
-            return new DataSmResp(header, SmppEncodingService);
+            return new DataSmResp(header, vSmppEncodingService);
         }
 
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer();
-            buffer.Append(EncodeCString(vServiceType, SmppEncodingService));
-            buffer.Append(vSourceAddress.GetBytes(SmppEncodingService));
-            buffer.Append(vDestinationAddress.GetBytes(SmppEncodingService));
+            buffer.Append(EncodeCString(vServiceType, vSmppEncodingService));
+            buffer.Append(vSourceAddress.GetBytes(vSmppEncodingService));
+            buffer.Append(vDestinationAddress.GetBytes(vSmppEncodingService));
             buffer.Append((byte)vEsmClass);
             buffer.Append((byte)vRegisteredDelivery);
             buffer.Append((byte)vDataCoding);
@@ -67,13 +67,13 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vServiceType = DecodeCString(buffer, SmppEncodingService);
-            vSourceAddress = SmppAddress.Parse(buffer, SmppEncodingService);
-            vDestinationAddress = SmppAddress.Parse(buffer, SmppEncodingService);
+            vServiceType = DecodeCString(buffer, vSmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+            vDestinationAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
             vEsmClass = (EsmClass)GetByte(buffer);
             vRegisteredDelivery = (RegisteredDelivery)GetByte(buffer);
             vDataCoding = (DataCoding)GetByte(buffer);
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, SmppEncodingService); }
+            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, vSmppEncodingService); }
         }
 
         public override byte[] GetMessageBytes()

@@ -82,8 +82,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override byte[] GetBodyData()
         {
             ByteBuffer buffer = new ByteBuffer(16);
-            buffer.Append(EncodeCString(vMessageID, SmppEncodingService));
-            buffer.Append(EncodeCString(vFinalDate, SmppEncodingService));
+            buffer.Append(EncodeCString(vMessageID, vSmppEncodingService));
+            buffer.Append(EncodeCString(vFinalDate, vSmppEncodingService));
             buffer.Append((byte)vMessageState);
             buffer.Append(vErrorCode);
             return buffer.ToBytes();
@@ -92,8 +92,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vMessageID = DecodeCString(buffer, SmppEncodingService);
-            vFinalDate = DecodeCString(buffer, SmppEncodingService);
+            vMessageID = DecodeCString(buffer, vSmppEncodingService);
+            vFinalDate = DecodeCString(buffer, vSmppEncodingService);
             vMessageState = (MessageState)GetByte(buffer);
             vErrorCode = GetByte(buffer);
             //This pdu has no option parameters,
