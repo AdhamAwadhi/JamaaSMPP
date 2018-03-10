@@ -361,7 +361,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             }
             else
             {
-                vTlv.Add(new Tlv.Tlv(Tag.user_message_reference, (ushort)val.Length, val));
+                vTlv.Add(new Tlv.Tlv(tag, (ushort)val.Length, val));
             }
         }
 
