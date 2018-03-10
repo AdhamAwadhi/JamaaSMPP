@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Text;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using System.Threading;
+using System.Collections.Concurrent;
 
 namespace JamaaTech.Smpp.Net.Lib
 {
@@ -26,8 +27,8 @@ namespace JamaaTech.Smpp.Net.Lib
     {
         #region Variables
         private int vDefaultResponseTimeout;
-        private List<ResponsePDU> vResponseQueue;
-        private List<PDUWaitContext> vWaitingQueue;
+        private IDictionary<uint, ResponsePDU> vResponseQueue;
+        private IDictionary<uint, PDUWaitContext> vWaitingQueue;
         private AutoResetEvent vResponseEvent;
         private AutoResetEvent vWaitingEvent;
         #endregion
@@ -36,8 +37,8 @@ namespace JamaaTech.Smpp.Net.Lib
         public ResponseHandler()
         {
             vDefaultResponseTimeout = 5000; //Five seconds
-            vWaitingQueue = new List<PDUWaitContext>(32);
-            vResponseQueue = new List<ResponsePDU>(32);
+            vWaitingQueue = new Dictionary<uint, PDUWaitContext>(32);
+            vResponseQueue = new Dictionary<uint, ResponsePDU>(32);
             vResponseEvent = new AutoResetEvent(true);
             vWaitingEvent = new AutoResetEvent(true);
         }
@@ -69,16 +70,11 @@ namespace JamaaTech.Smpp.Net.Lib
             try
             {
                 uint sequenceNumber = pdu.Header.SequenceNumber;
-                for (int index = 0; index < vWaitingQueue.Count; ++index)
+                PDUWaitContext waitContext;
+                if (vWaitingQueue.TryGetValue(sequenceNumber, out waitContext))
                 {
-                    PDUWaitContext waitContext = vWaitingQueue[index];
-                    if (waitContext.SequenceNumber == sequenceNumber)
-                    {
-                        vWaitingQueue.RemoveAt(index);
-                        waitContext.AlertResponseReceived();
-                        if (waitContext.TimedOut) { FetchResponse(sequenceNumber); }
-                        return;
-                    }
+                    waitContext.AlertResponseReceived();
+                    if (waitContext.TimedOut) { FetchResponse(sequenceNumber); }
                 }
             }
             finally { vWaitingEvent.Set(); }
@@ -97,7 +93,7 @@ namespace JamaaTech.Smpp.Net.Lib
             if (timeOut < 5000) { timeOut = vDefaultResponseTimeout; }
             PDUWaitContext waitContext = new PDUWaitContext(sequenceNumber, timeOut);
             vWaitingEvent.WaitOne();
-            try { vWaitingQueue.Add(waitContext); }
+            try { vWaitingQueue[sequenceNumber] = waitContext; }
             finally { vWaitingEvent.Set(); }
             waitContext.WaitForAlert();
             resp = FetchResponse(sequenceNumber);
@@ -110,25 +106,18 @@ namespace JamaaTech.Smpp.Net.Lib
         private void AddResponse(ResponsePDU pdu)
         {
             vResponseEvent.WaitOne();
-            try { vResponseQueue.Add(pdu); }
+            try { vResponseQueue[pdu.Header.SequenceNumber] = pdu; }
             finally { vResponseEvent.Set(); }
         }
 
         private ResponsePDU FetchResponse(uint sequenceNumber)
         {
             vResponseEvent.WaitOne();
-            try 
+            try
             {
-                for (int index = 0; index < vResponseQueue.Count; ++index)
-                {
-                    ResponsePDU pdu = vResponseQueue[index];
-                    if (pdu.Header.SequenceNumber == sequenceNumber)
-                    {
-                        vResponseQueue.RemoveAt(index);
-                        return pdu;
-                    }
-                }
-                return null;
+                ResponsePDU pdu;
+                vResponseQueue.TryGetValue(sequenceNumber, out pdu);
+                return pdu;
             }
             finally { vResponseEvent.Set(); }
         }
