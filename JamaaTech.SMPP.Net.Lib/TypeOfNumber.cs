@@ -27,7 +27,7 @@ namespace JamaaTech.Smpp.Net.Lib
         National = 2,
         NetworkSpecific = 3,
         SubscriberNumber = 4,
-        Aphanumeric = 5,
+        Alphanumeric = 5,
         Abbreviated = 6
     }
 }
