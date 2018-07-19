@@ -177,7 +177,7 @@ namespace JamaaTech.Smpp.Net.Client
         #region Methods
         #region Interface Methods
         /// <summary>
-        /// Sends message to a remote SMMP server
+        /// Sends message to a remote SMPP server
         /// </summary>
         /// <param name="message">A message to send</param>
         /// <param name="timeOut">A value in miliseconds after which the send operation times out</param>
@@ -193,9 +193,7 @@ namespace JamaaTech.Smpp.Net.Client
             foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService))
             {
                 if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpStrig(pdu, vSmppEncodingService));
-                ResponsePDU resp = vTrans.SendPdu(pdu, timeOut);
-                if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
-                { throw new SmppException(resp.Header.ErrorCode); }
+                ResponsePDU resp = SendPdu(pdu, timeOut);
                 var submitSmResp = resp as SubmitSmResp;
                 if (submitSmResp != null)
                 {
@@ -205,6 +203,21 @@ namespace JamaaTech.Smpp.Net.Client
                 message.ReceiptedMessageId = messageId;
                 RaiseMessageSentEvent(message);
             }
+        }
+
+        /// <summary>
+        /// Send PDU to a remote SMPP server 
+        /// </summary>
+        /// <param name="pdu"><see cref="RequestPDU"/></param>
+        /// <param name="timeout">A value in miliseconds after which the send operation times out</param>
+        /// <returns><see cref="ResponsePDU"/></returns>
+        public ResponsePDU SendPdu(RequestPDU pdu, int timeout)
+        {
+            var resp = vTrans.SendPdu(pdu, timeout);
+            if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
+            { throw new SmppException(resp.Header.ErrorCode); }
+
+            return resp;
         }
 
         /// <summary>
