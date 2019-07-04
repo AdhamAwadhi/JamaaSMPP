@@ -41,8 +41,9 @@ namespace JamaaTech.Smpp.Net.Client
             if (udh != null) { sms = new TextMessage(udh.SegmentID, udh.MessageCount, udh.MessageSequence); }
             else { sms = new TextMessage(); }
             sms.Text = message == null ? "" : message;
-            sms.SourceAddress = pdu.SourceAddress.Address;
-            sms.DestinationAddress = pdu.DestinationAddress.Address;
+            // Update the address and copy all information available.
+            sms.SourceAddress.CopyFrom(pdu.SourceAddress);
+            sms.DestinationAddress.CopyFrom(pdu.DestinationAddress);
             return sms;
         }
         #endregion

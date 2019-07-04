@@ -64,8 +64,9 @@ namespace JamaaTech.Smpp.Net.Client
         protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService)
         {
             SubmitSm sm = CreateSubmitSm(smppEncodingService);
-            sm.SourceAddress.Address = vSourceAddress;
-            sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
+            // Update the source and destination address, and fix the typo.
+            sm.SourceAddress.CopyFrom(vSourceAddress);
+            sm.DestinationAddress.CopyFrom(vDestinationAddress); 
             sm.DataCoding = defaultEncoding;
             sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);           
 

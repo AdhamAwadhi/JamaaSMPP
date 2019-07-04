@@ -28,8 +28,10 @@ namespace JamaaTech.Smpp.Net.Client
     public abstract class ShortMessage
     {
         #region Variables
-        protected string vSourceAddress;
-        protected string vDestinatinoAddress;
+        // Set the source and destination address has a smpp address to be able to set the 
+        // NPI and TON settings for each adress.
+        protected SmppAddress vSourceAddress;
+        protected SmppAddress vDestinationAddress;
         protected int vMessageCount;
         protected int vSegmentID;
         protected int vSequenceNumber;
@@ -41,8 +43,9 @@ namespace JamaaTech.Smpp.Net.Client
         #region Constructors
         public ShortMessage()
         {
-            vSourceAddress = "";
-            vDestinatinoAddress = "";
+            //Update the source and destination address
+            vSourceAddress = new SmppAddress();
+            vDestinationAddress = new SmppAddress();
             vSegmentID = -1;
         }
 
@@ -57,20 +60,20 @@ namespace JamaaTech.Smpp.Net.Client
 
         #region Properties
         /// <summary>
-        /// Gets or sets a <see cref="ShortMessage"/> source address
+        /// Gets the <see cref="ShortMessage"/> source address <see cref="SmppAddress"/>.
         /// </summary>
-        public string SourceAddress
+        public SmppAddress SourceAddress 
         {
+        	  //Set the source address as read only the address must be changed inside SmppAddress class.
             get { return vSourceAddress; }
-            set { vSourceAddress = value; }
         }
         /// <summary>
-        /// Gets or sets a <see cref="ShortMessage"/> destination address
+        /// Gets the <see cref="ShortMessage"/> destination address <see cref="SmppAddress"/>.
         /// </summary>
-        public string DestinationAddress
+        public SmppAddress DestinationAddress
         {
-            get { return vDestinatinoAddress; }
-            set { vDestinatinoAddress = value; }
+        	  //Set the destination address as read only the address must be changed inside SmppAddress class.
+            get { return vDestinationAddress; }
         }
         /// <summary>
         /// Gets or sets a <see cref="ShortMessage"/> receipted message identifier.

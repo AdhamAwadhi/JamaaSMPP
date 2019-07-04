@@ -63,9 +63,22 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             get { return vAddress; }
             set { vAddress = value; }
         }
+        /// <summary>Gets a value indicating whether this instance Adress is empty. </summary>
+        /// <value> <c>true</c> if this instance Address is empty; otherwise, <c>false</c>. </value>
+        public bool IsEmpty { get => string.IsNullOrEmpty(Address?.Trim()); }
         #endregion
 
         #region Methods
+        /// <summary>Copies the smpp address from another smpp address. </summary>
+        /// <param name="copyFrom">The address to copy from.</param>
+        /// <exception cref="ArgumentNullException">The copyFrom parameter is null.</exception>
+        public void CopyFrom(SmppAddress copyFrom)
+        {
+            if(copyFrom == null) { throw new ArgumentNullException("copyFrom"); }
+            this.vAddress = copyFrom.vAddress;
+            this.vNpi = copyFrom.Npi;
+            this.Ton = copyFrom.Ton;
+        }
         internal static SmppAddress Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
         {
             //We require at least 3 bytes for SMPPAddress instance to be craeted

@@ -185,6 +185,14 @@ namespace JamaaTech.Smpp.Net.Client
         {
             if (message == null) { throw new ArgumentNullException("message"); }
 
+            // If the message of the source address is empty then try to use the SMmppClient source address properties.
+            if(message.SourceAddress.IsEmpty)
+            {
+                message.SourceAddress.Address = vProperties.SourceAddress;
+                message.SourceAddress.Npi = vProperties.AddressNpi;
+                message.SourceAddress.Ton = vProperties.AddressTon;
+            }
+
             //Check if connection is open
             if (vState != SmppConnectionState.Connected)
             { throw new SmppClientException("Sending message operation failed because the SmppClient is not connected"); }

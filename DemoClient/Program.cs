@@ -72,8 +72,9 @@ namespace DemoClient
 
                 TextMessage msg = new TextMessage();
 
-                msg.DestinationAddress = dest; //Receipient number
-                msg.SourceAddress = smppConfig.SourceAddress; //Originating number
+                // Updated the address field.
+                msg.DestinationAddress.Address = dest; //Receipient number
+                msg.SourceAddress.Address = smppConfig.SourceAddress; //Originating number
                                                               //msg.Text = "Hello, this is my test message!";
                 msg.Text = msgTxt;
                 msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
