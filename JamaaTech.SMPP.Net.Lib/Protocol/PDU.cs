@@ -316,10 +316,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             }
             else
             {
-                var bytes = vSmppEncodingService.GetBytesFromCString(val);
-
-                // Add a null byte to the end if needed.
-                if (nullTerminated) Array.Resize(ref bytes, bytes.Length + 1);
+                var bytes = vSmppEncodingService.GetBytesFromCString(val, nullTerminated);
 
                 SetOptionalParamBytes(tag, bytes);
             }

@@ -11,7 +11,7 @@ namespace JamaaTech.Smpp.Net.Lib
 
         public SmppEncodingService() : this(System.Text.Encoding.BigEndianUnicode)
         {
-        }        
+        }
         public SmppEncodingService(System.Text.Encoding ucs2Encoding)
         {
             UCS2Encoding = ucs2Encoding;
@@ -62,12 +62,12 @@ namespace JamaaTech.Smpp.Net.Lib
             return result;
         }
 
-        public virtual byte[] GetBytesFromCString(string cStr)
+        public virtual byte[] GetBytesFromCString(string cStr, bool nullTerminated = true)
         {
-            return GetBytesFromCString(cStr, DataCoding.ASCII);
+            return GetBytesFromCString(cStr, DataCoding.ASCII, nullTerminated);
         }
 
-        public virtual byte[] GetBytesFromCString(string cStr, DataCoding dataCoding)
+        public virtual byte[] GetBytesFromCString(string cStr, DataCoding dataCoding, bool nullTerminated = true)
         {
             if (cStr == null) { throw new ArgumentNullException("cStr"); }
             if (cStr.Length == 0) { return new byte[] { 0x00 }; }
@@ -89,8 +89,17 @@ namespace JamaaTech.Smpp.Net.Lib
                 default:
                     throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Unsupported encoding");
             }
-            ByteBuffer buffer = new ByteBuffer(bytes, bytes.Length + 1);
-            buffer.Append(new byte[] { 0x00 }); //Append a null charactor a the end
+            ByteBuffer buffer;
+            if (nullTerminated)
+            {
+                buffer = new ByteBuffer(bytes, bytes.Length + 1);
+                buffer.Append(new byte[] { 0x00 }); //Append a null charactor a the end                
+            }
+            else
+            {
+                buffer = new ByteBuffer(bytes, bytes.Length);
+            }
+
             return buffer.ToBytes();
         }
 
