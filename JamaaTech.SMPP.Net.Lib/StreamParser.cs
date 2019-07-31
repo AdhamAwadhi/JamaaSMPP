@@ -135,7 +135,7 @@ namespace JamaaTech.Smpp.Net.Lib
             }
             //--
             header = PDUHeader.Parse(new ByteBuffer(headerBytes), vSmppEncodingService);
-            _Log.TraceFormat("PDU header: {0}", Logging.LoggingExtensions.DumpStrig(header, vSmppEncodingService));
+            _Log.TraceFormat("PDU header: {0}", Logging.LoggingExtensions.DumpString(header, vSmppEncodingService));
 
             try { pdu = PDU.CreatePDU(header, vSmppEncodingService); }
             catch (InvalidPDUCommandException inv_ex)

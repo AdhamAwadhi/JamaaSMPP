@@ -7,11 +7,11 @@ namespace JamaaTech.Smpp.Net.Lib.Logging
 {
     public static class LoggingExtensions
     {        
-        public static Func<object, SmppEncodingService, string> DumpStrig { get; set; } = DumpStrigDefault;
+        public static Func<object, SmppEncodingService, string> DumpString { get; set; } = DumpStringDefault;
 #if NET4
-        public static string DumpStrig(this object obj, SmppEncodingService encodingService = null)
+        public static string DumpString(this object obj, SmppEncodingService encodingService = null)
 #else
-        public static string DumpStrigDefault(object obj, SmppEncodingService encodingService = null)
+        public static string DumpStringDefault(object obj, SmppEncodingService encodingService = null)
 #endif
         {
             var sb = new StringBuilder();

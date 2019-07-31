@@ -192,12 +192,12 @@ namespace JamaaTech.Smpp.Net.Client
             string messageId = null;
             foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService))
             {
-                if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpStrig(pdu, vSmppEncodingService));
+                if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpString(pdu, vSmppEncodingService));
                 ResponsePDU resp = SendPdu(pdu, timeOut);
                 var submitSmResp = resp as SubmitSmResp;
                 if (submitSmResp != null)
                 {
-                    if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage Response: {0}", LoggingExtensions.DumpStrig(resp, vSmppEncodingService));
+                    if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage Response: {0}", LoggingExtensions.DumpString(resp, vSmppEncodingService));
                     messageId = ((SubmitSmResp)resp).MessageID;
                 }
                 message.ReceiptedMessageId = messageId;
@@ -521,7 +521,7 @@ namespace JamaaTech.Smpp.Net.Client
             if (pdu == null) { return; }
 
             if (_Log.IsDebugEnabled)
-                _Log.DebugFormat("Received PDU: {0}", LoggingExtensions.DumpStrig(pdu, vSmppEncodingService));
+                _Log.DebugFormat("Received PDU: {0}", LoggingExtensions.DumpString(pdu, vSmppEncodingService));
 
             if (vTraceSwitch.TraceVerbose)
             {
@@ -559,7 +559,7 @@ namespace JamaaTech.Smpp.Net.Client
             }
 
             if (message != null && _Log.IsDebugEnabled)
-                _Log.DebugFormat("PduReceived: message: {0}", LoggingExtensions.DumpStrig(message, vSmppEncodingService));
+                _Log.DebugFormat("PduReceived: message: {0}", LoggingExtensions.DumpString(message, vSmppEncodingService));
 
             if (vTraceSwitch.TraceVerbose)
             {
