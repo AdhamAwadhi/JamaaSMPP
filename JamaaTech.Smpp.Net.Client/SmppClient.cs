@@ -346,7 +346,7 @@ namespace JamaaTech.Smpp.Net.Client
                     lock (vProperties.SyncRoot)
                     {
                         bindInfo = vProperties.GetBindInfo();
-                        useSepConn = vProperties.InterfaceVersion == InterfaceVersion.v33;
+                        useSepConn = vProperties.CanSeparateConnections;
                     }
                     try { OpenSession(bindInfo, useSepConn, timeOut); }
                     catch (Exception ex)

@@ -18,6 +18,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using JamaaTech.Smpp.Net.Lib;
+using JamaaTech.Smpp.Net.Lib.Protocol;
 
 namespace JamaaTech.Smpp.Net.Client
 {
@@ -40,6 +41,7 @@ namespace JamaaTech.Smpp.Net.Client
         private string vSystemType;
         private object vSyncRoot;
         private string vSourceAddress;
+        private bool? vUseSeparateConnections;
         #endregion
 
         #region Constructors
@@ -173,6 +175,23 @@ namespace JamaaTech.Smpp.Net.Client
             get { return vSourceAddress; }
             set { vSourceAddress = value; }
         }
+
+        /// <summary>
+        /// Gets or sets UseSeparateConnections
+        /// When null: Depends on <see cref="InterfaceVersion"/>, if <see cref="InterfaceVersion.v33"/> true, <see cref="InterfaceVersion.v34"/> false.
+        /// When false: Use two sessions for Receiver (<see cref="CommandType.BindReceiver"/>) and Transmitter (<see cref="CommandType.BindTransmitter"/>)
+        /// When true: Use one session for Receiver and Transmitter in mode <see cref="CommandType.BindTransceiver"/>
+        /// </summary>
+        public bool? UseSeparateConnections
+        {
+            get { return vUseSeparateConnections; }
+            set { vUseSeparateConnections = value; }
+        }
+
+        /// <summary>
+        /// <see cref="UseSeparateConnections"/>
+        /// </summary>
+        public bool CanSeparateConnections => UseSeparateConnections == true || InterfaceVersion == InterfaceVersion.v33;
         #endregion
 
         #region Methods
