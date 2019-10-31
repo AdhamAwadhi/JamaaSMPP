@@ -19,8 +19,8 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Added `SmppConnectionProperties.UseSeparateConnections`
 
   > **When `null`**: Depends on `SmppConnectionProperties.InterfaceVersion`, if `InterfaceVersion.v33` will be `true`, otherwise `false.`
-  > **When `false`**: Use two sessions for Receiver (`CommandType.BindReceiver`) and Transmitter (`CommandType.BindTransmitter`)
-  > **When `true`**: Use one session for Receiver and Transmitter in mode `CommandType.BindTransceiver`
+  > **When `true`**: Use two sessions for Receiver (`CommandType.BindReceiver`) and Transmitter (`CommandType.BindTransmitter`)
+  > **When `false`**: Use one session for Receiver and Transmitter in mode `CommandType.BindTransceiver`
 
 ### v1.7.4
 - Support sending concatenated messages

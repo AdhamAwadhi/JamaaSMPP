@@ -179,8 +179,8 @@ namespace JamaaTech.Smpp.Net.Client
         /// <summary>
         /// Gets or sets UseSeparateConnections
         /// When null: Depends on <see cref="InterfaceVersion"/>, if <see cref="InterfaceVersion.v33"/> true, <see cref="InterfaceVersion.v34"/> false.
-        /// When false: Use two sessions for Receiver (<see cref="CommandType.BindReceiver"/>) and Transmitter (<see cref="CommandType.BindTransmitter"/>)
-        /// When true: Use one session for Receiver and Transmitter in mode <see cref="CommandType.BindTransceiver"/>
+        /// When true: Use two sessions for Receiver (<see cref="CommandType.BindReceiver"/>) and Transmitter (<see cref="CommandType.BindTransmitter"/>)
+        /// When false: Use one session for Receiver and Transmitter in mode <see cref="CommandType.BindTransceiver"/>
         /// </summary>
         public bool? UseSeparateConnections
         {
