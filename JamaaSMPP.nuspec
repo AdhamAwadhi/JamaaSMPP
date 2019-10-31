@@ -16,6 +16,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="lib\JamaaTech.Smpp.Net*.*" target="lib" exclude="**\*.exe" />    
+    <file src="lib\JamaaTech.Smpp.Net*.*" target="lib\net40" exclude="**\*.exe" />    
   </files>
 </package>

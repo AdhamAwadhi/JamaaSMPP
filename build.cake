@@ -10,16 +10,16 @@ var configuration = Argument("configuration", "Release");
 // EXTERNAL NUGET TOOLS
 //////////////////////////////////////////////////////////////////////
 
-#Tool "GitVersion.CommandLine"
+#tool nuget:?package=GitVersion.CommandLine&version=5.1.1
 
 //////////////////////////////////////////////////////////////////////
 // EXTERNAL NUGET LIBRARIES
 //////////////////////////////////////////////////////////////////////
 
 #addin "Cake.FileHelpers"
-#addin "System.Text.Json"
+#addin nuget:?package=Cake.Json
+#addin nuget:?package=Newtonsoft.Json&version=11.0.2
 //#addin "Cake.ExtendedNuGet"
-using System.Text.Json;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ Task("__UpdateAssemblyVersionInformation")
     StartProcess(gitVersionPath, gitVersionSettings, out outputLines);
 
     var output = string.Join("\n", outputLines);
-    gitVersionOutput = new JsonParser().Parse<Dictionary<string, object>>(output);
+    gitVersionOutput = DeserializeJson<Dictionary<string, object>>(output);
 
     Information("Updated GlobalAssemblyInfo");
     Information("AssemblyVersion -> {0}", gitVersionOutput["AssemblySemVer"]);
