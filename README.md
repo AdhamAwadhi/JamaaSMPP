@@ -15,6 +15,14 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
+### v1.7.5
+- Added `SmppConnectionProperties.UseSeparateConnections`
+
+  > **When `null`**: Depends on `SmppConnectionProperties.InterfaceVersion`, if `InterfaceVersion.v33` will be `true`, otherwise `false.`
+  > **When `false`**: Use two sessions for Receiver (`CommandType.BindReceiver`) and Transmitter (`CommandType.BindTransmitter`)
+  > **When `true`**: Use one session for Receiver and Transmitter in mode `CommandType.BindTransceiver`
+
+### v1.7.4
 - Support sending concatenated messages
 - ~~Fix Unicode Languages [issue #2](https://github.com/AdhamAwadhi/JamaaSMPP/issues/2). Allow user to set UCS2 encoding in SMPPEncodingUtil~~ 
 SEE [here](https://github.com/AdhamAwadhi/JamaaSMPP/wiki/Smpp-Encoding)
@@ -49,9 +57,9 @@ SEE [here](https://github.com/AdhamAwadhi/JamaaSMPP/wiki/Smpp-Encoding)
     - JamaaSMPP version : Simple version of GSM 03.38 without **Greeks  alphapet**
 
   >    You can choose between them by setting `UseGsmEncoding` property to `true` (*defualt*) to use  **GSM Encoding** or ti `false` to use the other.
-    
+  
         JamaaTech.Smpp.Net.Lib.Util.SMSCDefaultEncoding.UseGsmEncoding = true; // or false
-        
+  
 - Use [Common.Logging](https://github.com/net-commons/common-logging) for logging purpose
 - PDU TLV collection methods
 	+ `string GetOptionalParamString(Tag tag)`
