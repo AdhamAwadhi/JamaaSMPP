@@ -26,5 +26,6 @@ namespace DemoClient
         bool StartAutomatically { get; }
         string DestinationAddressRegex { get; }
         RegisteredDelivery RegisteredDeliveryValue { get; }
+        bool? UseSeparateConnections { get; }
     }
 }

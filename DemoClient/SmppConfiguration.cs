@@ -26,6 +26,7 @@ namespace DemoClient
         public bool StartAutomatically { get; set; }
         public string DestinationAddressRegex { get; set; }
         public RegisteredDelivery RegisteredDeliveryValue { get; set; }
+        public bool? UseSeparateConnections { get; set; }
 
         public SmppConfiguration()
         {
@@ -44,6 +45,7 @@ namespace DemoClient
             ReconnectInteval = 10000;
             Encoding = JamaaTech.Smpp.Net.Lib.DataCoding.UCS2;
             RegisteredDeliveryValue = RegisteredDelivery.DeliveryReceipt;
+            UseSeparateConnections = null;
 
         }
     }

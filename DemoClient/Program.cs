@@ -14,7 +14,10 @@ namespace DemoClient
 {
     class Program
     {
+        private static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         static ISmppConfiguration smppConfig;
+        private static SmppClient client;
 
         public static byte[] StringToByteArray(string hex)
         {
@@ -40,54 +43,99 @@ namespace DemoClient
 
             //Assert.AreEqual("253092914522667372", pdu.ReceiptedMessageId);
 
-            Trace.WriteLine("Start");
+            _Log.Info("Start");
             //Trace.Listeners.Add(new ConsoleTraceListener());
 
             smppConfig = GetSmppConfiguration();
 
             //SMPPEncodingUtil.UCS2Encoding = Encoding.UTF8;
 
-            var client = CreateSmppClient(smppConfig);
+            client = CreateSmppClient(smppConfig);
             client.Start();
 
             // must wait until connected before start sending
             while (client.ConnectionState != SmppConnectionState.Connected)
                 Thread.Sleep(100);
 
-            var input = "";
+            // Accept command input
+            bool bQuit = false;
+
             do
             {
-                Console.Write("Enter Dest: ");
-                input = Console.ReadLine();
-                if ("q".Equals(input, StringComparison.InvariantCultureIgnoreCase)) break;
+                // Hit Enter in the terminal once the binds are up to see this prompt
 
-                var dest = input;
-                Console.Write("Enter Msg: ");
-                var msgTxt = Console.ReadLine();
+                Console.WriteLine("Commands");
+                Console.WriteLine("send 123456 hello");
+                Console.WriteLine("quit");
+                Console.WriteLine("");
 
-                if (string.IsNullOrEmpty(msgTxt))
-                    msgTxt = @"السلام عليكم ورحمة الله وبركاته
+                Console.Write("\n#>");
+
+                string command = Console.ReadLine();
+                if (command.Length == 0)
+                    continue;
+
+                switch (command.Split(' ')[0].ToString())
+                {
+                    case "quit":
+                    case "exit":
+                    case "q":
+                        bQuit = true;
+                        break;
+
+                    default:
+                        ProcessCommand(command);
+                        break;
+                }
+
+                if (bQuit)
+                    break;
+
+            } while (true);
+
+            if (client != null)
+                client.Dispose();
+        }
+
+        private static void ProcessCommand(string command)
+        {
+            string[] parts = command.Split(' ');
+
+            switch (parts[0])
+            {
+                case "send":                
+                    SendMessage(command);
+                    break;
+            }
+        }
+
+        private static void SendMessage(string command)
+        {
+            var parts = command.Split(' ');
+            var dest = parts[1];
+            var msgTxt = string.Join(" ", parts, 2, parts.Length - 2);
+
+            if (string.IsNullOrEmpty(msgTxt))
+                msgTxt = @"السلام عليكم ورحمة الله وبركاته
 هذه رسالة عربية
 متعددة الاسطر";
 
-                TextMessage msg = new TextMessage();
+            TextMessage msg = new TextMessage();
 
-                msg.DestinationAddress = dest; //Receipient number
-                msg.SourceAddress = smppConfig.SourceAddress; //Originating number
-                                                              //msg.Text = "Hello, this is my test message!";
-                msg.Text = msgTxt;
-                msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
-                msg.UserMessageReference = Guid.NewGuid().ToString();
-                Console.WriteLine($"msg.UserMessageReference: {msg.UserMessageReference}");
-                Trace.WriteLine($"msg.UserMessageReference: {msg.UserMessageReference}");
+            msg.DestinationAddress = dest; //Receipient number
+            msg.SourceAddress = smppConfig.SourceAddress; //Originating number
+                                                          //msg.Text = "Hello, this is my test message!";
+            msg.Text = msgTxt;
+            msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
+            msg.UserMessageReference = Guid.NewGuid().ToString();
+            Console.WriteLine($"msg.UserMessageReference: {msg.UserMessageReference}");
+            _Log.DebugFormat($"msg.UserMessageReference: {msg.UserMessageReference}");
 
-                //client.SendMessage(msg);
+            //client.SendMessage(msg);
 
-                client.BeginSendMessage(msg, SendMessageCompleteCallback, client);
-
-                Console.ReadLine();
-            } while (true);
+            client.BeginSendMessage(msg, SendMessageCompleteCallback, client);
         }
+
 
         private static void SendMessageCompleteCallback(IAsyncResult result)
         {
@@ -98,7 +146,7 @@ namespace DemoClient
             }
             catch (Exception e)
             {
-                Trace.TraceError("SendMessageCompleteCallback:" + e.ToString());
+                _Log.Error("SendMessageCompleteCallback:" + e.Message, e);
             }
         }
 
@@ -128,6 +176,7 @@ namespace DemoClient
             properties.SystemType = config.SystemType;// "mysystemtype";
             properties.DefaultServiceType = config.DefaultServiceType;// "mydefaultservicetype";
             properties.DefaultEncoding = config.Encoding;
+            properties.UseSeparateConnections = config.UseSeparateConnections;
 
             //Resume a lost connection after 30 seconds
             client.AutoReconnectDelay = config.AutoReconnectDelay;
