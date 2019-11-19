@@ -15,11 +15,7 @@ namespace JamaaTech.Smpp.Net.Lib.Logging
         {
             try
             {
-#if NET4
-                return DumpString(obj, encodingService);
-#else
                 return DumpStringDefault(obj, encodingService);
-#endif
             }
             catch (Exception ex)
             {
@@ -29,11 +25,7 @@ namespace JamaaTech.Smpp.Net.Lib.Logging
             }
         }
 
-#if NET4
-        public static string DumpString(this object obj, SmppEncodingService encodingService = null)
-#else
         public static string DumpStringDefault(object obj, SmppEncodingService encodingService = null)
-#endif
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0} -- ", obj.GetType().Name);
