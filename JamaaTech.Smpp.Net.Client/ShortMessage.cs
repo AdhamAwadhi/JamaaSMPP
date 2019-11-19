@@ -36,6 +36,8 @@ namespace JamaaTech.Smpp.Net.Client
         protected bool vRegisterDeliveryNotification;
         protected string vReceiptedMessageId;
         protected string vUserMessageReference;
+        protected MessageState? vMessageState;
+        protected byte[] vNetworkErrorCode;
         #endregion
 
         #region Constructors
@@ -127,7 +129,26 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vRegisterDeliveryNotification; }
             set { vRegisterDeliveryNotification = value; }
-        }       
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="MessageStateType"/> value that indicates the ESME the final message state for an SMSC Delivery Receipt.
+        /// </summary>
+        public MessageState? MessageState
+        {
+            get { return vMessageState; }
+            set { vMessageState = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="Byte[]"/> value that indicates Network error code.  May be present for SMSC Delivery Receipts and
+		/// Intermediate Notifications.  See section 5.3.2.31 for more information.
+        /// </summary>
+        public byte[] NetworkErrorCode
+        {
+            get { return vNetworkErrorCode; }
+            set { vNetworkErrorCode = value; }
+        }
         #endregion
 
         #region Methods       
