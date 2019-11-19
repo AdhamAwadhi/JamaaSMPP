@@ -7,7 +7,10 @@ using System.Threading;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using System.Diagnostics;
+using JamaaTech.Smpp.Net.Lib.Logging;
+#if NET40
 using SettingsReader.Readers;
+#endif
 using System.Linq;
 
 namespace DemoClient
@@ -18,6 +21,7 @@ namespace DemoClient
 
         static ISmppConfiguration smppConfig;
         private static SmppClient client;
+        private static readonly Random RND = new Random();
 
         public static byte[] StringToByteArray(string hex)
         {
@@ -29,7 +33,7 @@ namespace DemoClient
 
         static void Main(string[] args)
         {
-            //Common.Logging.LogManager.Adapter = new Common.Logging.Simple.ConsoleOutLoggerFactoryAdapter();
+            Common.Logging.LogManager.Adapter = new Common.Logging.Simple.DebugLoggerFactoryAdapter();
             var encSrv = new SmppEncodingService();
 
             var hexBytes = "000000dd0000000500000000019182410001013334363439323836383039000501657669636572746961000400000000000000008569643a323533303932393134353232363637333732207375623a30303120646c7672643a303031207375626d697420646174653a3133303932393136353220646f6e6520646174653a3133303932393136353220737461743a44454c49565244206572723a3030303020746578743a1b3c657669534d531b3e0a534d532064652050727565042300030300000427000102001e001332353330393239313435323236363733373200";
@@ -103,7 +107,7 @@ namespace DemoClient
 
             switch (parts[0])
             {
-                case "send":                
+                case "send":
                     SendMessage(command);
                     break;
             }
@@ -127,13 +131,38 @@ namespace DemoClient
                                                           //msg.Text = "Hello, this is my test message!";
             msg.Text = msgTxt;
             msg.RegisterDeliveryNotification = true; //I want delivery notification for this message
-            msg.UserMessageReference = Guid.NewGuid().ToString();
-            Console.WriteLine($"msg.UserMessageReference: {msg.UserMessageReference}");
+            msg.UserMessageReference = GenerateUserMessageReference(smppConfig.UserMessageReferenceType);
             _Log.DebugFormat($"msg.UserMessageReference: {msg.UserMessageReference}");
 
-            //client.SendMessage(msg);
+            try
+            {
+                client.SendMessage(msg);
+            }
+            catch (SmppException smppEx)
+            {
+                _Log.ErrorFormat("smppEx.ErrorCode:({0}) {1} ", (int)smppEx.ErrorCode, smppEx.ErrorCode);
+                _Log.Error(smppEx);
+            }
+            catch (Exception e)
+            {
+                _Log.Error("SendMessage:" + e.Message, e);
+            }
+            //client.BeginSendMessage(msg, SendMessageCompleteCallback, client);
+        }
 
-            client.BeginSendMessage(msg, SendMessageCompleteCallback, client);
+        private static string GenerateUserMessageReference(UserMessageReferenceType userMessageReferenceType)
+        {
+            switch (userMessageReferenceType)
+            {
+                case UserMessageReferenceType.Guid:
+                    return Guid.NewGuid().ToString();
+                case UserMessageReferenceType.Int:
+                    return RND.Next(0, int.MaxValue).ToString();
+                case UserMessageReferenceType.IntHex:
+                    return RND.Next(0, int.MaxValue).ToString("X");
+                default:
+                    return null;
+            }
         }
 
 
@@ -152,8 +181,27 @@ namespace DemoClient
 
         private static ISmppConfiguration GetSmppConfiguration()
         {
+#if NET40
             var reader = new AppSettingsReader();
             return reader.Read<SmppConfiguration>();
+#else
+            return new SmppConfiguration()
+            {
+                SystemID = "smppclient1",
+                Password = "password",
+                Host = "localhost",
+                Port = 5016,
+                SystemType = "5750",
+                DefaultServiceType = "5750",
+                SourceAddress = "5750",
+                Encoding = DataCoding.UCS2,
+                AddressNpi = NumberingPlanIndicator.Unknown,
+                AddressTon = TypeOfNumber.Alphanumeric,
+                UserMessageReferenceType = UserMessageReferenceType.None,
+                RegisterDeliveryNotification = true,
+                UseSeparateConnections = true
+            };
+#endif
         }
 
         static SmppClient CreateSmppClient(ISmppConfiguration config)

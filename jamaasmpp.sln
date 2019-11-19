@@ -1,29 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.138
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smpp.Net.Client", "JamaaTech.Smpp.Net.Client\Smpp.Net.Client.csproj", "{1578A5AA-1DC1-42C6-AFF5-0EB278960881}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smpp.Net.Client", "JamaaTech.Smpp.Net.Client\Smpp.Net.Client.csproj", "{29B74C7F-40A4-41AF-A1CD-A30BB5FE2649}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smpp.Net.Lib", "JamaaTech.SMPP.Net.Lib\Smpp.Net.Lib.csproj", "{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smpp.Net.Lib", "JamaaTech.Smpp.Net.Lib\Smpp.Net.Lib.csproj", "{3FC3629D-8702-4ABF-BC8B-DB2EF91C1B57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoClient", "DemoClient\DemoClient.csproj", "{4E58329B-D8B3-4169-97B6-F501E7B04D07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoClient", "DemoClient\DemoClient.csproj", "{96C6F0F6-2FA0-4F82-B68D-903264F02383}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{87D8F062-1DD2-4909-B2F3-58E9B4C2BE33}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A540A591-CBB2-46C8-8F64-C72B4C83492E}"
 	ProjectSection(SolutionItems) = preProject
+		common.props = common.props
+		Jamaa Smpp Client.snk = Jamaa Smpp Client.snk
+		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{BAF24B2C-1080-4DF3-AF16-E5A700BE2E43}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B49D3C8D-C883-4811-8F54-248E0B33E1C6}"
 	ProjectSection(SolutionItems) = preProject
-		build.bat = build.bat
 		build.cake = build.cake
 		build.ps1 = build.ps1
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{10B5221A-E6A5-4788-8DAF-5E8315D0B015}"
-	ProjectSection(SolutionItems) = preProject
-		JamaaSMPP.nuspec = JamaaSMPP.nuspec
+		nupkg\pack.ps1 = nupkg\pack.ps1
 	EndProjectSection
 EndProject
 Global
@@ -32,20 +30,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1578A5AA-1DC1-42C6-AFF5-0EB278960881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1578A5AA-1DC1-42C6-AFF5-0EB278960881}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1578A5AA-1DC1-42C6-AFF5-0EB278960881}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1578A5AA-1DC1-42C6-AFF5-0EB278960881}.Release|Any CPU.Build.0 = Release|Any CPU
-		{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{181F2022-E0DD-415E-BBBA-7C5E0303AAF8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E58329B-D8B3-4169-97B6-F501E7B04D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E58329B-D8B3-4169-97B6-F501E7B04D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E58329B-D8B3-4169-97B6-F501E7B04D07}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E58329B-D8B3-4169-97B6-F501E7B04D07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29B74C7F-40A4-41AF-A1CD-A30BB5FE2649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29B74C7F-40A4-41AF-A1CD-A30BB5FE2649}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29B74C7F-40A4-41AF-A1CD-A30BB5FE2649}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29B74C7F-40A4-41AF-A1CD-A30BB5FE2649}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FC3629D-8702-4ABF-BC8B-DB2EF91C1B57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FC3629D-8702-4ABF-BC8B-DB2EF91C1B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FC3629D-8702-4ABF-BC8B-DB2EF91C1B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FC3629D-8702-4ABF-BC8B-DB2EF91C1B57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96C6F0F6-2FA0-4F82-B68D-903264F02383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96C6F0F6-2FA0-4F82-B68D-903264F02383}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96C6F0F6-2FA0-4F82-B68D-903264F02383}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96C6F0F6-2FA0-4F82-B68D-903264F02383}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A49D42F6-1512-4538-8020-0D683E8E56B1}
 	EndGlobalSection
 EndGlobal

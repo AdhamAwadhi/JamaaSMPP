@@ -1,0 +1,43 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Version>1.8.1</Version>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <PackageProjectUrl>https://github.com/AdhamAwadhi/JamaaSMPP/</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
+    <Company>Jamaa Technologies</Company>
+    <Authors>AdhamAwadhi,JamaaTech</Authors>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Owners>AdhamAwadhi,JamaaTech</Owners>
+    <Summary>HardwareAnalyzer</Summary>
+    <PackageTags>.net smpp</PackageTags>
+    <Title>Jamaa SMPP Client</Title>
+    <Description>Jamaa SMPP Client is a .NET implementation of the SMPP protocol that focuses on providing an easy-to-use and robust SMPP client library for .NET developers. This project is intended to be used by developers who want to integrate SMS functionalities in their applications as well as students who are learning the SMPP protocol.</Description>
+    <Copyright>Jamaa Technologies</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicense>https://github.com/AdhamAwadhi/JamaaSMPP/blob/master/LICENSE</PackageLicense>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <ReleaseVersion>$(Version)</ReleaseVersion>
+    <Version>$(Version)</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <PackageReleaseNotes>
+      v$(CurrentVersion)
+
+      - LoggingExtensions.DumpStringWithTry
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Jamaa Smpp Client.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+  </ItemGroup>
+
+</Project>
