@@ -36,6 +36,9 @@ namespace JamaaTech.Smpp.Net.Client
         protected bool vRegisterDeliveryNotification;
         protected string vReceiptedMessageId;
         protected string vUserMessageReference;
+        protected bool vSubmitUserMessageReference;
+        protected MessageState? vMessageState;
+        protected byte[] vNetworkErrorCode;
         #endregion
 
         #region Constructors
@@ -44,6 +47,7 @@ namespace JamaaTech.Smpp.Net.Client
             vSourceAddress = "";
             vDestinatinoAddress = "";
             vSegmentID = -1;
+            vSubmitUserMessageReference = true;
         }
 
         public ShortMessage(int segmentId, int messageCount, int sequenceNumber)
@@ -97,6 +101,15 @@ namespace JamaaTech.Smpp.Net.Client
         }
 
         /// <summary>
+        /// Gets or sets a <see cref="System.Boolean"/> value that indicates if the <see cref="UserMessageReference"/> should be sent to SMSC.
+        /// </summary>
+        public bool SubmitUserMessageReference
+        {
+            get { return vSubmitUserMessageReference; }
+            set { vSubmitUserMessageReference = value; }
+        }
+
+        /// <summary>
         /// Gets the index of this message segment in a group of contatenated message segements
         /// </summary>
         public int SegmentID
@@ -127,7 +140,26 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vRegisterDeliveryNotification; }
             set { vRegisterDeliveryNotification = value; }
-        }       
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="MessageStateType"/> value that indicates the ESME the final message state for an SMSC Delivery Receipt.
+        /// </summary>
+        public MessageState? MessageState
+        {
+            get { return vMessageState; }
+            set { vMessageState = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="Byte[]"/> value that indicates Network error code.  May be present for SMSC Delivery Receipts and
+		/// Intermediate Notifications.  See section 5.3.2.31 for more information.
+        /// </summary>
+        public byte[] NetworkErrorCode
+        {
+            get { return vNetworkErrorCode; }
+            set { vNetworkErrorCode = value; }
+        }
         #endregion
 
         #region Methods       

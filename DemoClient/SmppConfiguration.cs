@@ -25,8 +25,13 @@ namespace DemoClient
         public int TimeOut { get; set; }
         public bool StartAutomatically { get; set; }
         public string DestinationAddressRegex { get; set; }
-        public RegisteredDelivery RegisteredDeliveryValue { get; set; }
+        public bool RegisterDeliveryNotification { get; set; }
+        public NumberingPlanIndicator? AddressNpi { get; set; }
+        public TypeOfNumber? AddressTon { get; set; }
+        public Dictionary<string, string> OptionalParams { get; set; }
+        public UserMessageReferenceType UserMessageReferenceType { get; set; }
         public bool? UseSeparateConnections { get; set; }
+        public bool SubmitUserMessageReference { get; set; }
 
         public SmppConfiguration()
         {
@@ -44,9 +49,18 @@ namespace DemoClient
             KeepAliveInterval = 5000;
             ReconnectInteval = 10000;
             Encoding = JamaaTech.Smpp.Net.Lib.DataCoding.UCS2;
-            RegisteredDeliveryValue = RegisteredDelivery.DeliveryReceipt;
+            RegisterDeliveryNotification = true;
             UseSeparateConnections = null;
+            SubmitUserMessageReference = true;
 
         }
+    }
+
+    public enum UserMessageReferenceType
+    {
+        None,
+        Guid,
+        Int,
+        IntHex
     }
 }

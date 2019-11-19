@@ -6,13 +6,26 @@ using System.Text;
 namespace JamaaTech.Smpp.Net.Lib.Logging
 {
     public static class LoggingExtensions
-    {        
+    {
+        private static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static Func<object, SmppEncodingService, string> DumpString { get; set; } = DumpStringDefault;
-#if NET4
-        public static string DumpString(this object obj, SmppEncodingService encodingService = null)
-#else
+
+        public static string DumpStringWithTry(object obj, SmppEncodingService encodingService = null)
+        {
+            try
+            {
+                return DumpStringDefault(obj, encodingService);
+            }
+            catch (Exception ex)
+            {
+                if (_Log.IsErrorEnabled)
+                    _Log.Error(ex);
+                return null;
+            }
+        }
+
         public static string DumpStringDefault(object obj, SmppEncodingService encodingService = null)
-#endif
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0} -- ", obj.GetType().Name);

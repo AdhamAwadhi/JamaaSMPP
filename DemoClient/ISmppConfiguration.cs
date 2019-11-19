@@ -25,7 +25,12 @@ namespace DemoClient
         int TimeOut { get; }
         bool StartAutomatically { get; }
         string DestinationAddressRegex { get; }
-        RegisteredDelivery RegisteredDeliveryValue { get; }
+        bool RegisterDeliveryNotification { get; }
+        NumberingPlanIndicator? AddressNpi { get; }
+        TypeOfNumber? AddressTon { get; }
+        Dictionary<string, string> OptionalParams { get; }
+        UserMessageReferenceType UserMessageReferenceType { get; }
         bool? UseSeparateConnections { get; }
+        bool SubmitUserMessageReference { get; }
     }
 }

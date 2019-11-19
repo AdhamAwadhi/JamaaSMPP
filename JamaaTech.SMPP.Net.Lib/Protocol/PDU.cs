@@ -259,8 +259,23 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             var tlv = vTlv.GetTlvByTag(tag);
             if (tlv == null) return null;
 
-            return vSmppEncodingService.GetCStringFromBytes(tlv.RawValue);
+            return vSmppEncodingService.GetStringFromBytes(tlv.RawValue);
         }
+
+        /// <summary>
+        /// Gets the optional parameter string (with null terminated) associated with
+        /// the given tag.
+        /// </summary>
+        /// <param name="tag">The tag in TLV.</param>
+        /// <returns>The optional parameter string, or null if not found.</returns>
+        public string GetOptionalParamCString(Tag tag)
+        {
+            var tlv = vTlv.GetTlvByTag(tag);
+            if (tlv == null) return null;
+
+            return vSmppEncodingService.GetStringFromBytes(tlv.RawValue);
+        }
+
         /// <summary>
         /// Gets the optional parameter bytes associated with
         /// the given tag.

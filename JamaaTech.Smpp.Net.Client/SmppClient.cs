@@ -577,10 +577,13 @@ namespace JamaaTech.Smpp.Net.Client
             //Or if we have received a delivery receipt
             else if ((pdu.EsmClass & EsmClass.DeliveryReceipt) == EsmClass.DeliveryReceipt)
             {
-                // Extract receipted message id                
+                // Extract receipted message id
                 message.ReceiptedMessageId = pdu.GetOptionalParamString(Tag.receipted_message_id);
-
-                // Extract user message reference               
+                // Extract receipted message state
+                message.MessageState = pdu.GetOptionalParamByte<MessageState>(Tag.message_state);
+                // Extract receipted network error code
+                message.NetworkErrorCode = pdu.GetOptionalParamBytes(Tag.network_error_code);
+                // Extract user message reference
                 message.UserMessageReference = pdu.GetOptionalParamString(Tag.user_message_reference);
                 RaiseMessageDeliveredEvent(message);
             }
