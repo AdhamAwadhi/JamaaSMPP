@@ -31,5 +31,6 @@ namespace DemoClient
         Dictionary<string, string> OptionalParams { get; }
         UserMessageReferenceType UserMessageReferenceType { get; }
         bool? UseSeparateConnections { get; }
+        bool SubmitUserMessageReference { get; }
     }
 }

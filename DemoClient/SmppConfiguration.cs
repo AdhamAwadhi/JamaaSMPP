@@ -31,6 +31,7 @@ namespace DemoClient
         public Dictionary<string, string> OptionalParams { get; set; }
         public UserMessageReferenceType UserMessageReferenceType { get; set; }
         public bool? UseSeparateConnections { get; set; }
+        public bool SubmitUserMessageReference { get; set; }
 
         public SmppConfiguration()
         {
@@ -50,6 +51,7 @@ namespace DemoClient
             Encoding = JamaaTech.Smpp.Net.Lib.DataCoding.UCS2;
             RegisterDeliveryNotification = true;
             UseSeparateConnections = null;
+            SubmitUserMessageReference = true;
 
         }
     }

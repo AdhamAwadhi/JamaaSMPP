@@ -36,6 +36,7 @@ namespace JamaaTech.Smpp.Net.Client
         protected bool vRegisterDeliveryNotification;
         protected string vReceiptedMessageId;
         protected string vUserMessageReference;
+        protected bool vSubmitUserMessageReference;
         protected MessageState? vMessageState;
         protected byte[] vNetworkErrorCode;
         #endregion
@@ -46,6 +47,7 @@ namespace JamaaTech.Smpp.Net.Client
             vSourceAddress = "";
             vDestinatinoAddress = "";
             vSegmentID = -1;
+            vSubmitUserMessageReference = true;
         }
 
         public ShortMessage(int segmentId, int messageCount, int sequenceNumber)
@@ -96,6 +98,15 @@ namespace JamaaTech.Smpp.Net.Client
         {
             get { return vUserMessageReference; }
             set { vUserMessageReference = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="System.Boolean"/> value that indicates if the <see cref="UserMessageReference"/> should be sent to SMSC.
+        /// </summary>
+        public bool SubmitUserMessageReference
+        {
+            get { return vSubmitUserMessageReference; }
+            set { vSubmitUserMessageReference = value; }
         }
 
         /// <summary>

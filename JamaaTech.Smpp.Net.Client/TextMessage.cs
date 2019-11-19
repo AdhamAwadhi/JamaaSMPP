@@ -67,7 +67,8 @@ namespace JamaaTech.Smpp.Net.Client
             sm.SourceAddress.Address = vSourceAddress;
             sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
             sm.DataCoding = defaultEncoding;
-            sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);           
+            if (SubmitUserMessageReference)
+                sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);
 
             if (vRegisterDeliveryNotification)
                 sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
