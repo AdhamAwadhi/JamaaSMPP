@@ -15,6 +15,19 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
+### v1.8.2
+
+- Moved to dotnet core  
+
+- Added: `ShortMessage.MessageState`  
+
+- Added: `ShortMessage.NetworkErrorCode` 
+
+- Added: `ShortMessage.SubmitUserMessageReference` property
+
+  > In case you want to use `UserMessageReference` in your app **ONLY**, and not submit to SMSC.
+  > Like `SmppClient.MessageSent` event.
+
 ### v1.7.5
 - Added `SmppConnectionProperties.UseSeparateConnections`
 
