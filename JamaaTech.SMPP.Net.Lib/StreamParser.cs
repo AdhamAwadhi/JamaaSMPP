@@ -91,8 +91,11 @@ namespace JamaaTech.Smpp.Net.Lib
                     PDU pdu = WaitPDU();
                     if (pdu is RequestPDU)
                     {
-                        vProcessorCallback.BeginInvoke(
-   (RequestPDU)pdu, AsyncCallBackProcessPduRequest, null);
+#if NET40
+                        vProcessorCallback.BeginInvoke((RequestPDU)pdu, AsyncCallBackProcessPduRequest, null);  //old
+#else
+                        System.Threading.Tasks.Task.Run(() => vProcessorCallback.Invoke((RequestPDU)pdu));      //new
+#endif
                     }
                     else if (pdu is ResponsePDU) { vResponseHandler.Handle(pdu as ResponsePDU); }
                 }
@@ -228,7 +231,13 @@ namespace JamaaTech.Smpp.Net.Lib
             if (PDUError == null) { return; }
             PDUErrorEventArgs e = new PDUErrorEventArgs(exception, byteDump, header, pdu);
             foreach (EventHandler<PDUErrorEventArgs> del in PDUError.GetInvocationList())
-            { del.BeginInvoke(this, e, AsyncCallBackRaisePduErrorEvent, del); }
+            {
+#if NET40
+                del.BeginInvoke(this, e, AsyncCallBackRaisePduErrorEvent, del);
+#else
+                System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
+#endif
+            }
         }
 
         private void RaiseParserExceptionEvent(Exception exception)
@@ -236,7 +245,13 @@ namespace JamaaTech.Smpp.Net.Lib
             if (ParserException == null) { return; }
             ParserExceptionEventArgs e = new ParserExceptionEventArgs(exception);
             foreach (EventHandler<ParserExceptionEventArgs> del in ParserException.GetInvocationList())
-            { del.BeginInvoke(this, e, AsyncCallBackRaiseParserExceptionEvent, del); }
+            {
+#if NET40
+                del.BeginInvoke(this, e, AsyncCallBackRaiseParserExceptionEvent, del);
+#else
+                System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
+#endif
+            }
         }
 
         private void AsyncCallBackRaisePduErrorEvent(IAsyncResult result)

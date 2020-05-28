@@ -202,7 +202,13 @@ namespace JamaaTech.Smpp.Net.Lib
 
         public IAsyncResult BeginSendPdu(RequestPDU pdu, int timeout, AsyncCallback callback, object @object)
         {
+#if NET40
             return vCallback.BeginInvoke(pdu, timeout, callback, @object);
+
+#else
+                return System.Threading.Tasks.Task.Run(() => vCallback(pdu, timeout));
+#endif
+
         }
 
         public IAsyncResult BeginSendPdu(RequestPDU pdu, AsyncCallback callback, object @object)
@@ -491,7 +497,13 @@ namespace JamaaTech.Smpp.Net.Lib
             if (SessionClosed == null) { return; }
             SmppSessionClosedEventArgs e = new SmppSessionClosedEventArgs(reason, exception);
             foreach (EventHandler<SmppSessionClosedEventArgs> del in SessionClosed.GetInvocationList())
-            { del.BeginInvoke(this, e, AsyncCallBackRaiseSessionClosedEvent, del); }
+            {
+#if NET40
+                del.BeginInvoke(this, e, AsyncCallBackRaiseSessionClosedEvent, del);
+#else
+                System.Threading.Tasks.Task.Run(() => del.Invoke(this, e));
+#endif
+            }
         }
 
         private void AsyncCallBackRaiseSessionClosedEvent(IAsyncResult result)

@@ -210,8 +210,12 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
             if (SessionClosed == null) { return; }
             foreach (EventHandler<TcpIpSessionClosedEventArgs> del in SessionClosed.GetInvocationList())
             {
+#if NET40
                 SessionClosed.BeginInvoke(this, new TcpIpSessionClosedEventArgs(reason, ex),
                     AsyncCallBackRaiseSessionClosedEvent, del);
+#else
+                System.Threading.Tasks.Task.Run(() => SessionClosed.Invoke(this, new TcpIpSessionClosedEventArgs(reason, ex)));
+#endif
             }
         }
 
@@ -220,8 +224,12 @@ namespace JamaaTech.Smpp.Net.Lib.Networking
             if (SessionException == null) { return; }
             foreach (EventHandler<TcpIpSessionExceptionEventArgs> del in SessionException.GetInvocationList())
             {
-                del.BeginInvoke(this, new TcpIpSessionExceptionEventArgs(ex), 
+#if NET40
+                del.BeginInvoke(this, new TcpIpSessionExceptionEventArgs(ex),
                     AsyncCallBackRaiseSessionExceptionEvent, del);
+#else
+                System.Threading.Tasks.Task.Run(() => del.Invoke(this, new TcpIpSessionExceptionEventArgs(ex)));
+#endif
             }
         }
 

@@ -239,7 +239,12 @@ namespace JamaaTech.Smpp.Net.Client
         /// <returns>An <see cref="IAsyncResult"/> that references the asynchronous send message operation</returns>
         public IAsyncResult BeginSendMessage(ShortMessage message, int timeout, AsyncCallback callback, object state)
         {
+#if NET40
             return vSendMessageCallBack.BeginInvoke(message, timeout, callback, state);
+
+#else
+                return System.Threading.Tasks.Task.Run(() => vSendMessageCallBack(message, timeout));
+#endif
         }
 
         /// <summary>
