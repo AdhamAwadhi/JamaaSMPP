@@ -46,7 +46,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         EnquireLinkResp = 0x80000015,
         DataSm = 0x00000103,
         DataSmResp =0x80000103,
-        AlertNotification = 0x00000103,
+        AlertNotification = 0x00000102,
         SubmitMulti = 0x00000021,
         SubmitMultiResp = 0x80000012
     }
