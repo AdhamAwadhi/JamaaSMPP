@@ -23,7 +23,7 @@
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
     <Message Text="@(ReferenceCopyLocalPaths)" />
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
     </ItemGroup>
   </Target>
 </Project>
