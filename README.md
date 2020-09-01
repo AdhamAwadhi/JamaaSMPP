@@ -15,6 +15,12 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
+### v1.9.0
+
+- Fixed: `CommandType.AlertNotification` to be `0x00000103`  
+
+- Fixed: .Net Core Issues #37 
+
 ### v1.8.2
 
 - Moved to dotnet core  
