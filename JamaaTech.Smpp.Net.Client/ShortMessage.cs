@@ -63,7 +63,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <summary>
         /// Gets or sets a <see cref="ShortMessage"/> source address
         /// </summary>
-        public  string SourceAddress
+        public string SourceAddress
         {
             get { return vSourceAddress; }
             set { vSourceAddress = value; }
