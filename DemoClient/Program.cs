@@ -224,6 +224,8 @@ namespace DemoClient
             properties.SystemType = config.SystemType;// "mysystemtype";
             properties.DefaultServiceType = config.DefaultServiceType;// "mydefaultservicetype";
             properties.DefaultEncoding = config.Encoding;
+            properties.AddressTon = config.AddressTon ?? TypeOfNumber.International;
+            properties.AddressNpi = config.AddressNpi ?? NumberingPlanIndicator.Unknown;
             properties.UseSeparateConnections = config.UseSeparateConnections;
 
             //Resume a lost connection after 30 seconds

@@ -61,11 +61,14 @@ namespace JamaaTech.Smpp.Net.Client
         #endregion
 
         #region Methods
-        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService)
+        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
         {
-            SubmitSm sm = CreateSubmitSm(smppEncodingService);
-            sm.SourceAddress.Address = vSourceAddress;
-            sm.DestinationAddress.Address = vDestinatinoAddress; // Urgh, typo :(
+            destAddress = destAddress ?? new SmppAddress() {Address = vDestinatinoAddress};
+            srcAddress = srcAddress ?? new SmppAddress()
+            {
+                Address = vSourceAddress
+            };
+            SubmitSm sm = CreateSubmitSm(smppEncodingService, destAddress, srcAddress );
             sm.DataCoding = defaultEncoding;
             if (SubmitUserMessageReference)
                 sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);
@@ -100,12 +103,9 @@ namespace JamaaTech.Smpp.Net.Client
             }
         }
 
-        protected virtual SubmitSm CreateSubmitSm(SmppEncodingService smppEncodingService)
+        protected virtual SubmitSm CreateSubmitSm(SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
         {
-            var sm = new SubmitSm(smppEncodingService);
-
-            //sm.SourceAddress.Ton = TypeOfNumber.Unknown;
-            //sm.DestinationAddress.Ton = TypeOfNumber.Unknown;
+            var sm = new SubmitSm(smppEncodingService, destAddress, srcAddress);
 
             return sm;
         }
