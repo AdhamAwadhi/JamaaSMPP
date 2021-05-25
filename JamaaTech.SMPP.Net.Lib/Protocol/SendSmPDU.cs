@@ -37,8 +37,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal SendSmPDU(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
+        internal SendSmPDU(PDUHeader header, SmppEncodingService smppEncodingService, SmppAddress srcAddress = null)
+            : base(header, smppEncodingService, srcAddress)
         {
             vServiceType = "";
             vEsmClass = EsmClass.Default;

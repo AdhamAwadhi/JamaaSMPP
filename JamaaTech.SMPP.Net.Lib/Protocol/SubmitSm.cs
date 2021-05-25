@@ -84,8 +84,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        public SubmitSm(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
+        public SubmitSm(PDUHeader header, SmppEncodingService smppEncodingService, SmppAddress destAddress = null,  SmppAddress srcAddress = null)
+            : base(header, smppEncodingService,destAddress,srcAddress)
         {
             vServiceType = Protocol.ServiceType.DEFAULT;
             vProtocolId = 0;
@@ -97,10 +97,10 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             vDataCoding = DataCoding.ASCII;
             vSmDefalutMessageId = 0;
         }
-
-        public SubmitSm(SmppEncodingService smppEncodingService)
-            : this(new PDUHeader(CommandType.SubmitSm), smppEncodingService)
+        public SubmitSm( SmppEncodingService smppEncodingService,SmppAddress destAddress = null,  SmppAddress srcAddress = null)
+            : this(new PDUHeader(CommandType.SubmitSm), smppEncodingService, destAddress, srcAddress)
         { }
+        
         #endregion
 
         #region Methods

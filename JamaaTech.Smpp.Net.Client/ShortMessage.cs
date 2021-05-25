@@ -163,12 +163,12 @@ namespace JamaaTech.Smpp.Net.Client
         #endregion
 
         #region Methods       
-        internal IEnumerable<SendSmPDU> GetMessagePDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService)
+        internal IEnumerable<SendSmPDU> GetMessagePDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress, SmppAddress  srcAddress )
         {
-            return GetPDUs(defaultEncoding, smppEncodingService);
+            return GetPDUs(defaultEncoding, smppEncodingService, destAddress, srcAddress);
         }
 
-        protected abstract IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService);
+        protected abstract IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null);
 
         #endregion
     }
