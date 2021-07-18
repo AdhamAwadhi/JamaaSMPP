@@ -1,7 +1,5 @@
 ﻿using JamaaTech.Smpp.Net.Lib.Util;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace JamaaTech.Smpp.Net.Lib
 {

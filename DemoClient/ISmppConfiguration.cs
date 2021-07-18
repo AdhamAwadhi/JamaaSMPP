@@ -1,8 +1,5 @@
 ﻿using JamaaTech.Smpp.Net.Lib;
-using JamaaTech.Smpp.Net.Lib.Protocol;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DemoClient
 {

@@ -15,8 +15,6 @@
  ************************************************************************/
 
 using System;
-using System.Text;
-using System.Collections.Generic;
 
 namespace JamaaTech.Smpp.Net.Client
 {
