@@ -14,10 +14,6 @@
  *
  ************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace JamaaTech.Smpp.Net.Lib.Protocol
 {
     public abstract class SingleDestinationPDU : SendSmPDU
@@ -27,10 +23,10 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal SingleDestinationPDU(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
+        internal SingleDestinationPDU(PDUHeader header, SmppEncodingService smppEncodingService,SmppAddress destinationDestAddress = null, SmppAddress srcAddresss = null)
+            : base(header, smppEncodingService,srcAddresss)
         {
-            vDestinationAddress = new SmppAddress();
+            vDestinationAddress = destinationDestAddress ?? new SmppAddress();
         }
         #endregion
 

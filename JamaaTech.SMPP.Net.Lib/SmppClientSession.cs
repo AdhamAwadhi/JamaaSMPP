@@ -15,12 +15,9 @@
  ************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using JamaaTech.Smpp.Net.Lib.Networking;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using System.Timers;
-using System.Net.Sockets;
 using System.Net;
 using System.Diagnostics;
 using JamaaTech.Smpp.Net.Lib.Util;

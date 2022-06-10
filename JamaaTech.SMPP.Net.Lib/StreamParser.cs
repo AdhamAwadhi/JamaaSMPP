@@ -15,7 +15,6 @@
  ************************************************************************/
 
 using System;
-using System.Net.Sockets;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Networking;
 using JamaaTech.Smpp.Net.Lib.Util;

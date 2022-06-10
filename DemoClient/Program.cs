@@ -1,13 +1,9 @@
 ﻿using JamaaTech.Smpp.Net.Client;
 using JamaaTech.Smpp.Net.Lib.Util;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
-using System.Diagnostics;
-using JamaaTech.Smpp.Net.Lib.Logging;
 #if NET40
 using SettingsReader.Readers;
 #endif
@@ -224,6 +220,8 @@ namespace DemoClient
             properties.SystemType = config.SystemType;// "mysystemtype";
             properties.DefaultServiceType = config.DefaultServiceType;// "mydefaultservicetype";
             properties.DefaultEncoding = config.Encoding;
+            properties.AddressTon = config.AddressTon ?? TypeOfNumber.International;
+            properties.AddressNpi = config.AddressNpi ?? NumberingPlanIndicator.Unknown;
             properties.UseSeparateConnections = config.UseSeparateConnections;
 
             //Resume a lost connection after 30 seconds
