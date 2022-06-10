@@ -181,7 +181,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// </summary>
         /// <param name="message">A message to send</param>
         /// <param name="timeOut">A value in miliseconds after which the send operation times out</param>
-        public void SendMessage(ShortMessage message, int timeOut)
+        public virtual void SendMessage(ShortMessage message, int timeOut)
         {
             if (message == null) { throw new ArgumentNullException("message"); }
 
@@ -211,7 +211,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <param name="pdu"><see cref="RequestPDU"/></param>
         /// <param name="timeout">A value in miliseconds after which the send operation times out</param>
         /// <returns><see cref="ResponsePDU"/></returns>
-        public ResponsePDU SendPdu(RequestPDU pdu, int timeout)
+        public virtual ResponsePDU SendPdu(RequestPDU pdu, int timeout)
         {
             var resp = vTrans.SendPdu(pdu, timeout);
             if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
@@ -224,7 +224,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// Sends message to a remote SMPP server
         /// </summary>
         /// <param name="message">A message to send</param>
-        public void SendMessage(ShortMessage message)
+        public virtual void SendMessage(ShortMessage message)
         {
             SendMessage(message, vTrans.DefaultResponseTimeout);
         }
@@ -237,7 +237,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <param name="callback">An <see cref="AsyncCallback"/> delegate</param>
         /// <param name="state">An object that contains state information for this request</param>
         /// <returns>An <see cref="IAsyncResult"/> that references the asynchronous send message operation</returns>
-        public IAsyncResult BeginSendMessage(ShortMessage message, int timeout, AsyncCallback callback, object state)
+        public virtual IAsyncResult BeginSendMessage(ShortMessage message, int timeout, AsyncCallback callback, object state)
         {
 #if NET40
             return vSendMessageCallBack.BeginInvoke(message, timeout, callback, state);
@@ -254,7 +254,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <param name="callback">An <see cref="AsyncCallback"/> delegate</param>
         /// <param name="state">An object that contains state information for this request</param>
         /// <returns>An <see cref="IAsyncResult"/> that references the asynchronous send message operation</returns>
-        public IAsyncResult BeginSendMessage(ShortMessage message, AsyncCallback callback, object state)
+        public virtual IAsyncResult BeginSendMessage(ShortMessage message, AsyncCallback callback, object state)
         {
             int timeout = 0;
             timeout = vTrans.DefaultResponseTimeout;
@@ -265,7 +265,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// Ends a pending asynchronous send message operation
         /// </summary>
         /// <param name="result">An <see cref="IAsyncResult"/> that stores state information for this asynchronous operation</param>
-        public void EndSendMessage(IAsyncResult result)
+        public virtual void EndSendMessage(IAsyncResult result)
         {
             vSendMessageCallBack.EndInvoke(result);
         }
@@ -273,7 +273,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <summary>
         /// Starts <see cref="SmppClient"/> and immediately connects to a remote SMPP server
         /// </summary>
-        public void Start()
+        public virtual void Start()
         {
 
             vStarted = true;
@@ -285,7 +285,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// Starts <see cref="SmppClient"/> and waits for a specified amount of time before establishing connection
         /// </summary>
         /// <param name="connectDelay">A value in miliseconds to wait before establishing connection</param>
-        public void Start(int connectDelay)
+        public virtual void Start(int connectDelay)
         {
             if (connectDelay < 0) { connectDelay = 0; }
             vStarted = true;
@@ -296,7 +296,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <summary>
         /// Immediately attempts to reestablish a lost connection without waiting for <see cref="SmppClient"/> to automatically reconnect
         /// </summary>
-        public void ForceConnect()
+        public virtual void ForceConnect()
         {
             Open(vTimeOut);
         }
@@ -305,7 +305,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// Immediately attempts to reestablish a lost connection without waiting for <see cref="SmppClient"/> to automatically reconnect
         /// </summary>
         /// <param name="timeout">A time in miliseconds after which a connection operation times out</param>
-        public void ForceConnect(int timeout)
+        public virtual void ForceConnect(int timeout)
         {
             Open(timeout);
         }
@@ -313,7 +313,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <summary>
         /// Shuts down <see cref="SmppClient"/>
         /// </summary>
-        public void Shutdown()
+        public virtual void Shutdown()
         {
             if (!vStarted) { return; }
             vStarted = false;
@@ -325,7 +325,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <summary>
         /// Restarts <see cref="SmppClient"/>
         /// </summary>
-        public void Restart()
+        public virtual void Restart()
         {
             Shutdown();
             Start();
@@ -635,7 +635,7 @@ namespace JamaaTech.Smpp.Net.Client
 
         #endregion
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
