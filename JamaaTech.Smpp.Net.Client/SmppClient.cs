@@ -202,7 +202,10 @@ namespace JamaaTech.Smpp.Net.Client
                     if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage Response: {0}", LoggingExtensions.DumpString(resp, vSmppEncodingService));
                     messageId = ((SubmitSmResp)resp).MessageID;
                 }
-                message.ReceiptedMessageId = messageId;
+                if(message.ReceiptedMessageId is {Length:>0})
+                    message.ReceiptedMessageId += $",{messageId}";
+                else
+                    message.ReceiptedMessageId += messageId;
                 RaiseMessageSentEvent(message);
             }
         }
