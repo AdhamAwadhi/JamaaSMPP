@@ -63,7 +63,10 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             //Note that the body part may have not been returned by
             //the SMSC if the command status is not 0
             if (buffer.Length == 0) { return; }
-            vMessageID = DecodeCString(buffer, vSmppEncodingService);
+            if(string.IsNullOrEmpty(vMessageID))
+                vMessageID = DecodeCString(buffer, vSmppEncodingService);
+            else
+                vMessageID+=$":{DecodeCString(buffer, vSmppEncodingService)}";
             //This pdu has no optional parameters,
             //after preceding statements, the buffer must remain with no data
             if (buffer.Length > 0) { throw new TooManyBytesException(); }

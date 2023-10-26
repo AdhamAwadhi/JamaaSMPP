@@ -17,6 +17,7 @@
 using System;
 using System.Threading;
 using System.Diagnostics;
+using System.Linq;
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Util;
@@ -189,18 +190,18 @@ namespace JamaaTech.Smpp.Net.Client
             if (vState != SmppConnectionState.Connected)
             { throw new SmppClientException("Sending message operation failed because the SmppClient is not connected"); }
 
-            string messageId = null;
             var srcAddress = new SmppAddress(vProperties.AddressTon, vProperties.AddressNpi, string.IsNullOrWhiteSpace(message.SourceAddress) ? Properties.SourceAddress : message.SourceAddress);
             var destAddress = new SmppAddress(){ Address = message.DestinationAddress};
-            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService,destAddress, srcAddress))
+            var messagePdUs = message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService,destAddress, srcAddress);
+            foreach (SendSmPDU pdu in messagePdUs)
             {
+                string messageId = null;
                 if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpString(pdu, vSmppEncodingService));
-                ResponsePDU resp = SendPdu(pdu, timeOut);
-                var submitSmResp = resp as SubmitSmResp;
-                if (submitSmResp != null)
+                var resp = SendPdu(pdu, timeOut);
+                if (resp is SubmitSmResp submitSmResp)
                 {
                     if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage Response: {0}", LoggingExtensions.DumpString(resp, vSmppEncodingService));
-                    messageId = ((SubmitSmResp)resp).MessageID;
+                    messageId = submitSmResp.MessageID;
                 }
                 if(message.ReceiptedMessageId is {Length:>0})
                     message.ReceiptedMessageId += $",{messageId}";
@@ -216,7 +217,7 @@ namespace JamaaTech.Smpp.Net.Client
         /// <param name="pdu"><see cref="RequestPDU"/></param>
         /// <param name="timeout">A value in miliseconds after which the send operation times out</param>
         /// <returns><see cref="ResponsePDU"/></returns>
-        public virtual ResponsePDU SendPdu(RequestPDU pdu, int timeout)
+        protected virtual ResponsePDU SendPdu(RequestPDU pdu, int timeout)
         {
             var resp = vTrans.SendPdu(pdu, timeout);
             if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
@@ -549,7 +550,7 @@ namespace JamaaTech.Smpp.Net.Client
                         smppEx.ErrorCode, new ByteBuffer(pdu.GetBytes()).DumpString(), smppEx.Message));
                 }
                 //Notify the SMSC that we encountered an error while processing the message
-                e.Response = pdu.CreateDefaultResponce();
+                e.Response = pdu.CreateDefaultResponse();
                 e.Response.Header.ErrorCode = smppEx.ErrorCode;
                 return;
             }
@@ -563,7 +564,7 @@ namespace JamaaTech.Smpp.Net.Client
                         new ByteBuffer(pdu.GetBytes()).DumpString(), ex.Message));
                 }
                 //Let the receiver know that this message was rejected
-                e.Response = pdu.CreateDefaultResponce();
+                e.Response = pdu.CreateDefaultResponse();
                 e.Response.Header.ErrorCode = SmppErrorCode.ESME_RX_P_APPN; //ESME Receiver Reject Message
                 return;
             }

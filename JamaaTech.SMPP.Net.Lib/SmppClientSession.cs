@@ -180,7 +180,7 @@ namespace JamaaTech.Smpp.Net.Lib
 
         private void SendPduBase(PDU pdu)
         {
-            if (pdu == null) { throw new ArgumentNullException("pdu"); }
+            if (pdu == null) { throw new ArgumentNullException(nameof(pdu)); }
             if (!(CheckState(pdu) && (pdu.AllowedSource & SmppEntityType.ESME) == SmppEntityType.ESME))
             { throw new SmppException(SmppErrorCode.ESME_RINVBNDSTS, "Incorrect bind status for given command"); }
             try { vTrans.Send(pdu); }
@@ -423,7 +423,7 @@ namespace JamaaTech.Smpp.Net.Lib
             ResponsePDU resp = null;
             if (pdu is Unbind)
             {
-                resp = pdu.CreateDefaultResponce();
+                resp = pdu.CreateDefaultResponse();
                 try { SendPduBase(resp); }
                 catch {/*silent catch*/}
                 EndSession(SmppSessionCloseReason.UnbindRequested, null);
@@ -434,7 +434,7 @@ namespace JamaaTech.Smpp.Net.Lib
             {
                 if (pdu.HasResponse)
                 {
-                    resp = pdu.CreateDefaultResponce();
+                    resp = pdu.CreateDefaultResponse();
                 }
             }
             if (resp != null)
@@ -465,7 +465,7 @@ namespace JamaaTech.Smpp.Net.Lib
             if (e.Pdu is RequestPDU)
             {
                 RequestPDU req = (RequestPDU)e.Pdu;
-                resp = req.CreateDefaultResponce();
+                resp = req.CreateDefaultResponse();
                 resp.Header.ErrorCode = e.Exception.ErrorCode;
             }
             else

@@ -61,7 +61,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Methods
-        public override ResponsePDU CreateDefaultResponce()
+        public override ResponsePDU CreateDefaultResponse()
         {
             PDUHeader header = new PDUHeader(CommandType.BindTransceiver, vHeader.SequenceNumber);
             return new BindTransceiverResp(header, vSmppEncodingService);

@@ -102,7 +102,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
 
         #region Methods
         #region Interface Methods
-        public override ResponsePDU CreateDefaultResponce()
+        public override ResponsePDU CreateDefaultResponse()
         {
             CommandType cmdType = CommandType.BindTransceiverResp;
             switch (vHeader.CommandType)

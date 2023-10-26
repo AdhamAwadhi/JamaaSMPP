@@ -43,7 +43,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Methods
-        public override ResponsePDU CreateDefaultResponce()
+        public override ResponsePDU CreateDefaultResponse()
         {
             PDUHeader header = new PDUHeader(CommandType.DataSmResp, vHeader.SequenceNumber);
             return new DataSmResp(header, vSmppEncodingService);
