@@ -384,18 +384,21 @@ namespace JamaaTech.Smpp.Net.Client
             }
         }
 
-        private void OpenSession(SessionBindInfo bindInfo, bool useSeparateConnections, int timeOut)
+    private void OpenSession(SessionBindInfo bindInfo, bool useSeparateConnections, int timeOut)
+    {
+        ChangeState(SmppConnectionState.Connecting);
+        var connStateConfig = (useSeparateConnections, bindInfo.AllowReceive, bindInfo.AllowTransmit);
+        switch (connStateConfig)
         {
-            ChangeState(SmppConnectionState.Connecting);
-            if (useSeparateConnections)
-            {
+            case (true, true, true):
                 //Create two separate sessions for sending and receiving
+                //ReceiveConnection
                 try
                 {
                     bindInfo.AllowReceive = true;
                     bindInfo.AllowTransmit = false;
-                    vRecv = SmppClientSession.Bind(bindInfo, timeOut, vSmppEncodingService);
-                    InitializeSession(vRecv);
+                    _vRecv = SmppClientSession.Bind(bindInfo, timeOut, _vSmppEncodingService);
+                    InitializeSession(_vRecv);
                 }
                 catch
                 {
@@ -404,36 +407,91 @@ namespace JamaaTech.Smpp.Net.Client
                     StartTimer();
                     throw;
                 }
-                //--
+
+                //Transmit Connection
                 try
                 {
                     bindInfo.AllowReceive = false;
                     bindInfo.AllowTransmit = true;
-                    vTrans = SmppClientSession.Bind(bindInfo, timeOut, vSmppEncodingService);
-                    InitializeSession(vTrans);
+                    _vTrans = SmppClientSession.Bind(bindInfo, timeOut, _vSmppEncodingService);
+                    InitializeSession(_vTrans);
                 }
                 catch
                 {
-                    try { vRecv.EndSession(); }
-                    catch {/*Silent catch*/}
-                    vRecv = null;
+                    try
+                    {
+                        _vRecv.EndSession();
+                    }
+                    catch
+                    {
+                        /*Silent catch*/
+                    }
+
+                    _vRecv = null;
                     ChangeState(SmppConnectionState.Closed);
                     //Start reconnect timer
                     StartTimer();
                     throw;
                 }
+
                 ChangeState(SmppConnectionState.Connected);
-            }
-            else
-            {
-                //Use a single session for both sending and receiving
-                bindInfo.AllowTransmit = true;
-                bindInfo.AllowReceive = true;
+                break;
+            case (_, true, false):
+                //ReceiveConnection
                 try
                 {
-                    SmppClientSession session = SmppClientSession.Bind(bindInfo, timeOut, vSmppEncodingService);
-                    vTrans = session;
-                    vRecv = session;
+                    bindInfo.AllowReceive = true;
+                    bindInfo.AllowTransmit = false;
+                    _vRecv = SmppClientSession.Bind(bindInfo, timeOut, _vSmppEncodingService);
+                    InitializeSession(_vRecv);
+                }
+                catch
+                {
+                    ChangeState(SmppConnectionState.Closed);
+                    //Start reconnect timer
+                    StartTimer();
+                    throw;
+                }
+
+                ChangeState(SmppConnectionState.Connected);
+                break;
+            case (_, false, true):
+                //Transmit Connection
+                try
+                {
+                    bindInfo.AllowReceive = false;
+                    bindInfo.AllowTransmit = true;
+                    _vTrans = SmppClientSession.Bind(bindInfo, timeOut, _vSmppEncodingService);
+                    InitializeSession(_vTrans);
+                }
+                catch
+                {
+                    try
+                    {
+                        _vRecv.EndSession();
+                    }
+                    catch
+                    {
+                        /*Silent catch*/
+                    }
+
+                    _vRecv = null;
+                    ChangeState(SmppConnectionState.Closed);
+                    //Start reconnect timer
+                    StartTimer();
+                    throw;
+                }
+
+                ChangeState(SmppConnectionState.Connected);
+                break;
+            case (false, _, _):
+                try
+                {
+                    SmppClientSession session = SmppClientSession.Bind(bindInfo, timeOut, _vSmppEncodingService);
+                    if (bindInfo.AllowTransmit)
+                        _vTrans = session;
+                    if (bindInfo.AllowReceive)
+                        _vRecv = session;
                     InitializeSession(session);
                     ChangeState(SmppConnectionState.Connected);
                 }
@@ -460,8 +518,16 @@ namespace JamaaTech.Smpp.Net.Client
                     StartTimer();
                     throw;
                 }
-            }
+
+                break;
+            case (_, false, false):
+            default:
+                _vTrans = null;
+                _vRecv = null;
+                ChangeState(SmppConnectionState.Closed);
+                break;
         }
+    }
 
         private void CloseSession()
         {
