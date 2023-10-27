@@ -16,37 +16,36 @@
 
 using System;
 
-namespace JamaaTech.Smpp.Net.Client
+namespace JamaaTech.Smpp.Net.Client;
+
+/// <summary>
+/// Represents an exception thrown during an SMPP operation
+/// </summary>
+[Serializable]
+public class SmppClientException : Exception
 {
+    #region Variables
+    #endregion
+
+    #region Constructors
     /// <summary>
-    /// Represents an exception thrown during an SMPP operation
+    /// Initializes a new instance of <see cref="SmppClientException"/>
     /// </summary>
-    [Serializable]
-    public class SmppClientException : Exception
-    {
-        #region Variables
-        #endregion
+    public SmppClientException() { }
 
-        #region Constructors
-        /// <summary>
-        /// Initializes a new instance of <see cref="SmppClientException"/>
-        /// </summary>
-        public SmppClientException() { }
+    /// <summary>
+    /// Initializes a new instance of <see cref="SmppClientException"/>
+    /// </summary>
+    /// <param name="message">The message that describes the error</param>
+    public SmppClientException(string message)
+        : base(message) { }
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="SmppClientException"/>
-        /// </summary>
-        /// <param name="message">The message that describes the error</param>
-        public SmppClientException(string message)
-            : base(message) { }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="SmppClientException"/>
-        /// </summary>
-        /// <param name="message">A message that describes the error</param>
-        /// <param name="innerException">The exception that is the cause of the current exception or null if not exception is specified</param>
-        public SmppClientException(string message, Exception innerException)
-            : base(message, innerException) { }
-        #endregion
-    }
+    /// <summary>
+    /// Initializes a new instance of <see cref="SmppClientException"/>
+    /// </summary>
+    /// <param name="message">A message that describes the error</param>
+    /// <param name="innerException">The exception that is the cause of the current exception or null if not exception is specified</param>
+    public SmppClientException(string message, Exception innerException)
+        : base(message, innerException) { }
+    #endregion
 }

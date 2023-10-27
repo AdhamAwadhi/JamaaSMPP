@@ -15,12 +15,11 @@
  ************************************************************************/
 
 
-namespace JamaaTech.Smpp.Net.Client
-{
-    /// <summary>
-    /// A delegate used for asynchorous send message operations
-    /// </summary>
-    /// <param name="message">A message to send</param>
-    /// <param name="timeout">A value indicating the time in miliseconds after which the send operation times out</param>
-    internal delegate void SendMessageCallBack(ShortMessage message,int timeout);
-}
+namespace JamaaTech.Smpp.Net.Client;
+
+/// <summary>
+/// A delegate used for asynchorous send message operations
+/// </summary>
+/// <param name="message">A message to send</param>
+/// <param name="timeout">A value indicating the time in miliseconds after which the send operation times out</param>
+internal delegate void SendMessageCallBack(ShortMessage message,int timeout);

@@ -7,6 +7,7 @@
     <AssemblyName>JamaaTech.Smpp.Net.Client</AssemblyName>
     <PackageId>JamaaSMPP</PackageId>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <RootNamespace>JamaaTech.Smpp.Net.Client</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release' ">
