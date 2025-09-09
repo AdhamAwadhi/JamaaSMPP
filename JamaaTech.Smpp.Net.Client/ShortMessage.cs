@@ -36,6 +36,7 @@ namespace JamaaTech.Smpp.Net.Client
         protected string vReceiptedMessageId;
         protected string vUserMessageReference;
         protected bool vSubmitUserMessageReference;
+        protected bool vSubmitReceiptedMessageId;
         protected MessageState? vMessageState;
         protected byte[] vNetworkErrorCode;
         #endregion
@@ -47,6 +48,7 @@ namespace JamaaTech.Smpp.Net.Client
             vDestinatinoAddress = "";
             vSegmentID = -1;
             vSubmitUserMessageReference = true;
+            vSubmitReceiptedMessageId = true;
         }
 
         public ShortMessage(int segmentId, int messageCount, int sequenceNumber)
@@ -109,6 +111,15 @@ namespace JamaaTech.Smpp.Net.Client
         }
 
         /// <summary>
+        /// Gets or sets a <see cref="System.Boolean"/> value that indicates if the <see cref="ReceiptedMessageId"/> should be sent to SMSC.
+        /// </summary>
+        public bool SubmitReceiptedMessageId
+        {
+            get { return vSubmitReceiptedMessageId; }
+            set { vSubmitReceiptedMessageId = value; }
+        }
+
+        /// <summary>
         /// Gets the index of this message segment in a group of contatenated message segements
         /// </summary>
         public int SegmentID
@@ -162,7 +173,7 @@ namespace JamaaTech.Smpp.Net.Client
         #endregion
 
         #region Methods       
-        internal IEnumerable<SendSmPDU> GetMessagePDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress, SmppAddress  srcAddress )
+        internal IEnumerable<SendSmPDU> GetMessagePDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress, SmppAddress srcAddress)
         {
             return GetPDUs(defaultEncoding, smppEncodingService, destAddress, srcAddress);
         }

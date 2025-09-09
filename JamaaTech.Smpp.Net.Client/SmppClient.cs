@@ -189,7 +189,7 @@ namespace JamaaTech.Smpp.Net.Client
             if (vState != SmppConnectionState.Connected)
             { throw new SmppClientException("Sending message operation failed because the SmppClient is not connected"); }
 
-            string messageId = null;
+            string messageId = message.ReceiptedMessageId;
             var srcAddress = new SmppAddress(vProperties.AddressTon, vProperties.AddressNpi, string.IsNullOrWhiteSpace(message.SourceAddress) ? Properties.SourceAddress : message.SourceAddress);
             var destAddress = new SmppAddress(){ Address = message.DestinationAddress};
             foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, vSmppEncodingService,destAddress, srcAddress))

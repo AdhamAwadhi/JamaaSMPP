@@ -62,14 +62,15 @@ namespace JamaaTech.Smpp.Net.Client
         protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
         {
             destAddress = destAddress ?? new SmppAddress() {Address = vDestinatinoAddress};
-            srcAddress = srcAddress ?? new SmppAddress()
-            {
-                Address = vSourceAddress
-            };
+            srcAddress = srcAddress ?? new SmppAddress() { Address = vSourceAddress };
             SubmitSm sm = CreateSubmitSm(smppEncodingService, destAddress, srcAddress );
             sm.DataCoding = defaultEncoding;
+
             if (SubmitUserMessageReference)
                 sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);
+
+            if (SubmitReceiptedMessageId)
+                sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.receipted_message_id, ReceiptedMessageId);
 
             if (vRegisterDeliveryNotification)
                 sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
