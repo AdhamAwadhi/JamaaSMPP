@@ -22,7 +22,6 @@ namespace JamaaTech.Smpp.Net.Lib
             switch (options.Implementation.Trim().ToLowerInvariant())
             {
                 case "v1":
-                case "default":
                 case "legacy":
                     // You may optionally modify the legacy ResponseHandler to implement IResponseHandler.
                     return new ResponseHandler() { DefaultResponseTimeout = options.DefaultResponseTimeout };
@@ -30,6 +29,7 @@ namespace JamaaTech.Smpp.Net.Lib
                     return new ConcurrentResponseHandler(options);
                
                 case "v2":
+                case "default":
                 default:
                     return new ResponseHandlerV2() { DefaultResponseTimeout = options.DefaultResponseTimeout };
             }

@@ -14,8 +14,8 @@ namespace JamaaTech.Smpp.Net.Lib
         public int DefaultResponseTimeout { get; set; } = 5000;
 
         /// <summary>
-        /// Name of implementation to load: "default" (legacy) or "concurrent".
+        /// Name of implementation to load: "v1" (legacy), "concurrent" or "v2" (default).
         /// </summary>
-        public string Implementation { get; set; } = "concurrent";
+        public string Implementation { get; set; } = "v2";
     }
 }
