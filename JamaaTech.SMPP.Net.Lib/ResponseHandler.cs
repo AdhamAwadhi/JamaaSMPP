@@ -20,7 +20,7 @@ using System.Threading;
 
 namespace JamaaTech.Smpp.Net.Lib
 {
-    public class ResponseHandler
+    public class ResponseHandler : IResponseHandler
     {
         #region Variables
         private int vDefaultResponseTimeout;

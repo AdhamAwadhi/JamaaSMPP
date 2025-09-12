@@ -31,7 +31,7 @@ namespace JamaaTech.Smpp.Net.Lib
         #region Variables
         private Timer vTimer;
         private PDUTransmitter vTrans;
-        private ResponseHandler vRespHandler;
+        private IResponseHandler vRespHandler;
         private StreamParser vStreamParser;
         private TcpIpSession vTcpIpSession;
         private object vSyncRoot;
@@ -320,7 +320,7 @@ namespace JamaaTech.Smpp.Net.Lib
         private void AssembleComponents()
         {
             vTrans = new PDUTransmitter(vTcpIpSession);
-            vRespHandler = new ResponseHandler();
+            vRespHandler = ResponseHandlerFactory.Create();
             vStreamParser = new StreamParser(
                 vTcpIpSession, vRespHandler, new PduProcessorCallback(PduRequestProcessorCallback), vSmppEncodingService);
             vStreamParser.ParserException += ParserExceptionEventHandler;

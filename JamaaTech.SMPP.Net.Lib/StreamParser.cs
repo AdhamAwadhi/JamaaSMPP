@@ -32,7 +32,7 @@ namespace JamaaTech.Smpp.Net.Lib
         #region Variables
         private TcpIpSession vTcpIpSession;
         private PduProcessorCallback vProcessorCallback;
-        private ResponseHandler vResponseHandler;
+        private IResponseHandler vResponseHandler;
         private SmppEncodingService vSmppEncodingService;
         //--
         private TraceSwitch vTraceSwitch;
@@ -56,7 +56,7 @@ namespace JamaaTech.Smpp.Net.Lib
         /// <param name="session">A <see cref="TcpIpSession"/></param>
         /// <param name="responseQueue">A <see cref="ResponseQueue"/> instance to which <see cref="ResponsePDU"/> pdu's are forwarded</param>
         /// <param name="requestProcessor">A callback delegate for processing <see cref="RequestPDU"/> pdu's</param>
-        public StreamParser(TcpIpSession session, ResponseHandler responseQueue, PduProcessorCallback requestProcessor, SmppEncodingService smppEncodingService)
+        public StreamParser(TcpIpSession session, IResponseHandler responseQueue, PduProcessorCallback requestProcessor, SmppEncodingService smppEncodingService)
         {
             if (session == null) { throw new ArgumentNullException("session"); }
             if (requestProcessor == null) { throw new ArgumentNullException("requestProcessor"); }
