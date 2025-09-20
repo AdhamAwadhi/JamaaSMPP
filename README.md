@@ -15,6 +15,13 @@ This is created based on  https://jamaasmpp.codeplex.com/
 - Read User Guide [http://www.seleniumsoftware.com/user-guide.htm](http://www.seleniumsoftware.com/user-guide.htm)
 
 # What's new?
+
+### v1.13.0
+
+- Fixed: `ReceiptedMessageId` submitting
+- Improved: ResponseHandlers
+- Fixed: `SubmitSmMultiPart` HasResponse
+
 ### v1.11.0
 
 - Added MultiPartTextMessage
