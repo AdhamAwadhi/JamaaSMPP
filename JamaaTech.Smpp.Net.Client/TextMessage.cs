@@ -97,7 +97,7 @@ namespace JamaaTech.Smpp.Net.Client
             }
             else
             {
-                sm.SetMessageBytes(bytes);
+                sm.SetMessageText(vText, defaultEncoding);
                 yield return sm;
             }
         }

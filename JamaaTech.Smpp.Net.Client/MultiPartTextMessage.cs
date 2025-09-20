@@ -58,7 +58,7 @@ namespace JamaaTech.Smpp.Net.Client
 
         public override void SetMessageText(string message, DataCoding dataCoding, Udh udh)
         {
-            _hasResponse = udh.IsLast;
+            _hasResponse = udh == null ? true : udh.IsLast;
             base.SetMessageText(message, dataCoding, udh);
         }
 
