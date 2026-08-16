@@ -96,7 +96,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         }
 
         public DeliverSm(SmppEncodingService smppEncodingService)
-            : this(new PDUHeader(CommandType.SubmitSm), smppEncodingService)
+            : this(new PDUHeader(CommandType.DeliverSm), smppEncodingService)
         { }
         #endregion
 
