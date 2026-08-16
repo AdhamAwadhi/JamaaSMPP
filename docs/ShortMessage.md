@@ -297,19 +297,30 @@ var pdus = multiPart.GetMessagePDUs(DataCoding.ASCII, encodingService, destAddre
 
 ### UDH Generation
 ```csharp
-// UDH contains concatenation information
-// IEI: 0x00 (Concatenated short messages)
-// IEDL: 0x03 (3 bytes of data)
-// IED: [ReferenceNumber, MaxSegments, SequenceNumber]
+// Use Udh for an 8-bit concatenated-message reference number.
+Udh udh8 = new Udh(0x12, 3, 2);
+// [0x05, 0x00, 0x03, 0x12, 0x03, 0x02]
 
-// Example UDH for 3-part message, segment 2:
-// [0x05, 0x00, 0x03, 0x12, 0x34, 0x02]
-// 0x05: UDH length
-// 0x00: IEI (concatenation)
-// 0x03: IEDL (3 bytes)
-// 0x12, 0x34: Reference number
-// 0x02: Sequence number (2 of 3)
+// Use Udh16 for a 16-bit concatenated-message reference number.
+// It can be passed anywhere a Udh is accepted.
+Udh udh16 = new Udh16(0x1234, 3, 2);
+// [0x06, 0x08, 0x04, 0x12, 0x34, 0x03, 0x02]
+
+// TextMessage uses 8-bit references by default. Opt in to 16-bit references
+// for automatic splitting and the corresponding smaller segment size.
+TextMessage message = new TextMessage
+{
+    Text = "Long message text...",
+    Use16BitReferenceNumber = true
+};
 ```
+
+For `Udh`, IEI `0x00` identifies an 8-bit reference and IEDL is `0x03`. For
+`Udh16`, IEI `0x08` identifies a big-endian 16-bit reference and IEDL is
+`0x04`. The maximum-segment and sequence-number fields remain one byte each.
+The multipart limits for 16-bit UDH are 152 characters for `SMSCDefault` and
+`ASCII`, 133 for `Latin1`, and 66 for `UCS2`, compared with 153, 134, and 67
+respectively for 8-bit UDH.
 
 ## Usage Examples
 

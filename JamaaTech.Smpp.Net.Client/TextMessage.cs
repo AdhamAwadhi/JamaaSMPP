@@ -26,6 +26,7 @@ namespace JamaaTech.Smpp.Net.Client
         #region Variables
         private string vText;
         private int vMaxMessageLength;
+        private bool vUseUdh16Bit;
         #endregion
 
         #region Constuctors
@@ -56,6 +57,16 @@ namespace JamaaTech.Smpp.Net.Client
         }
 
         public int MaxMessageLength { get { return vMaxMessageLength; } }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether concatenated messages use a
+        /// 16-bit UDH reference number. The default is <see langword="false"/>.
+        /// </summary>
+        public bool UseUdh16Bit
+        {
+            get { return vUseUdh16Bit; }
+            set { vUseUdh16Bit = value; }
+        }
         #endregion
 
         #region Methods
@@ -83,10 +94,12 @@ namespace JamaaTech.Smpp.Net.Client
             if (vText.Length > vMaxMessageLength && bytes.Length > vMaxMessageLength) // Split into multiple!
             {
                 var SegID = SegmentIdGeneratorFactory.Generator.NextSegmentId(vSourceAddress, vDestinatinoAddress);
-                vMaxMessageLength = GetMaxMessageLength(defaultEncoding, true);
+                vMaxMessageLength = GetMaxMessageLength(defaultEncoding, true, vUseUdh16Bit);
                 var messages = Split(vText, vMaxMessageLength);
                 var totalSegments = messages.Count; // get the number of (how many) parts
-                var udh = new Udh(SegID, totalSegments, 0); // ID, Total, part
+                Udh udh = vUseUdh16Bit
+                    ? new Udh16(SegID, totalSegments, 0)
+                    : new Udh(SegID, totalSegments, 0); // ID, Total, part
 
                 for (int i = 0; i < totalSegments; i++)
                 {
@@ -109,7 +122,7 @@ namespace JamaaTech.Smpp.Net.Client
             return sm;
         }
 
-        private static List<String> Split(string message, int maxPartLength)
+        public static List<String> Split(string message, int maxPartLength)
         {
             var result = new List<String>();
 
@@ -125,18 +138,18 @@ namespace JamaaTech.Smpp.Net.Client
 
         }
 
-        private static int GetMaxMessageLength(DataCoding encoding, bool includeUdh)
+        public static int GetMaxMessageLength(DataCoding encoding, bool includeUdh, bool useUdh16Bit = false)
         {
             switch (encoding)
             {
                 case DataCoding.SMSCDefault:
-                    return includeUdh ? 153 : 160;
+                    return includeUdh ? (useUdh16Bit ? 152 : 153) : 160;
                 case DataCoding.Latin1:
-                    return includeUdh ? 134 : 140;
+                    return includeUdh ? (useUdh16Bit ? 133 : 134) : 140;
                 case DataCoding.ASCII:
-                    return includeUdh ? 153 : 160;
+                    return includeUdh ? (useUdh16Bit ? 152 : 153) : 160;
                 case DataCoding.UCS2:
-                    return includeUdh ? 67 : 70;
+                    return includeUdh ? (useUdh16Bit ? 66 : 67) : 70;
                 default:
                     throw new InvalidOperationException("Invalid or unsuported encoding for text message ");
             }

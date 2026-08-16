@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 namespace JamaaTech.Smpp.Net.Client
 {
     /// <summary>
-    /// Returns the next segment ID (0-255) for a given source/destination pair.
+    /// Returns the next segment ID (0-65535) for a given source/destination pair.
     /// </summary>
     public interface ISegmentIdGenerator
     {
@@ -12,7 +12,7 @@ namespace JamaaTech.Smpp.Net.Client
     }
 
     /// <summary>
-    /// Abstraction for per (source,destination) cyclic counters (0-255).
+    /// Abstraction for per (source,destination) cyclic counters (0-65535).
     /// Implement to plug in alternative backends (Redis, distributed cache, etc).
     /// </summary>
     public interface ISegmentIdCounterStore
@@ -50,16 +50,16 @@ namespace JamaaTech.Smpp.Net.Client
             }
         }
 
-        private readonly ConcurrentDictionary<AddressKey, byte> _counters =
-            new ConcurrentDictionary<AddressKey, byte>();
+        private readonly ConcurrentDictionary<AddressKey, ushort> _counters =
+            new ConcurrentDictionary<AddressKey, ushort>();
 
         public int Next(string sourceAddress, string destinationAddress)
         {
             var key = new AddressKey(sourceAddress, destinationAddress);
-            byte next = _counters.AddOrUpdate(
+            ushort next = _counters.AddOrUpdate(
                 key,
-                k => (byte)0,
-                (k, prev) => (byte)((prev + 1) & 0xFF));
+                k => (ushort)0,
+                (k, prev) => (ushort)((prev + 1) & 0xFFFF));
             return next;
         }
     }

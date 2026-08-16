@@ -99,19 +99,19 @@ namespace JamaaTech.Smpp.Net.Lib
                 segId = buffer.Remove();
                 count = buffer.Remove();
                 seq = buffer.Remove();
+                return new Udh(segId, count, seq);
             }
             else if (length == 6 && iei == 8 && ieidl == 4) //16 bits message reference
             {
                 segId = smppEncodingService.GetShortFromBytes(buffer.Remove(2));
                 count = buffer.Remove();
                 seq = buffer.Remove();
+                return new Udh16(segId, count, seq);
             }
             else { throw new SmppException(SmppErrorCode.ESME_RUNKNOWNERR, "Invalid or unsupported UDH field"); }
-            Udh udh = new Udh(segId, count, seq);
-            return udh;
         }
 
-        public byte[] GetBytes()
+        public virtual byte[] GetBytes()
         {
             ByteBuffer buffer = new ByteBuffer(5);
             buffer.Append(0x05); //User 8 bits reference number
@@ -124,5 +124,31 @@ namespace JamaaTech.Smpp.Net.Lib
         }
 
         #endregion
+    }
+
+    public class Udh16 : Udh
+    {
+        public Udh16(int segmentId, int messageCount, int messageSequence)
+            : base(segmentId, messageCount, messageSequence)
+        {
+        }
+
+        public Udh16(int segmentId, int messageCount)
+            : base(segmentId, messageCount)
+        {
+        }
+
+        public override byte[] GetBytes()
+        {
+            ByteBuffer buffer = new ByteBuffer(6);
+            buffer.Append(0x06); //UDH length
+            buffer.Append(0x08); //IEI = 8 concatenated message with 16 bits reference number
+            buffer.Append(0x04); //Four bytes follow
+            buffer.Append((byte)(SegmentID >> 8));
+            buffer.Append((byte)SegmentID);
+            buffer.Append((byte)MessageCount);
+            buffer.Append((byte)MessageSequence);
+            return buffer.ToBytes();
+        }
     }
 }
