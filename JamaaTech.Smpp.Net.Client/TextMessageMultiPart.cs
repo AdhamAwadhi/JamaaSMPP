@@ -19,7 +19,7 @@ using JamaaTech.Smpp.Net.Lib.Protocol;
 
 namespace JamaaTech.Smpp.Net.Client
 {
-    public class MultiPartTextMessage : TextMessage
+    public class TextMessageMultiPart : TextMessage
     {
         protected override SubmitSm CreateSubmitSm(SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
         {
