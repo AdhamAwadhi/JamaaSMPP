@@ -8,7 +8,7 @@ using JamaaTech.Smpp.Net.Lib.Protocol;
 using JamaaTech.Smpp.Net.Lib.Testing;
 using Xunit;
 
-namespace JamaaTech.Smpp.Net.Lib.Tests
+namespace JamaaTech.Smpp.Net.Tests
 {
     public class SmppClientSessionThreadingTests
     {

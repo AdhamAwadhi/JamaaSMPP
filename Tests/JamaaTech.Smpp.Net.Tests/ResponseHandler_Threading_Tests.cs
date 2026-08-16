@@ -9,7 +9,7 @@ using JamaaTech.Smpp.Net.Lib.Protocol;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace JamaaTech.Smpp.Net.Lib.Tests
+namespace JamaaTech.Smpp.Net.Tests
 {
     public class ResponseHandler_Threading_Tests : IDisposable
     {
@@ -52,7 +52,8 @@ namespace JamaaTech.Smpp.Net.Lib.Tests
                 var seqs = Enumerable.Range(1, n).Select(i => (uint)i).ToArray();
                 var tasks = seqs.Select(s => Task.Run(() => handler.WaitResponse(new TestRequestPDU(s)))).ToArray();
                 // deliver in reverse order
-                foreach (var s in seqs.Reverse())
+                seqs.Reverse();
+                foreach (var s in seqs)
                 {
                     handler.Handle(new TestResponsePDU(s));
                 }

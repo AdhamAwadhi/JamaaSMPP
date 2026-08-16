@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12106.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Smpp.Net.Client", "JamaaTech.Smpp.Net.Client\Smpp.Net.Client.csproj", "{29B74C7F-40A4-41AF-A1CD-A30BB5FE2649}"
 EndProject
@@ -24,9 +24,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B49D3C8D
 		nupkg\pack.ps1 = nupkg\pack.ps1
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamaaTech.Smpp.Net.Lib.Tests", "Tests\JamaaTech.Smpp.Net.Lib.Tests\JamaaTech.Smpp.Net.Lib.Tests.csproj", "{46CE808D-C8E9-F19D-5CA3-992FFECD594D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{4C519B03-BEAB-4586-B8BF-9C2A43DDF87F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{14856823-95F8-4234-BB73-2AB8A4FCFB90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamaaTech.Smpp.Net.Tests", "Tests\JamaaTech.Smpp.Net.Tests\JamaaTech.Smpp.Net.Tests.csproj", "{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,18 +76,6 @@ Global
 		{96C6F0F6-2FA0-4F82-B68D-903264F02383}.Release|x64.Build.0 = Release|Any CPU
 		{96C6F0F6-2FA0-4F82-B68D-903264F02383}.Release|x86.ActiveCfg = Release|Any CPU
 		{96C6F0F6-2FA0-4F82-B68D-903264F02383}.Release|x86.Build.0 = Release|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Debug|x64.Build.0 = Debug|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Debug|x86.Build.0 = Debug|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Release|x64.ActiveCfg = Release|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Release|x64.Build.0 = Release|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Release|x86.ActiveCfg = Release|Any CPU
-		{46CE808D-C8E9-F19D-5CA3-992FFECD594D}.Release|x86.Build.0 = Release|Any CPU
 		{4C519B03-BEAB-4586-B8BF-9C2A43DDF87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C519B03-BEAB-4586-B8BF-9C2A43DDF87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C519B03-BEAB-4586-B8BF-9C2A43DDF87F}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -98,9 +88,24 @@ Global
 		{4C519B03-BEAB-4586-B8BF-9C2A43DDF87F}.Release|x64.Build.0 = Release|Any CPU
 		{4C519B03-BEAB-4586-B8BF-9C2A43DDF87F}.Release|x86.ActiveCfg = Release|Any CPU
 		{4C519B03-BEAB-4586-B8BF-9C2A43DDF87F}.Release|x86.Build.0 = Release|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Debug|x64.Build.0 = Debug|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Debug|x86.Build.0 = Debug|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Release|x64.ActiveCfg = Release|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Release|x64.Build.0 = Release|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Release|x86.ActiveCfg = Release|Any CPU
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8FD314D7-C2CE-4697-80A5-38AECE35EDD3} = {14856823-95F8-4234-BB73-2AB8A4FCFB90}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A49D42F6-1512-4538-8020-0D683E8E56B1}

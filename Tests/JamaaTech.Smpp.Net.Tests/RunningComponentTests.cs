@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using JamaaTech.Smpp.Net.Lib.Util;
 using Xunit;
 
-namespace JamaaTech.Smpp.Net.Lib.Tests
+namespace JamaaTech.Smpp.Net.Tests
 {
     public class TestRunningComponent : RunningComponent
     {
