@@ -190,9 +190,8 @@ namespace JamaaTech.Smpp.Net.Client
 
             string messageId = message.ReceiptedMessageId;
             var srcAddress = new SmppAddress(vProperties.AddressTon, vProperties.AddressNpi, string.IsNullOrWhiteSpace(message.SourceAddress) ? Properties.SourceAddress : message.SourceAddress);
-            var destAddress = new SmppAddress() { Address = message.DestinationAddress };
 
-            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, destAddress, srcAddress))
+            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, srcAddress))
             {
                 if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpString(pdu));
                 ResponsePDU resp = SendPdu(pdu, timeOut);
@@ -266,9 +265,8 @@ namespace JamaaTech.Smpp.Net.Client
 
             string messageId = message.ReceiptedMessageId;
             var srcAddress = new SmppAddress(vProperties.AddressTon, vProperties.AddressNpi, string.IsNullOrWhiteSpace(message.SourceAddress) ? Properties.SourceAddress : message.SourceAddress);
-            var destAddress = new SmppAddress(){ Address = message.DestinationAddress};
             
-            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, destAddress, srcAddress))
+            foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, srcAddress))
             {
                 if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpString(pdu));
                 ResponsePDU resp = await SendPduAsync(pdu, timeout, cancellationToken).ConfigureAwait(false);

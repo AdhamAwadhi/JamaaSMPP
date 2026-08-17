@@ -70,14 +70,14 @@ namespace JamaaTech.Smpp.Net.Client
         #endregion
 
         #region Methods
-        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppAddress destAddress = null, SmppAddress srcAddress = null)
+        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding dataCoding, SmppAddress srcAddress = null)
         {
-            destAddress = destAddress ?? new SmppAddress() {Address = vDestinatinoAddress};
-            srcAddress = srcAddress ?? new SmppAddress() { Address = vSourceAddress };
+            var destAddressLocal = new SmppAddress() { Address = vDestinatinoAddress };
+            var srcAddressLocal = srcAddress ?? new SmppAddress() { Address = vSourceAddress };
             Func<SubmitSm> smFactory = () =>
             {
-                SubmitSm sm = CreateSubmitSm(destAddress, srcAddress);
-                sm.DataCoding = defaultEncoding;
+                SubmitSm sm = CreateSubmitSm(destAddressLocal, srcAddressLocal);
+                sm.DataCoding = dataCoding;
 
                 if (SubmitUserMessageReference)
                     sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);
@@ -91,15 +91,15 @@ namespace JamaaTech.Smpp.Net.Client
                 return sm;
             };
 
-            vMaxMessageLength = GetMaxMessageLength(defaultEncoding, false);
-            byte[] bytes = SmppEncodingService.Instance.GetBytesFromString(vText, defaultEncoding);
+            vMaxMessageLength = GetMaxMessageLength(dataCoding, false);
+            byte[] bytes = SmppEncodingService.Instance.GetBytesFromString(vText, dataCoding);
 
             // Unicode encoding return 2 items for 1 char 
             // We check vText Length first
             if (vText.Length > vMaxMessageLength && bytes.Length > vMaxMessageLength) // Split into multiple!
             {
-                var SegID = SegmentIdGeneratorFactory.Generator.NextSegmentId(vSourceAddress, vDestinatinoAddress);
-                vMaxMessageLength = GetMaxMessageLength(defaultEncoding, true, vUseUdh16Bit);
+                var SegID = SegmentIdGeneratorFactory.Generator.NextSegmentId(srcAddressLocal.Address, destAddressLocal.Address);
+                vMaxMessageLength = GetMaxMessageLength(dataCoding, true, vUseUdh16Bit);
                 var messages = Split(vText, vMaxMessageLength);
                 var totalSegments = messages.Count; // get the number of (how many) parts
                 Udh udh = vUseUdh16Bit
@@ -110,14 +110,14 @@ namespace JamaaTech.Smpp.Net.Client
                 {
                     udh.MessageSequence = i + 1;  // seq+1 , - parts of the message      
                     var sm = smFactory();
-                    sm.SetMessageText(messages[i], defaultEncoding, udh); // send parts of the message + all other UDH settings
+                    sm.SetMessageText(messages[i], dataCoding, udh); // send parts of the message + all other UDH settings
                     yield return sm;
                 }
             }
             else
             {
                 var sm = smFactory();
-                sm.SetMessageText(vText, defaultEncoding);
+                sm.SetMessageText(vText, dataCoding);
                 yield return sm;
             }
         }
