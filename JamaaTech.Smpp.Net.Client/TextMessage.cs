@@ -74,17 +74,22 @@ namespace JamaaTech.Smpp.Net.Client
         {
             destAddress = destAddress ?? new SmppAddress() {Address = vDestinatinoAddress};
             srcAddress = srcAddress ?? new SmppAddress() { Address = vSourceAddress };
-            SubmitSm sm = CreateSubmitSm(destAddress, srcAddress );
-            sm.DataCoding = defaultEncoding;
+            Func<SubmitSm> smFactory = () =>
+            {
+                SubmitSm sm = CreateSubmitSm(destAddress, srcAddress);
+                sm.DataCoding = defaultEncoding;
 
-            if (SubmitUserMessageReference)
-                sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);
+                if (SubmitUserMessageReference)
+                    sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.user_message_reference, UserMessageReference);
 
-            if (SubmitReceiptedMessageId)
-                sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.receipted_message_id, ReceiptedMessageId);
+                if (SubmitReceiptedMessageId)
+                    sm.SetOptionalParamString(Lib.Protocol.Tlv.Tag.receipted_message_id, ReceiptedMessageId);
 
-            if (vRegisterDeliveryNotification)
-                sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
+                if (vRegisterDeliveryNotification)
+                    sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
+
+                return sm;
+            };
 
             vMaxMessageLength = GetMaxMessageLength(defaultEncoding, false);
             byte[] bytes = SmppEncodingService.Instance.GetBytesFromString(vText, defaultEncoding);
@@ -104,12 +109,14 @@ namespace JamaaTech.Smpp.Net.Client
                 for (int i = 0; i < totalSegments; i++)
                 {
                     udh.MessageSequence = i + 1;  // seq+1 , - parts of the message      
+                    var sm = smFactory();
                     sm.SetMessageText(messages[i], defaultEncoding, udh); // send parts of the message + all other UDH settings
                     yield return sm;
                 }
             }
             else
             {
+                var sm = smFactory();
                 sm.SetMessageText(vText, defaultEncoding);
                 yield return sm;
             }
