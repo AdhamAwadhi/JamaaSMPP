@@ -16,6 +16,8 @@
 
 using JamaaTech.Smpp.Net.Lib;
 using JamaaTech.Smpp.Net.Lib.Protocol;
+using JamaaTech.Smpp.Net.Lib.Protocol.Tlv;
+using System;
 
 namespace JamaaTech.Smpp.Net.Client
 {
@@ -38,12 +40,44 @@ namespace JamaaTech.Smpp.Net.Client
             pdu.GetMessageText(out message, out udh);
             TextMessage sms = null;
             //Check if the udh field is present
-            if (udh != null) { sms = new TextMessage(udh.SegmentID, udh.MessageCount, udh.MessageSequence); }
-            else { sms = new TextMessage(); }
+            if (udh != null)
+            {
+                sms = new TextMessage(udh.SegmentID, udh.MessageCount, udh.MessageSequence)
+                {
+                    ConcatenationType = udh is Udh16 ? ConcatenationType.UDH16bit : ConcatenationType.UDH8bit
+                };
+            }
+            else
+            {
+                GetSarData(pdu, out var more_msgs, out var msgCount, out var sarTotal, out var sarSegId, out var sarSeqNo);
+                if (sarTotal.HasValue)
+                    sms = new TextMessage(sarSegId.Value, sarTotal.Value, sarSeqNo.Value)
+                    {
+                        ConcatenationType = ConcatenationType.SAR
+                    };
+                else
+                    sms = new TextMessage();
+            }
             sms.Text = message == null ? "" : message;
             sms.SourceAddress = pdu.SourceAddress.Address;
             sms.DestinationAddress = pdu.DestinationAddress.Address;
+
+
             return sms;
+        }
+
+        private static void GetSarData(SingleDestinationPDU pdu,
+                                       out bool? more_msgs,
+                                       out byte? msgCount,
+                                       out byte? sarTotal,
+                                       out byte? sarSegId,
+                                       out byte? sarSeqNo)
+        {
+            more_msgs = pdu.GetOptionalParamByte<bool>(Tag.more_messages_to_send);
+            msgCount = pdu.GetOptionalParamByte<byte>(Tag.number_of_messages);
+            sarTotal = pdu.GetOptionalParamByte<byte>(Tag.sar_total_segments);
+            sarSegId = pdu.GetOptionalParamByte<byte>(Tag.sar_msg_ref_num);
+            sarSeqNo = pdu.GetOptionalParamByte<byte>(Tag.sar_segment_seqnum);
         }
         #endregion
     }
