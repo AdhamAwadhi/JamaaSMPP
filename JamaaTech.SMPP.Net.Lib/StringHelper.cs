@@ -41,5 +41,19 @@ namespace JamaaTech.Smpp.Net.Lib
                     throw new InvalidOperationException("Invalid or unsuported encoding for text message ");
             }
         }
+
+        public static byte[] ConvertFromHexString(string hex)
+        {
+#if NET8_0_OR_GREATER
+            return Convert.FromHexString(hex);
+#else
+            return Enumerable.Range(0, hex.Length)
+                             .Where(x => x % 2 == 0)
+                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                             .ToArray();
+#endif
+        }
+
+
     }
 }

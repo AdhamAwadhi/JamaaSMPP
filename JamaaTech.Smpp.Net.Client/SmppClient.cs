@@ -236,8 +236,8 @@ namespace JamaaTech.Smpp.Net.Client
         public virtual async Task<ResponsePDU> SendPduAsync(RequestPDU pdu, int timeout, CancellationToken cancellationToken = default)
         {
             var resp = await vTrans.SendPduAsync(pdu, timeout, cancellationToken).ConfigureAwait(false);
-            if (_Log.IsTraceEnabled) _Log.TraceFormat("SendPdu req: {0} resp: {1}", Convert.ToBase64String(pdu.GetBytes()), Convert.ToBase64String(resp.GetBytes()));
-            if (_Log.IsDebugEnabled) _Log.DebugFormat("SendPdu req: {0} resp: {1}", LoggingExtensions.DumpString(pdu), LoggingExtensions.DumpString(resp));
+            if (_Log.IsTraceEnabled) _Log.TraceFormat("SendPduAsync req: {0} resp: {1}", Convert.ToBase64String(pdu.GetBytes()), Convert.ToBase64String(resp.GetBytes()));
+            if (_Log.IsDebugEnabled) _Log.DebugFormat("SendPduAsync req: {0} resp: {1}", LoggingExtensions.DumpString(pdu), LoggingExtensions.DumpString(resp));
             if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
             { throw new SmppException(resp.Header.ErrorCode); }
 
