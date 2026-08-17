@@ -218,6 +218,8 @@ namespace JamaaTech.Smpp.Net.Client
         public virtual ResponsePDU SendPdu(RequestPDU pdu, int timeout)
         {
             var resp = vTrans.SendPdu(pdu, timeout);
+            if (_Log.IsTraceEnabled) _Log.TraceFormat("SendPdu req: {0} resp: {1}", Convert.ToBase64String(pdu.GetBytes()), Convert.ToBase64String(resp.GetBytes()));
+            if (_Log.IsDebugEnabled) _Log.DebugFormat("SendPdu req: {0} resp: {1}", LoggingExtensions.DumpString(pdu), LoggingExtensions.DumpString(resp));
             if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
             { throw new SmppException(resp.Header.ErrorCode); }
 
@@ -234,6 +236,8 @@ namespace JamaaTech.Smpp.Net.Client
         public virtual async Task<ResponsePDU> SendPduAsync(RequestPDU pdu, int timeout, CancellationToken cancellationToken = default)
         {
             var resp = await vTrans.SendPduAsync(pdu, timeout, cancellationToken).ConfigureAwait(false);
+            if (_Log.IsTraceEnabled) _Log.TraceFormat("SendPdu req: {0} resp: {1}", Convert.ToBase64String(pdu.GetBytes()), Convert.ToBase64String(resp.GetBytes()));
+            if (_Log.IsDebugEnabled) _Log.DebugFormat("SendPdu req: {0} resp: {1}", LoggingExtensions.DumpString(pdu), LoggingExtensions.DumpString(resp));
             if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
             { throw new SmppException(resp.Header.ErrorCode); }
 
@@ -265,7 +269,7 @@ namespace JamaaTech.Smpp.Net.Client
 
             string messageId = message.ReceiptedMessageId;
             var srcAddress = new SmppAddress(vProperties.AddressTon, vProperties.AddressNpi, string.IsNullOrWhiteSpace(message.SourceAddress) ? Properties.SourceAddress : message.SourceAddress);
-            
+
             foreach (SendSmPDU pdu in message.GetMessagePDUs(vProperties.DefaultEncoding, srcAddress))
             {
                 if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpString(pdu));
