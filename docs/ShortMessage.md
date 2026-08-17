@@ -99,12 +99,13 @@ classDiagram
     
     class TextMessage {
         +string Text
+        +ConcatenationType ConcatenationType
         +GetPDUs() IEnumerable~SendSmPDU~
     }
     
     class MultiPartTextMessage {
         +string Text
-        +SplitMethodType SplitMethod
+        +ConcatenationType ConcatenationType
         +GetPDUs() IEnumerable~SendSmPDU~
     }
     
@@ -289,7 +290,7 @@ var pdus = longMessage.GetMessagePDUs(DataCoding.ASCII, encodingService, destAdd
 MultiPartTextMessage multiPart = new MultiPartTextMessage();
 multiPart.Text = "Long message text...";
 multiPart.DestinationAddress = "1234567890";
-multiPart.SplitMethod = SplitMethodType.UDH; // Use UDH for concatenation
+multiPart.ConcatenationType = ConcatenationType.UDH8bit; // Use UDH for concatenation
 
 // GetMessagePDUs returns controlled segments
 var pdus = multiPart.GetMessagePDUs(DataCoding.ASCII, encodingService, destAddress, srcAddress);
@@ -355,7 +356,7 @@ client.SendMessage(longMessage);
 MultiPartTextMessage multiPart = new MultiPartTextMessage();
 multiPart.DestinationAddress = "1234567890";
 multiPart.Text = "This is a long message that will be split into multiple parts with explicit control over the splitting process and UDH generation.";
-multiPart.SplitMethod = SplitMethodType.UDH;
+multiPart.ConcatenationType = ConcatenationType.UDH8bit;
 multiPart.RegisterDeliveryNotification = true;
 
 // Send with controlled splitting

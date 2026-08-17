@@ -32,7 +32,7 @@ namespace JamaaTech.Smpp.Net.Tests
             var message = new TestTextMessage
             {
                 Text = new string('a', 134),
-                UseUdh16Bit = true
+                ConcatenationType = ConcatenationType.UDH16bit
             };
 
             List<byte[]> messageParts = message.GetMessageParts(DataCoding.UCS2);
@@ -67,7 +67,7 @@ namespace JamaaTech.Smpp.Net.Tests
             var message = new TestTextMessageMultiPart
             {
                 Text = new string('a', 134),
-                UseUdh16Bit = true
+                ConcatenationType = ConcatenationType.UDH16bit
             };
 
             List<SendSmPDU> pdus = message.GetPdus(DataCoding.UCS2);

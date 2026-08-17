@@ -16,9 +16,18 @@
 
 namespace JamaaTech.Smpp.Net.Client
 {
-    public enum SplitMethodType
+    /// <summary>
+    /// The type of concatenation used in message segments.
+    /// </summary>
+    public enum ConcatenationType
     {
-        UDH,
-        SAR,
+        UDH8bit,
+
+        /// <summary>
+        /// Uses User Data Header with 16 bit reference number
+        /// </summary>
+        UDH16bit,
+
+        SAR
     }
 }

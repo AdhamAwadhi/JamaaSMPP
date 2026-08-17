@@ -184,7 +184,7 @@ namespace DemoClient
                 UserMessageReferenceType = UserMessageReferenceType.Int,
                 RegisterDeliveryNotification = true,
                 UseSeparateConnections = false,
-                //SplitMethod = SplitMethodType.UDH
+                //ConcatenationType = ConcatenationType.UDH
             };
         }
 
