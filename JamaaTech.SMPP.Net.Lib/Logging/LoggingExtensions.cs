@@ -8,13 +8,13 @@ namespace JamaaTech.Smpp.Net.Lib.Logging
     {
         private static readonly global::Common.Logging.ILog _Log = global::Common.Logging.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static Func<object, SmppEncodingService, string> DumpString { get; set; } = DumpStringDefault;
+        public static Func<object, string> DumpString { get; set; } = DumpStringDefault;
 
-        public static string DumpStringWithTry(object obj, SmppEncodingService encodingService = null)
+        public static string DumpStringWithTry(object obj)
         {
             try
             {
-                return DumpStringDefault(obj, encodingService);
+                return DumpStringDefault(obj);
             }
             catch (Exception ex)
             {
@@ -24,7 +24,7 @@ namespace JamaaTech.Smpp.Net.Lib.Logging
             }
         }
 
-        public static string DumpStringDefault(object obj, SmppEncodingService encodingService = null)
+        public static string DumpStringDefault(object obj)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0} -- ", obj.GetType().Name);
@@ -41,11 +41,11 @@ namespace JamaaTech.Smpp.Net.Lib.Logging
 
                 if (value is byte[])
                 {
-                    value = BytesToString(value as byte[], encodingService);
+                    value = BytesToString(value as byte[]);
                 }
                 else if (value is TlvCollection)
                 {
-                    value = TlvCollectionToString(value as TlvCollection, encodingService);
+                    value = TlvCollectionToString(value as TlvCollection);
                 }
 
                 sb.AppendFormat("{0}:{1} ", property.Name, value);
@@ -54,25 +54,25 @@ namespace JamaaTech.Smpp.Net.Lib.Logging
             return sb.ToString();
         }
 
-        private static string TlvCollectionToString(TlvCollection tlvCollection, SmppEncodingService encodingService)
+        private static string TlvCollectionToString(TlvCollection tlvCollection)
         {
             var tags = new StringBuilder();
             tags.Append("[");
             foreach (var tlv in tlvCollection)
             {
-                tags.AppendFormat("{0}:{1} ", tlv.Tag, BytesToString(tlv.RawValue, encodingService));
+                tags.AppendFormat("{0}:{1} ", tlv.Tag, BytesToString(tlv.RawValue));
             }
             tags.Append("]");
 
             return tags.ToString();
         }
 
-        private static string BytesToString(byte[] value, SmppEncodingService encodingService)
+        private static string BytesToString(byte[] value)
         {
             try
             {
-                if (encodingService != null)
-                    return encodingService.GetCStringFromBytes(value);
+                if (SmppEncodingService.Instance != null)
+                    return SmppEncodingService.Instance.GetCStringFromBytes(value);
 
                 return BytesToStringHex(value);
             }

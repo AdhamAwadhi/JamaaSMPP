@@ -90,25 +90,25 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Methods
-        public static PDUHeader Parse(ByteBuffer buffer, SmppEncodingService smppEncodingService)
+        public static PDUHeader Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
             if (buffer.Length < 16) { throw new ArgumentException("Buffer length must not be less than 16 bytes"); }
-            uint cmdLength = smppEncodingService.GetIntFromBytes(buffer.Remove(4));
-            CommandType cmdType = (CommandType)smppEncodingService.GetIntFromBytes(buffer.Remove(4));
-            SmppErrorCode errorCode = (SmppErrorCode)smppEncodingService.GetIntFromBytes(buffer.Remove(4));
-            uint seqNumber = smppEncodingService.GetIntFromBytes(buffer.Remove(4));
+            uint cmdLength = SmppEncodingService.Instance.GetIntFromBytes(buffer.Remove(4));
+            CommandType cmdType = (CommandType)SmppEncodingService.Instance.GetIntFromBytes(buffer.Remove(4));
+            SmppErrorCode errorCode = (SmppErrorCode)SmppEncodingService.Instance.GetIntFromBytes(buffer.Remove(4));
+            uint seqNumber = SmppEncodingService.Instance.GetIntFromBytes(buffer.Remove(4));
             PDUHeader header = new PDUHeader(cmdType, seqNumber, errorCode, cmdLength);
             return header;
         }
 
-        public byte[] GetBytes(SmppEncodingService smppEncodingService)
+        public byte[] GetBytes()
         {
             ByteBuffer buffer = new ByteBuffer(32);
-            buffer.Append(smppEncodingService.GetBytesFromInt(vCommandLength));
-            buffer.Append(smppEncodingService.GetBytesFromInt((uint)vCommandType));
-            buffer.Append(smppEncodingService.GetBytesFromInt((uint)vErrorCode));
-            buffer.Append(smppEncodingService.GetBytesFromInt(vSequenceNumber));
+            buffer.Append(SmppEncodingService.Instance.GetBytesFromInt(vCommandLength));
+            buffer.Append(SmppEncodingService.Instance.GetBytesFromInt((uint)vCommandType));
+            buffer.Append(SmppEncodingService.Instance.GetBytesFromInt((uint)vErrorCode));
+            buffer.Append(SmppEncodingService.Instance.GetBytesFromInt(vSequenceNumber));
             return buffer.ToBytes();
         }
 

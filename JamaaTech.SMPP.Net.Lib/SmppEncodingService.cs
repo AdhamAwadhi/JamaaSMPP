@@ -5,6 +5,45 @@ namespace JamaaTech.Smpp.Net.Lib
 {
     public class SmppEncodingService
     {
+        private static SmppEncodingService _instance;
+        private static readonly object _sync = new object();
+
+        public static SmppEncodingService Instance
+        {
+            get
+            {
+                var i = _instance;
+                if (i == null)
+                {
+                    lock (_sync)
+                    {
+                        if (_instance == null)
+                            _instance = new SmppEncodingService(); // uses default
+                        i = _instance;
+                    }
+                }
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// Configure a custom generator (e.g. new DefaultSegmentIdGenerator(customStore)). First call wins.
+        /// </summary>
+        public static void Configure(SmppEncodingService instance, bool throwIfAlreadyConfigured = true)
+        {
+            if (instance == null) throw new ArgumentNullException("instance");
+            lock (_sync)
+            {
+                if (_instance != null)
+                {
+                    if (throwIfAlreadyConfigured)
+                        throw new InvalidOperationException("SmppEncodingService already configured.");
+                    return;
+                }
+                _instance = instance;
+            }
+        }
+
         public System.Text.Encoding UCS2Encoding { get; protected set; }
 
         public SmppEncodingService() : this(System.Text.Encoding.BigEndianUnicode)

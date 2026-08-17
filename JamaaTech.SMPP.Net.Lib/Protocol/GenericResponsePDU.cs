@@ -19,8 +19,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public abstract class GenericResponsePDU : ResponsePDU
     {
         #region Constructors
-        internal GenericResponsePDU(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
+        internal GenericResponsePDU(PDUHeader header)
+            : base(header) { }
         #endregion
 
         #region Methods

@@ -120,9 +120,9 @@ namespace JamaaTech.Smpp.Net.Lib
         #endregion
 
         #region Methods
-        internal BindRequest CreatePdu(SmppEncodingService smppEncodingService)
+        internal BindRequest CreatePdu()
         {
-            BindRequest req = CreateBindBdu(smppEncodingService);
+            BindRequest req = CreateBindBdu();
             req.AddressNpi = vAddressNpi;
             req.AddressTon = vAddressTon;
             req.SystemID = vSystemID;
@@ -132,11 +132,11 @@ namespace JamaaTech.Smpp.Net.Lib
             return req;
         }
 
-        private BindRequest CreateBindBdu(SmppEncodingService smppEncodingService)
+        private BindRequest CreateBindBdu()
         {
-            if (vAllowReceive && vAllowTransmit) { return new BindTransceiver(smppEncodingService); }
-            else if (vAllowTransmit) { return new BindTransmitter(smppEncodingService); }
-            else if (vAllowReceive) { return new BindReceiver(smppEncodingService); }
+            if (vAllowReceive && vAllowTransmit) { return new BindTransceiver(); }
+            else if (vAllowTransmit) { return new BindTransmitter(); }
+            else if (vAllowReceive) { return new BindReceiver(); }
             else { throw new InvalidOperationException("Both AllowTransmit and AllowReceive cannot be set to false"); }
         }
         #endregion

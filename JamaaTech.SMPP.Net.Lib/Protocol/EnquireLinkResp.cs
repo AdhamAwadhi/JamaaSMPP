@@ -19,8 +19,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public class EnquireLinkResp : GenericResponsePDU
     {
         #region Constructors
-        internal EnquireLinkResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
+        internal EnquireLinkResp(PDUHeader header)
+            : base(header) { }
         #endregion
 
         #region Properties

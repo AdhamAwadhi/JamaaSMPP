@@ -46,7 +46,6 @@ namespace JamaaTech.Smpp.Net.Lib
         private string vPassword;
         private TypeOfNumber vAddressTon;
         private NumberingPlanIndicator vAddressNpi;
-        private SmppEncodingService vSmppEncodingService;
 
         private SendPduCallback vCallback;
         //--
@@ -67,9 +66,8 @@ namespace JamaaTech.Smpp.Net.Lib
         #endregion
 
         #region Constructors
-        private SmppClientSession(SmppEncodingService smppEncodingService)
+        private SmppClientSession()
         {
-            vSmppEncodingService = smppEncodingService;
             InitializeTimer();
             vSyncRoot = new object();
             vDefaultResponseTimeout = 5000;
@@ -147,11 +145,6 @@ namespace JamaaTech.Smpp.Net.Lib
             set { vSyncRoot = value; }
         }
 
-        public SmppEncodingService SmppEncodingService
-        {
-            get { return vSmppEncodingService; }
-            set { vSmppEncodingService = value; }
-        }
         #endregion
 
         #region Methods
@@ -285,7 +278,7 @@ namespace JamaaTech.Smpp.Net.Lib
             EndSession(SmppSessionCloseReason.EndSessionCalled, null);
         }
 
-        public static SmppClientSession Bind(SessionBindInfo bindInfo, int timeOut, SmppEncodingService smppEncodingService)
+        public static SmppClientSession Bind(SessionBindInfo bindInfo, int timeOut)
         {
             try
             {
@@ -294,7 +287,7 @@ namespace JamaaTech.Smpp.Net.Lib
                 //--
                 tcpIpSession = CreateTcpIpSession(bindInfo);
                 //--
-                SmppClientSession smppSession = new SmppClientSession(smppEncodingService);
+                SmppClientSession smppSession = new SmppClientSession();
                 smppSession.vTcpIpSession = tcpIpSession;
                 smppSession.ChangeState(SmppSessionState.Open);
                 smppSession.AssembleComponents();
@@ -334,7 +327,7 @@ namespace JamaaTech.Smpp.Net.Lib
             if (reason != SmppSessionCloseReason.UnbindRequested)
             {
                 //If unbind request was received, do not try to unbind again
-                Unbind unbind = new Unbind(SmppEncodingService);
+                Unbind unbind = new Unbind();
                 try
                 {
                     vTrans.Send(unbind);
@@ -381,7 +374,7 @@ namespace JamaaTech.Smpp.Net.Lib
             vTrans = new PDUTransmitter(vTcpIpSession);
             vRespHandler = ResponseHandlerFactory.Create();
             vStreamParser = new StreamParser(
-                vTcpIpSession, vRespHandler, new PduProcessorCallback(PduRequestProcessorCallback), vSmppEncodingService);
+                vTcpIpSession, vRespHandler, new PduProcessorCallback(PduRequestProcessorCallback));
             vStreamParser.ParserException += ParserExceptionEventHandler;
             vStreamParser.PDUError += PduErrorEventHandler;
             //Start stream parser
@@ -404,7 +397,7 @@ namespace JamaaTech.Smpp.Net.Lib
         {
             vTcpIpSession.SessionClosed += TcpIpSessionClosedEventHandler;
 
-            BindRequest bindReq = bindInfo.CreatePdu(SmppEncodingService);
+            BindRequest bindReq = bindInfo.CreatePdu();
             vTrans.Send(bindReq);
             BindResponse bindResp = null;
             try { bindResp = (BindResponse)vRespHandler.WaitResponse(bindReq, timeOut); }
@@ -462,7 +455,7 @@ namespace JamaaTech.Smpp.Net.Lib
 
         private void TimerCallback(object sender, ElapsedEventArgs e)
         {
-            EnquireLink enqLink = new EnquireLink(SmppEncodingService);
+            EnquireLink enqLink = new EnquireLink();
             //Send EnquireLink with 5 seconds response timeout
             try
             {
@@ -530,7 +523,7 @@ namespace JamaaTech.Smpp.Net.Lib
             }
             else
             {
-                resp = new GenericNack(e.Header, vSmppEncodingService);
+                resp = new GenericNack(e.Header);
                 resp.Header.ErrorCode = e.Exception.ErrorCode;
             }
             try { SendPduBase(resp); }

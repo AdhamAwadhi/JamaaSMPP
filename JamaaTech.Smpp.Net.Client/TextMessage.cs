@@ -70,11 +70,11 @@ namespace JamaaTech.Smpp.Net.Client
         #endregion
 
         #region Methods
-        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
+        protected override IEnumerable<SendSmPDU> GetPDUs(DataCoding defaultEncoding, SmppAddress destAddress = null, SmppAddress srcAddress = null)
         {
             destAddress = destAddress ?? new SmppAddress() {Address = vDestinatinoAddress};
             srcAddress = srcAddress ?? new SmppAddress() { Address = vSourceAddress };
-            SubmitSm sm = CreateSubmitSm(smppEncodingService, destAddress, srcAddress );
+            SubmitSm sm = CreateSubmitSm(destAddress, srcAddress );
             sm.DataCoding = defaultEncoding;
 
             if (SubmitUserMessageReference)
@@ -87,7 +87,7 @@ namespace JamaaTech.Smpp.Net.Client
                 sm.RegisteredDelivery = RegisteredDelivery.DeliveryReceipt;
 
             vMaxMessageLength = GetMaxMessageLength(defaultEncoding, false);
-            byte[] bytes = smppEncodingService.GetBytesFromString(vText, defaultEncoding);
+            byte[] bytes = SmppEncodingService.Instance.GetBytesFromString(vText, defaultEncoding);
 
             // Unicode encoding return 2 items for 1 char 
             // We check vText Length first
@@ -115,9 +115,9 @@ namespace JamaaTech.Smpp.Net.Client
             }
         }
 
-        protected virtual SubmitSm CreateSubmitSm(SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
+        protected virtual SubmitSm CreateSubmitSm(SmppAddress destAddress = null, SmppAddress srcAddress = null)
         {
-            var sm = new SubmitSm(smppEncodingService, destAddress, srcAddress);
+            var sm = new SubmitSm(destAddress, srcAddress);
 
             return sm;
         }

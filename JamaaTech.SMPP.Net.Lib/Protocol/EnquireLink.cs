@@ -19,11 +19,11 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public class EnquireLink : GenericRequestPDU
     {
         #region Constuctors
-        internal EnquireLink(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
+        internal EnquireLink(PDUHeader header)
+            : base(header) { }
 
-        public EnquireLink(SmppEncodingService smppEncodingService)
-            :base(new PDUHeader(CommandType.EnquireLink), smppEncodingService)
+        public EnquireLink()
+            :base(new PDUHeader(CommandType.EnquireLink))
         {
         }
         #endregion
@@ -47,7 +47,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             //use default Status and Length
             //header.CommandStatus = 0;
             //header.CommandLength = 16;
-            EnquireLinkResp resp = (EnquireLinkResp)CreatePDU(header, vSmppEncodingService);
+            EnquireLinkResp resp = (EnquireLinkResp)CreatePDU(header);
             return resp;
         }
         #endregion

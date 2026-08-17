@@ -19,11 +19,11 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public sealed class BindTransmitter : BindRequest
     {
         #region Constructors
-        public BindTransmitter(SmppEncodingService smppEncodingService)
-            : base(new PDUHeader(CommandType.BindTransmitter), smppEncodingService) { }
+        public BindTransmitter()
+            : base(new PDUHeader(CommandType.BindTransmitter)) { }
 
-        internal BindTransmitter(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
+        internal BindTransmitter(PDUHeader header)
+            : base(header) { }
         #endregion
     }
 }

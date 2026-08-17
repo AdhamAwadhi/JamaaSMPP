@@ -34,8 +34,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal SendSmPDU(PDUHeader header, SmppEncodingService smppEncodingService, SmppAddress srcAddress = null)
-            : base(header, smppEncodingService, srcAddress)
+        internal SendSmPDU(PDUHeader header, SmppAddress srcAddress = null)
+            : base(header, srcAddress)
         {
             vServiceType = "";
             vEsmClass = EsmClass.Default;
@@ -92,11 +92,11 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             if (msgBytes == null) { return; }
             ByteBuffer buffer = new ByteBuffer(msgBytes);
             //Check if the UDH is set in the esm_class field
-            if ((EsmClass & EsmClass.UdhiIndicator) == EsmClass.UdhiIndicator) 
+            if ((EsmClass & EsmClass.UdhiIndicator) == EsmClass.UdhiIndicator)
             {
                 _Log.Info("200020:UDH field presense detected;");
                 if (vTraceSwitch.TraceInfo) { Trace.WriteLine("200020:UDH field presense detected;"); }
-                try { udh = Udh.Parse(buffer, vSmppEncodingService); }
+                try { udh = Udh.Parse(buffer); }
                 catch (Exception ex)
                 {
                     _Log.ErrorFormat("20023:UDH field parsing error - {0}", ex, new ByteBuffer(msgBytes).DumpString());
@@ -111,7 +111,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             }
             //Check if we have something remaining in the buffer
             if (buffer.Length == 0) { return; }
-            try { message = vSmppEncodingService.GetStringFromBytes(buffer.ToBytes(), DataCoding); }
+            try { message = SmppEncodingService.Instance.GetStringFromBytes(buffer.ToBytes(), DataCoding); }
             catch (Exception ex1)
             {
                 _Log.ErrorFormat("200019:SMS message decoding failure - {0}", ex1, new ByteBuffer(msgBytes).DumpString());
@@ -134,7 +134,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         {
             ByteBuffer buffer = new ByteBuffer(160);
             if (udh != null) { buffer.Append(udh.GetBytes()); }
-            buffer.Append(vSmppEncodingService.GetBytesFromString(message, dataCoding));
+            buffer.Append(SmppEncodingService.Instance.GetBytesFromString(message, dataCoding));
             SetMessageBytes(buffer.ToBytes());
             if (udh != null) { EsmClass = EsmClass | EsmClass.UdhiIndicator; }
             DataCoding = dataCoding;

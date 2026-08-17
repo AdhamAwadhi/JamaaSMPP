@@ -19,11 +19,11 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public class Unbind : GenericRequestPDU
     {
         #region Constructors
-        internal Unbind(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
+        internal Unbind(PDUHeader header)
+            : base(header) { }
 
-        public Unbind(SmppEncodingService smppEncodingService)
-            : base(new PDUHeader(CommandType.UnBind), smppEncodingService)
+        public Unbind()
+            : base(new PDUHeader(CommandType.UnBind))
         {
         }
         #endregion
@@ -44,7 +44,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         public override ResponsePDU CreateDefaultResponce()
         {
             PDUHeader header = new PDUHeader(CommandType.UnBindResp,vHeader.SequenceNumber);
-            UnbindResp resp = (UnbindResp)CreatePDU(header, vSmppEncodingService);
+            UnbindResp resp = (UnbindResp)CreatePDU(header);
             return resp;
         }
         #endregion

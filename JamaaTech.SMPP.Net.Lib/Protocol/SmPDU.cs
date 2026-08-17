@@ -23,10 +23,10 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal SmPDU(PDUHeader header, SmppEncodingService smppEncodingService, SmppAddress srcAddress = null)
-            : base(header, smppEncodingService)
+        internal SmPDU(PDUHeader header, SmppAddress srcAddress = null)
+            : base(header)
         {
-            vSourceAddress = srcAddress?? new SmppAddress();
+            vSourceAddress = srcAddress ?? new SmppAddress();
         }
         #endregion
 

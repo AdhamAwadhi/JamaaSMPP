@@ -21,9 +21,9 @@ namespace JamaaTech.Smpp.Net.Client
 {
     public class TextMessageMultiPart : TextMessage
     {
-        protected override SubmitSm CreateSubmitSm(SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
+        protected override SubmitSm CreateSubmitSm(SmppAddress destAddress = null, SmppAddress srcAddress = null)
         {
-            var sm = new SubmitSmMultiPart(smppEncodingService, destAddress, srcAddress);
+            var sm = new SubmitSmMultiPart(destAddress, srcAddress);
 
             return sm;
         }
@@ -45,13 +45,13 @@ namespace JamaaTech.Smpp.Net.Client
         #endregion
 
         #region Constructors
-        public SubmitSmMultiPart(JamaaTech.Smpp.Net.Lib.SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
-            : base(smppEncodingService, destAddress, srcAddress)
+        public SubmitSmMultiPart(SmppAddress destAddress = null, SmppAddress srcAddress = null)
+            : base(destAddress, srcAddress)
         {
         }
 
-        public SubmitSmMultiPart(PDUHeader header, JamaaTech.Smpp.Net.Lib.SmppEncodingService smppEncodingService, SmppAddress destAddress = null, SmppAddress srcAddress = null)
-            : base(header, smppEncodingService, destAddress, srcAddress)
+        public SubmitSmMultiPart(PDUHeader header, SmppAddress destAddress = null, SmppAddress srcAddress = null)
+            : base(header, destAddress, srcAddress)
         {
         }
         #endregion

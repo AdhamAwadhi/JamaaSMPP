@@ -91,9 +91,8 @@ namespace JamaaTech.Smpp.Net.Tests
             public List<byte[]> GetMessageParts(DataCoding dataCoding)
             {
                 var parts = new List<byte[]>();
-                var encodingService = new SmppEncodingService();
 
-                foreach (SendSmPDU pdu in base.GetPDUs(dataCoding, encodingService))
+                foreach (SendSmPDU pdu in base.GetPDUs(dataCoding))
                 {
                     parts.Add(pdu.GetMessageBytes());
                 }
@@ -107,9 +106,8 @@ namespace JamaaTech.Smpp.Net.Tests
             public List<SendSmPDU> GetPdus(DataCoding dataCoding)
             {
                 var pdus = new List<SendSmPDU>();
-                var encodingService = new SmppEncodingService();
 
-                foreach (SendSmPDU pdu in base.GetPDUs(dataCoding, encodingService))
+                foreach (SendSmPDU pdu in base.GetPDUs(dataCoding))
                 {
                     pdus.Add(pdu);
                 }

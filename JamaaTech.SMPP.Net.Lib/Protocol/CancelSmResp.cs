@@ -19,8 +19,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
     public sealed class CancelSmResp : GenericResponsePDU
     {
         #region Constructors
-        internal CancelSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService) { }
+        internal CancelSmResp(PDUHeader header)
+            : base(header) { }
         #endregion
 
         #region Properties

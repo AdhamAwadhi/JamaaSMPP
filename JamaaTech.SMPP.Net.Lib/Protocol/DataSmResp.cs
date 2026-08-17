@@ -27,8 +27,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        internal DataSmResp(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
+        internal DataSmResp(PDUHeader header)
+            : base(header)
         {
             vMessageID = "";
         }
@@ -55,7 +55,7 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #region Methods
         protected override byte[] GetBodyData()
         {
-            return EncodeCString(vMessageID, vSmppEncodingService);
+            return EncodeCString(vMessageID);
         }
 
         protected override void Parse(ByteBuffer buffer)
@@ -63,8 +63,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
             //We require at least 1 byte for this pdu
             if (buffer.Length < 1) { throw new NotEnoughBytesException("data_sm_resp requires at least 1 byte of body data"); }
-            vMessageID = DecodeCString(buffer, vSmppEncodingService);
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, vSmppEncodingService); }
+            vMessageID = DecodeCString(buffer);
+            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer); }
         }
         #endregion
     }

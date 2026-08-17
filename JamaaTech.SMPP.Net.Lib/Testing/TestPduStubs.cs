@@ -13,7 +13,7 @@ namespace JamaaTech.Smpp.Net.Lib.Testing
     public sealed class TestRequestPDU : RequestPDU
     {
         public TestRequestPDU(uint sequence)
-            : base(new PDUHeader(CommandType.BindTransmitter, sequence), new SmppEncodingService()) { }
+            : base(new PDUHeader(CommandType.BindTransmitter, sequence)) { }
 
         public override ResponsePDU CreateDefaultResponce() => new TestResponsePDU(Header.SequenceNumber);
         public override SmppEntityType AllowedSource => (SmppEntityType)0;
@@ -29,7 +29,7 @@ namespace JamaaTech.Smpp.Net.Lib.Testing
     public sealed class TestResponsePDU : ResponsePDU
     {
         public TestResponsePDU(uint sequence)
-            : base(new PDUHeader(CommandType.BindTransmitterResp, sequence), new SmppEncodingService()) { }
+            : base(new PDUHeader(CommandType.BindTransmitterResp, sequence)) { }
 
         public override SmppEntityType AllowedSource => (SmppEntityType)0;
         public override SmppSessionState AllowedSession => (SmppSessionState)0;

@@ -21,7 +21,7 @@ namespace JamaaTech.Smpp.Net.Tests
         {
             var buffer = new ByteBuffer(new byte[] { 0x06, 0x08, 0x04, 0xAB, 0xCD, 0x03, 0x02 });
 
-            Udh udh = Udh.Parse(buffer, new SmppEncodingService());
+            Udh udh = Udh.Parse(buffer);
 
             Assert.IsType<Udh16>(udh);
             Assert.Equal(0xABCD, udh.SegmentID);

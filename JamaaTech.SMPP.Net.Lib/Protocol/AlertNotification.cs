@@ -27,14 +27,14 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         #endregion
 
         #region Constructors
-        public AlertNotification(SmppEncodingService smppEncodingService)
-            : base(new PDUHeader(CommandType.AlertNotification), smppEncodingService)
+        public AlertNotification()
+            : base(new PDUHeader(CommandType.AlertNotification))
         {
             vEsmeAddress = new SmppAddress();
         }
 
-        internal AlertNotification(PDUHeader header, SmppEncodingService smppEncodingService)
-            : base(header, smppEncodingService)
+        internal AlertNotification(PDUHeader header)
+            : base(header)
         {
             vEsmeAddress = new SmppAddress();
         }
@@ -70,8 +70,8 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
 
         protected override byte[] GetBodyData()
         {
-            byte[] sourceAddrBytes = vSourceAddress.GetBytes(vSmppEncodingService);
-            byte[] esmeAddresBytes = vEsmeAddress.GetBytes(vSmppEncodingService);
+            byte[] sourceAddrBytes = vSourceAddress.GetBytes();
+            byte[] esmeAddresBytes = vEsmeAddress.GetBytes();
             ByteBuffer buffer = new ByteBuffer(sourceAddrBytes.Length + esmeAddresBytes.Length);
             buffer.Append(sourceAddrBytes);
             buffer.Append(esmeAddresBytes);
@@ -81,11 +81,11 @@ namespace JamaaTech.Smpp.Net.Lib.Protocol
         protected override void Parse(ByteBuffer buffer)
         {
             if (buffer == null) { throw new ArgumentNullException("buffer"); }
-            vSourceAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
-            vEsmeAddress = SmppAddress.Parse(buffer, vSmppEncodingService);
+            vSourceAddress = SmppAddress.Parse(buffer);
+            vEsmeAddress = SmppAddress.Parse(buffer);
             //If there are some bytes left,
             //construct a tlv collection
-            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer, vSmppEncodingService); }
+            if (buffer.Length > 0) { vTlv = TlvCollection.Parse(buffer); }
         }
         #endregion
     }

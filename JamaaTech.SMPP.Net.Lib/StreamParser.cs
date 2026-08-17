@@ -33,7 +33,6 @@ namespace JamaaTech.Smpp.Net.Lib
         private TcpIpSession vTcpIpSession;
         private PduProcessorCallback vProcessorCallback;
         private IResponseHandler vResponseHandler;
-        private SmppEncodingService vSmppEncodingService;
         //--
         private TraceSwitch vTraceSwitch;
         #endregion
@@ -56,7 +55,7 @@ namespace JamaaTech.Smpp.Net.Lib
         /// <param name="session">A <see cref="TcpIpSession"/></param>
         /// <param name="responseQueue">A <see cref="ResponseQueue"/> instance to which <see cref="ResponsePDU"/> pdu's are forwarded</param>
         /// <param name="requestProcessor">A callback delegate for processing <see cref="RequestPDU"/> pdu's</param>
-        public StreamParser(TcpIpSession session, IResponseHandler responseQueue, PduProcessorCallback requestProcessor, SmppEncodingService smppEncodingService)
+        public StreamParser(TcpIpSession session, IResponseHandler responseQueue, PduProcessorCallback requestProcessor)
         {
             if (session == null) { throw new ArgumentNullException("session"); }
             if (requestProcessor == null) { throw new ArgumentNullException("requestProcessor"); }
@@ -64,7 +63,6 @@ namespace JamaaTech.Smpp.Net.Lib
             vTcpIpSession = session;
             vProcessorCallback = requestProcessor;
             vResponseHandler = responseQueue;
-            vSmppEncodingService = smppEncodingService;
             //--Create and initialize a trace switch
             vTraceSwitch = new TraceSwitch("StreamParserSwitch", "Stream perser switch");
         }
@@ -142,14 +140,14 @@ namespace JamaaTech.Smpp.Net.Lib
                 HandleException(tcpIp_ex_1); throw;
             }
             //--
-            header = PDUHeader.Parse(new ByteBuffer(headerBytes), vSmppEncodingService);
-            _Log.TraceFormat("PDU header: {0}", Logging.LoggingExtensions.DumpString(header, vSmppEncodingService));
+            header = PDUHeader.Parse(new ByteBuffer(headerBytes));
+            _Log.TraceFormat("PDU header: {0}", Logging.LoggingExtensions.DumpString(header));
 
-            try { pdu = PDU.CreatePDU(header, vSmppEncodingService); }
+            try { pdu = PDU.CreatePDU(header); }
             catch (InvalidPDUCommandException inv_ex)
             {
                 ByteBuffer iBuffer = new ByteBuffer((int)header.CommandLength);
-                iBuffer.Append(header.GetBytes(vSmppEncodingService));
+                iBuffer.Append(header.GetBytes());
                 if (header.CommandLength > 16)
                 {
                     try { iBuffer.Append(ReadBodyBytes((int)header.CommandLength - 16)); }
