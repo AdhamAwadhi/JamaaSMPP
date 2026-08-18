@@ -21,6 +21,8 @@ namespace JamaaTech.Smpp.Net.Lib.Util
 {
     public sealed class ByteBuffer
     {
+        public static ByteBuffer Create(byte[] array) => new ByteBuffer(array);
+        
         #region Variables
         private byte[] vArrayBuffer;
         private int vNextPosition;

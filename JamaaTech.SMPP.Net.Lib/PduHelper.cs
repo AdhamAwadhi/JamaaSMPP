@@ -42,5 +42,15 @@ namespace JamaaTech.Smpp.Net.Lib
 
             return pdu;
         }
+
+        public static string ToBase64String(PDU pdu)
+        {
+            return Convert.ToBase64String(pdu.GetBytes());
+        }
+
+        public static string ToHexString(PDU pdu)
+        {
+            return StringHelper.ConvertToHexString(pdu.GetBytes());
+        }
     }
 }

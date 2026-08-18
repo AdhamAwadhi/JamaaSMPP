@@ -195,10 +195,10 @@ namespace JamaaTech.Smpp.Net.Client
             {
                 if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage SendSmPDU: {0}", LoggingExtensions.DumpString(pdu));
                 ResponsePDU resp = SendPdu(pdu, timeOut);
+                if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage Response: {0}", LoggingExtensions.DumpString(resp));
                 var submitSmResp = resp as SubmitSmResp;
                 if (submitSmResp != null)
                 {
-                    if (_Log.IsDebugEnabled) _Log.DebugFormat("SendMessage Response: {0}", LoggingExtensions.DumpString(resp));
                     messageId = ((SubmitSmResp)resp).MessageID;
                 }
                 // Set the message id only if we have a valid message id
@@ -218,8 +218,8 @@ namespace JamaaTech.Smpp.Net.Client
         public virtual ResponsePDU SendPdu(RequestPDU pdu, int timeout)
         {
             var resp = vTrans.SendPdu(pdu, timeout);
-            if (_Log.IsTraceEnabled) _Log.TraceFormat("SendPdu req: {0} resp: {1}", Convert.ToBase64String(pdu.GetBytes()), Convert.ToBase64String(resp.GetBytes()));
-            if (_Log.IsDebugEnabled) _Log.DebugFormat("SendPdu req: {0} resp: {1}", LoggingExtensions.DumpString(pdu), LoggingExtensions.DumpString(resp));
+            if (_Log.IsTraceEnabled) _Log.TraceFormat("SendPdu req: {0} resp: {1}", PduHelper.ToHexString(pdu), PduHelper.ToHexString(resp));
+            //if (_Log.IsDebugEnabled) _Log.DebugFormat("SendPdu req: {0} resp: {1}", LoggingExtensions.DumpString(pdu), LoggingExtensions.DumpString(resp));
             if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
             { throw new SmppException(resp.Header.ErrorCode); }
 
@@ -236,7 +236,7 @@ namespace JamaaTech.Smpp.Net.Client
         public virtual async Task<ResponsePDU> SendPduAsync(RequestPDU pdu, int timeout, CancellationToken cancellationToken = default)
         {
             var resp = await vTrans.SendPduAsync(pdu, timeout, cancellationToken).ConfigureAwait(false);
-            if (_Log.IsTraceEnabled) _Log.TraceFormat("SendPduAsync req: {0} resp: {1}", Convert.ToBase64String(pdu.GetBytes()), Convert.ToBase64String(resp.GetBytes()));
+            if (_Log.IsTraceEnabled) _Log.TraceFormat("SendPduAsync req: {0} resp: {1}", PduHelper.ToHexString(pdu), PduHelper.ToHexString(resp));
             if (_Log.IsDebugEnabled) _Log.DebugFormat("SendPduAsync req: {0} resp: {1}", LoggingExtensions.DumpString(pdu), LoggingExtensions.DumpString(resp));
             if (resp.Header.ErrorCode != SmppErrorCode.ESME_ROK)
             { throw new SmppException(resp.Header.ErrorCode); }

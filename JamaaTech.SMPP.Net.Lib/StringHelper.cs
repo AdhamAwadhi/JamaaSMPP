@@ -44,6 +44,8 @@ namespace JamaaTech.Smpp.Net.Lib
 
         public static byte[] ConvertFromHexString(string hex)
         {
+            if (string.IsNullOrEmpty(hex)) return null;
+
 #if NET8_0_OR_GREATER
             return Convert.FromHexString(hex);
 #else
@@ -51,6 +53,21 @@ namespace JamaaTech.Smpp.Net.Lib
                              .Where(x => x % 2 == 0)
                              .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
                              .ToArray();
+#endif
+        }
+
+        public static string ConvertToHexString(byte[] bytes)
+        {
+            if (bytes == null) return null;
+
+#if NET8_0_OR_GREATER
+            return Convert.ToHexString(bytes);
+#else
+            StringBuilder hex = new StringBuilder(bytes.Length * 2);
+            foreach (byte b in bytes)
+                hex.AppendFormat("{0:X2}", b); // X2 = uppercase, x2 = lowercase
+
+            return hex.ToString();
 #endif
         }
 
