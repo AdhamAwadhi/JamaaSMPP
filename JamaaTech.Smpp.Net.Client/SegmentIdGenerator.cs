@@ -71,11 +71,6 @@ namespace JamaaTech.Smpp.Net.Client
     {
         private readonly ISegmentIdCounterStore _store;
 
-        public DefaultSegmentIdGenerator()
-            : this(new InMemorySegmentIdCounterStore())
-        {
-        }
-
         public DefaultSegmentIdGenerator(ISegmentIdCounterStore store)
         {
             if (store == null) throw new ArgumentNullException("store");
@@ -106,7 +101,7 @@ namespace JamaaTech.Smpp.Net.Client
                     lock (_sync)
                     {
                         if (_generator == null)
-                            _generator = new DefaultSegmentIdGenerator(); // uses in-memory store
+                            _generator = new DefaultSegmentIdGenerator(new InMemorySegmentIdCounterStore()); // uses in-memory store
                         g = _generator;
                     }
                 }
